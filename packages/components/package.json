@@ -1,6 +1,6 @@
 {
   "name": "vue-element-plus-x",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,8 +12,8 @@
   "module": "dist/es/index.js",
   "types": "types/index.d.ts",
   "files": [
-    "dist/es",
-    "dist/umd",
+    "dist/es/index.js",
+    "dist/umd/index.js",
     "types",
     "README.md",
     "!dist/**/*.map"
