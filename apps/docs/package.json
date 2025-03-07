@@ -1,5 +1,6 @@
 {
   "name": "docs",
+  "private": true,
   "scripts": {
     "dev": "vitepress dev --port 5174",
     "build": "vitepress build",
