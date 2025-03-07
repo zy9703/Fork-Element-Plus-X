@@ -50,7 +50,7 @@ const emits = defineEmits(["onComplete"]);
 
 const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   maxHeight: "500px",
-})
+});
 
 /* 在底部时候自动滚动 开始 */
 // 滚动容器的引用
@@ -82,6 +82,8 @@ watch(
 
 // 父组件的触发方法，直接让滚动容器滚动到顶部
 function scrollToTop() {
+  // 处理在滚动时候，无法回到顶部的问题
+  wasOver.value = true;
   nextTick(() => {
     // 自动滚动到最顶部
     scrollContainer.value!.scrollTop = 0;
