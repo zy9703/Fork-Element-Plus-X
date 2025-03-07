@@ -1,0 +1,46 @@
+{
+  "name": "vue-element-plus-x",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "main": "dist/umd/index.js",
+  "module": "dist/es/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist/es/core",
+    "dist/cjs/core",
+    "dist/cjs/cmd",
+    "types",
+    "!dist/**/*.map"
+  ],
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "dompurify": "^3.2.4",
+    "element-plus": "^2.9.4",
+    "github-markdown-css": "^5.8.1",
+    "markdown-it": "^14.1.0",
+    "prismjs": "^1.29.0",
+    "typed.js": "^2.1.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/dom-speech-recognition": "^0.0.4",
+    "@types/markdown-it": "^14.1.2",
+    "@types/prismjs": "^1.26.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "sass-embedded": "^1.85.1",
+    "terser": "^5.39.0",
+    "typescript": "~5.7.2",
+    "unplugin-auto-import": "^19.1.1",
+    "unplugin-vue-components": "^28.4.1",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.3",
+    "vite-plugin-prismjs": "^0.0.11",
+    "vue-tsc": "^2.2.4"
+  }
+}

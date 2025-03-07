@@ -1,84 +1,90 @@
-# Turborepo starter
+# 🌟 Element Plus X 组件库 🌟
 
-This Turborepo starter is maintained by the Turborepo core team.
+------
 
-## Using this example
+### 🚀 **初始发布** 🚀
 
-Run the following command:
+- **无TS、ESLint版本**：这是我们踏上旅程的起点，简洁而纯粹。
 
-```sh
-npx create-turbo@latest
-```
+------
 
-## What's inside?
+### 🔥 **现有组件** 🔥
 
-This Turborepo includes the following packages/apps:
+- **打字器组件**：让你的文字动起来，吸引用户的眼球！
+- **气泡组件**：轻盈的信息提示，提升用户体验。
+- **气泡列表组件**：有序展示信息，让数据更加直观。
+- **输入框组件**：简洁高效的输入体验，满足对话需求。
 
-### Apps and Packages
+------
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### 🎯 **项目运行** 🎯
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+要运行 Element Plus X 组件库项目，请按照以下步骤操作：
 
-### Utilities
+1. **克隆项目**：
 
-This Turborepo has some additional tools already setup for you:
+   ```bash
+   git clone https://github.com/HeJiaYue520/Element-Plus-X.git
+   cd vue-element-plus-x
+   ```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+2. **安装依赖**：
 
-### Build
+   ```bash
+   npm install
+   ```
 
-To build all apps and packages, run the following command:
+   这将安装项目所需的所有依赖项。
 
-```
-cd my-turborepo
-pnpm build
-```
+3. **开发模式**：
 
-### Develop
+   ```bash
+   npm run dev
+   ```
 
-To develop all apps and packages, run the following command:
+   启动 Vite 开发服务器，您可以在浏览器中访问 `http://localhost:5173`（或 Vite 配置的其他端口）来查看和运行组件库。
 
-```
-cd my-turborepo
-pnpm dev
-```
+4. **构建项目**：
 
-### Remote Caching
+   ```bash
+   npm run build
+   ```
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+   这将构建生产环境的项目文件，并输出到 `dist` 目录中。
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+5. **预览构建结果**：
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+   ```bash
+   npm run preview
+   ```
 
-```
-cd my-turborepo
-npx turbo login
-```
+   启动一个本地服务器来预览构建后的项目。
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+------
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+### 🙏 **致敬开源** 🙏
 
-```
-npx turbo link
-```
+感谢 **Ant Design** 的开源精神，我们的组件库正是基于Ant Design X的灵感进行复刻与创新的。
 
-## Useful Links
+------
 
-Learn more about the power of Turborepo:
+🛠️ **技术栈** 🛠️
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+- **Element Plus + Vue 3**：在强大的基础上进行封装，打造更优质的组件库。
+- **官方新特性**：充分利用Vue 3和Element Plus的新特性，无需JSX语法，让开发更加便捷。
+
+------
+
+### 📌 **未来规划** 📌
+
+- **NPM开源**：即将上线NPM，开箱即用，让更多人受益。
+- **TS+ESLint+官方文档**：完善版本，提升开发体验与代码质量。
+- **Ant Design X剩余组件**：持续加入，打造更全面的组件库。
+- **AI助手项目组件**：创新不止，为AI助手项目量身定制组件。
+- **移动端方案**：跨平台布局，满足移动端需求，让开发无处不在。
+
+------
+
+### 🎉 **敬请期待** 🎉
+
+更多精彩，即将呈现！请持续关注 `element-plus-X` 我们的更新与发展，一起创造更美好的未来！
