@@ -5,7 +5,7 @@
     "build:components": "turbo run build --filter=vue-element-plus-x",
     "dev:playground": "turbo run dev --filter=playground",
     "dev:docs": "turbo run dev --filter=docs",
-    "dev": "turbo run dev",
+    "dev": "npm run dev:playground",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

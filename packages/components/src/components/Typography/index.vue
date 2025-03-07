@@ -1,6 +1,11 @@
 <template>
   <div v-if="isMarkdown && content">
-    <span v-if="typing" class="markdown-body" ref="typingContent" v-html="showContent"></span>
+    <span
+      v-if="typing"
+      class="markdown-body"
+      ref="typingContent"
+      v-html="showContent"
+    ></span>
     <span v-else class="markdown-body" v-html="showContent"></span>
   </div>
   <div v-else-if="content">
@@ -77,15 +82,19 @@ const initTyped = () => {
         // 打字结束后隐藏光标
         self.cursor.style.display = "none";
         // 结束后去掉打字中类名
-        (self as unknown as { el: HTMLElement }).el.parentElement?.classList.remove("el-is-typing");
+        (
+          self as unknown as { el: HTMLElement }
+        ).el.parentElement?.classList.remove("el-is-typing");
       }
-      console.log(self)
+      // console.log(self)
       onCompleteFunc(self);
     },
     preStringTyped: (_arrayPos, self) => {
       // console.log('即将开始打字', arrayPos, self)
       // 给列表组件添加一个打字中的类名，结束后去掉
-      (self as unknown as { el: HTMLElement }).el.parentElement?.classList.add("el-is-typing");
+      (self as unknown as { el: HTMLElement }).el.parentElement?.classList.add(
+        "el-is-typing"
+      );
     },
   });
 };
