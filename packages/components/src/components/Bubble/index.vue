@@ -1,16 +1,20 @@
 <!-- Bubble 对话气泡 -->
 <template>
-  <div class="el-bubble" :class="{
-    'el-bubble-start': placement === 'start',
-    'el-bubble-end': placement === 'end',
-  }" :style="{
-    '--el-padding-sm': '12px',
-    '--el-padding-xxs': '4px',
-    '--el-box-shadow-tertiary': `0 1px 2px 0 rgba(0, 0, 0, 0.03),
+  <div
+    class="el-bubble"
+    :class="{
+      'el-bubble-start': placement === 'start',
+      'el-bubble-end': placement === 'end',
+    }"
+    :style="{
+      '--el-padding-sm': '12px',
+      '--el-padding-xxs': '4px',
+      '--el-box-shadow-tertiary': `0 1px 2px 0 rgba(0, 0, 0, 0.03),
       0 1px 6px -1px rgba(0, 0, 0, 0.02),
       0 2px 4px 0 rgba(0, 0, 0, 0.02)`,
-    '--bubble-content-max-width': `${maxWidth}`,
-  }">
+      '--bubble-content-max-width': `${maxWidth}`,
+    }"
+  >
     <!-- 头像 -->
     <div class="el-bubble-avatar" v-if="$slots['avatar']">
       <slot name="avatar"> </slot>
@@ -23,29 +27,50 @@
         <slot name="header"> </slot>
       </div>
 
-      <div class="el-bubble-content" :class="{
-        'el-bubble-content-loading': loading,
-        'el-bubble-content-round': shape === 'round',
-        'el-bubble-content-corner': shape === 'corner',
-        'el-bubble-content-filled': variant === 'filled',
-        'el-bubble-content-borderless': variant === 'borderless',
-        'el-bubble-content-outlined': variant === 'outlined',
-        'el-bubble-content-shadow': variant === 'shadow',
-      }">
-        <div class="el-typography" :class="{
-          'no-content': !content,
-        }" v-if="!loading">
-          <Typography :typing="_typing" :content="content" :isMarkdown="isMarkdown" :suffix="_suffix" :step="_step"
-            v-if="!$slots['content'] && content" @onComplete="onCompleteFunc" />
+      <div
+        class="el-bubble-content"
+        :class="{
+          'el-bubble-content-loading': loading,
+          'el-bubble-content-round': shape === 'round',
+          'el-bubble-content-corner': shape === 'corner',
+          'el-bubble-content-filled': variant === 'filled',
+          'el-bubble-content-borderless': variant === 'borderless',
+          'el-bubble-content-outlined': variant === 'outlined',
+          'el-bubble-content-shadow': variant === 'shadow',
+        }"
+      >
+        <div
+          class="el-typography"
+          :class="{
+            'no-content': !content,
+          }"
+          v-if="!loading"
+        >
+          <Typography
+            :typing="_typing"
+            :content="content"
+            :isMarkdown="isMarkdown"
+            :suffix="_suffix"
+            :step="_step"
+            v-if="!$slots['content'] && content"
+            @onComplete="onCompleteFunc"
+          />
         </div>
 
         <!-- 内容-自定义 -->
         <slot name="content" v-if="$slots['content'] && !loading"> </slot>
 
         <!-- 加载中-默认 -->
-        <div class="el-bubble-loading-wrap" v-if="loading && !$slots['loading']">
-          <div v-for="(_, index) in dots" :key="index" class="dot" :style="{ animationDelay: `${index * 0.2}s` }">
-          </div>
+        <div
+          class="el-bubble-loading-wrap"
+          v-if="loading && !$slots['loading']"
+        >
+          <div
+            v-for="(_, index) in dots"
+            :key="index"
+            class="dot"
+            :style="{ animationDelay: `${index * 0.2}s` }"
+          ></div>
         </div>
 
         <!-- 加载中-自定义 -->
@@ -151,9 +176,9 @@ const dots = [1, 2, 3];
     line-height: var(--el-font-line-height-primary);
   }
 
-  .el-bubble-header {
-    margin-bottom: var();
-  }
+  // .el-bubble-header {
+  //   margin-bottom: var();
+  // }
 
   .el-bubble-content {
     background-color: var(--el-fill-color);
@@ -167,7 +192,10 @@ const dots = [1, 2, 3];
     color: var(--el-text-color-primary);
     font-size: var(--el-font-size-base);
     line-height: var(--el-font-line-height-primary);
-    min-height: calc(var(--el-padding-sm) * 2 + var(--el-font-line-height-primary) * var(--el-font-size-base));
+    min-height: calc(
+      var(--el-padding-sm) * 2 + var(--el-font-line-height-primary) *
+        var(--el-font-size-base)
+    );
     word-break: break-word;
 
     // 打字器没有内容时候展示高度
@@ -225,7 +253,6 @@ const dots = [1, 2, 3];
 
     /* 波浪动画 */
     @keyframes wave {
-
       0%,
       100% {
         transform: translateY(-2px);

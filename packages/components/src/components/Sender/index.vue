@@ -117,14 +117,14 @@ const emits = defineEmits(["submit"]);
 const value = defineModel("value", { type: String, default: "" });
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "请输入内容",
-  autosize: ()=> ({
+  autosize: () => ({
     minRows: 1,
     maxRows: 6,
   }),
   submitType: "enter",
   headerAnimationTimer: 300,
   inputWidth: "500px",
-})
+});
 
 const senderRef = ref();
 const inputRef = ref();
@@ -186,7 +186,7 @@ const startRecognition = () => {
     };
     recognition.value.onend = () => {
       speechLoading.value = false;
-      console.log("语音识别结束");
+      // console.log("语音识别结束");
     };
     recognition.value.onerror = (event) => {
       console.error("语音识别出错:", event.error);
@@ -220,7 +220,7 @@ const clear = () => {
   inputRef.value.clear();
 };
 // 在这判断组合键的回车键 (目前支持两种模式)
-const handleKeyDown = (e: {target: HTMLTextAreaElement} & KeyboardEvent) => {
+const handleKeyDown = (e: { target: HTMLTextAreaElement } & KeyboardEvent) => {
   if (props.readOnly) {
     return false;
   }
@@ -363,7 +363,8 @@ defineExpose({
   .slide-leave-active {
     height: calc-size(max-content, size);
     opacity: 1;
-    transition: height var(--el-sender-header-animation-duration),
+    transition:
+      height var(--el-sender-header-animation-duration),
       opacity var(--el-sender-header-animation-duration),
       border var(--el-sender-header-animation-duration);
     overflow: hidden;
@@ -424,7 +425,9 @@ defineExpose({
           vertical-align: bottom;
           resize: none;
           background-color: transparent;
-          transition: all var(--el-transition-duration), height 0s;
+          transition:
+            all var(--el-transition-duration),
+            height 0s;
           box-shadow: none !important;
         }
       }
