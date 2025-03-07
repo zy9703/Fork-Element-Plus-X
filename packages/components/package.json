@@ -17,6 +17,16 @@
     "README.md",
     "!dist/**/*.map"
   ],
+  "tags": [
+    "vue",
+    "element-plus",
+    "element-plus-x",
+    "vue-element-plus-x",
+    "vue3",
+    "vue3-element-plus",
+    "vue3-element-plus-x",
+    "vue3-element-plus-x-components"
+  ],
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "dompurify": "^3.2.4",
