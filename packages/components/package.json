@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ci:publish": "pnpm changeset publish -r"
   },
   "main": "dist/umd/index.js",
   "module": "dist/es/index.js",
@@ -17,7 +18,7 @@
     "README.md",
     "!dist/**/*.map"
   ],
-  "tags": [
+  "keywords": [
     "vue",
     "element-plus",
     "element-plus-x",
@@ -27,6 +28,11 @@
     "vue3-element-plus-x",
     "vue3-element-plus-x-components"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HeJiaYue520/Element-Plus-X"
+  },
+  "license": "MIT",
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "dompurify": "^3.2.4",
