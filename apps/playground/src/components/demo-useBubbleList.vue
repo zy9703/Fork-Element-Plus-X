@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { messageArr, type MessageItem } from "@/assets/mock";
-import { BubbleList } from "../../../../packages/components/types";
+import { BubbleList } from "vue-element-plus-x";
 import { onMounted, ref } from "vue";
 
 const bubbleItems = ref(messageArr);

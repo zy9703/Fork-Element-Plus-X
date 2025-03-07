@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.com/
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      # - name: Build frontend
+      #   run: |
+      #     cd frontend_apps/pc-ferrume
+      #     echo "当前打包版本: ${{ env.VERSION }}"
+      #     pnpm run build
+
+      - name: Build frontend
+        run: |
+          echo "当前打包版本: ${{ env.VERSION }}"
+          pnpm run build:all
+
+      - name: Create release
+        id: create_release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          working-directory: ./rust_apps/tauri-app
+          # tagName: v__VERSION__
+          tagName: ${{ env.VERSION }}
+          # releaseName: 'v__VERSION__'
+          releaseName: '${{ env.VERSION }}'
+          releaseBody: 'See the assets to download and install this version.'
+          releaseDraft: false
+          prerelease: false

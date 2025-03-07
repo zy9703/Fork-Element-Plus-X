@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { Bubble } from "../../../../packages/components/types";
+import { Bubble } from "vue-element-plus-x";
 import { Refresh, Search, Star, DocumentCopy } from "@element-plus/icons-vue";
 
 const avatar = ref(

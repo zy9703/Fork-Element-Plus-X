@@ -84,7 +84,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Sender } from "../../../../packages/components/types";
+import { Sender } from "vue-element-plus-x";
 import { CircleClose, Link } from "@element-plus/icons-vue";
 
 const senderRef = ref();
