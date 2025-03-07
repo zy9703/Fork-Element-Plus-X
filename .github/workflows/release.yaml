@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -24,37 +24,22 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.com/
 
-      - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-
       - name: Install dependencies
         run: |
           pnpm install
 
-      # - name: Build frontend
-      #   run: |
-      #     cd frontend_apps/pc-ferrume
-      #     echo "当前打包版本: ${{ env.VERSION }}"
-      #     pnpm run build
-
-      - name: Build frontend
+      - name: Build
         run: |
-          echo "当前打包版本: ${{ env.VERSION }}"
-          pnpm run build:all
+          pnpm build:components
 
-      - name: Create release
+      - name: Create Release Pull Request
         id: create_release
-        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        uses: changesets/action@v1
         with:
-          working-directory: ./rust_apps/tauri-app
-          # tagName: v__VERSION__
+          working-directory: ./packages/components
           tagName: ${{ env.VERSION }}
-          # releaseName: 'v__VERSION__'
           releaseName: '${{ env.VERSION }}'
-          releaseBody: 'See the assets to download and install this version.'
-          releaseDraft: false
-          prerelease: false
+          publish: pnpm ci:publish
