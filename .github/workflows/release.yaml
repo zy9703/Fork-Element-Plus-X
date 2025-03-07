@@ -35,12 +35,11 @@ jobs:
 
       - name: Create Release Pull Request
         id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: changesets/action@v1
         with:
-          working-directory: ./packages/components
           tagName: ${{ env.VERSION }}
           releaseName: '${{ env.VERSION }}'
           publish: pnpm ci:publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
