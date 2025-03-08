@@ -4,27 +4,25 @@
 
 <h1 align="center">🎉Element-Plus-X</h1>
 
-<div align="center">
+<h4 align="center">
 开箱即用的企业级AI组件库前端解决方案
+</h4>
+
+<div align="center">
+
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/HeJiaYue520/Element-Plus-X/blob/main/LICENSE)[![npm version](https://img.shields.io/npm/v/vue-element-plus-x)](https://www.npmjs.com/package/vue-element-plus-x)[![GitHub stars](https://img.shields.io/github/stars/HeJiaYue520/Element-Plus-X)](https://github.com/HeJiaYue520/Element-Plus-X)[![npm](https://img.shields.io/npm/dm/vue-element-plus-x.svg)](https://www.npmjs.com/package/vue-element-plus-x)
+
+[Report Bug](https://github.com/HeJiaYue520/Element-Plus-X/issues/new) [Request Feature](https://github.com/HeJiaYue520/Element-Plus-X/issues/new])
+
 </div>
 
 <div align="center">
 
-[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/HeJiaYue520/Element-Plus-X/blob/main/LICENSE)
+<img height="180" src="http://1.12.42.192:8755/bubble.png" calss="element-plus-x-bubble" />
 
-[![npm version](https://img.shields.io/npm/v/vue-element-plus-x)](https://www.npmjs.com/package/vue-element-plus-x)
+<img height="180" src="http://1.12.42.192:8755/bubbleList.png" calss="element-plus-x-bubbleList" />
 
-[![GitHub stars](https://img.shields.io/github/stars/HeJiaYue520/Element-Plus-X)](https://github.com/HeJiaYue520/Element-Plus-X)
-
-[![npm](https://img.shields.io/npm/dm/vue-element-plus-x.svg)](https://www.npmjs.com/package/vue-element-plus-x)
-
-[Report Bug](https://github.com/HeJiaYue520/Element-Plus-X/issues/new) [Request Feature](https://github.com/HeJiaYue520/Element-Plus-X/issues/new])
-
-![bubble组件](http://1.12.42.192:8755/bubble.png)
-
-![bubbleList组件](http://1.12.42.192:8755/bubbleList.png)
-
-![sender组件](http://1.12.42.192:8755/sender.png)
+<img height="180" src="http://1.12.42.192:8755/sender.png" calss="element-plus-x-sender" />
 
 </div>
 
