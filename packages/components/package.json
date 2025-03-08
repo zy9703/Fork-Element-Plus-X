@@ -32,6 +32,11 @@
     "type": "git",
     "url": "https://github.com/HeJiaYue520/Element-Plus-X"
   },
+  "homepage": "http://1.12.42.192:8765/",
+  "bugs": {
+    "url": "https://github.com/HeJiaYue520/Element-Plus-X/issues",
+    "email": "lijunsong2@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
