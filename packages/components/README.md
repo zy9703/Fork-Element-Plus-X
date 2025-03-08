@@ -1,6 +1,30 @@
-# **🎉**Element-Plus-X 组件库开源啦！
+<div align="center">
+<img height="180" src="http://1.12.42.192:8755/element-plus-x.png" calss="element-plus-x-logo" />
+</div>
 
-Element-Plus-X 组件库正处在充满活力的持续进化阶段，我们始终专注于为开发者精心打造一个更丰富、高效且易用的组件宝库。目前，已有的打字器组件、气泡组件、气泡列表组件以及输入框组件，已经在较多项目中发挥了关键作用和优势，但这仅仅是我们前行路上的一个里程碑，我们的目标是为您带来更卓越的开发体验。
+<h1 align="center">🎉Element-Plus-X</h1>
+
+<h4 align="center">
+开箱即用的企业级AI组件库前端解决方案
+</h4>
+
+<div align="center">
+
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/HeJiaYue520/Element-Plus-X/blob/main/LICENSE)[![npm version](https://img.shields.io/npm/v/vue-element-plus-x)](https://www.npmjs.com/package/vue-element-plus-x)[![GitHub stars](https://img.shields.io/github/stars/HeJiaYue520/Element-Plus-X)](https://github.com/HeJiaYue520/Element-Plus-X)[![npm](https://img.shields.io/npm/dm/vue-element-plus-x.svg)](https://www.npmjs.com/package/vue-element-plus-x)
+
+[Report Bug](https://github.com/HeJiaYue520/Element-Plus-X/issues/new) [Request Feature](https://github.com/HeJiaYue520/Element-Plus-X/issues/new])
+
+</div>
+
+<div align="center">
+
+<img height="180" src="http://1.12.42.192:8755/bubble.png" calss="element-plus-x-bubble" />
+
+<img height="180" src="http://1.12.42.192:8755/bubbleList.png" calss="element-plus-x-bubbleList" />
+
+<img height="180" src="http://1.12.42.192:8755/sender.png" calss="element-plus-x-sender" />
+
+</div>
 
 ## **🔥**一、持续进化，未来可期
 
@@ -12,7 +36,7 @@ Element-Plus-X 组件库正处在充满活力的持续进化阶段，我们始�
 
 ## 💖三、您的反馈，助力成长
 
-您的使用体验对我们至关重要！我们深知，只有通过您的实际使用和反馈，Element - Plus - X 组件库才能不断进步与完善。如果您在使用过程中发现任何问题，无论是功能上的瑕疵，还是体验上的不足，又或者您对组件库有新的期望与建议，都请毫不犹豫地告诉我们。您的每一条反馈意见，都将成为我们优化组件库的重要依据，为组件库的持续发展注入新的活力。
+您的使用体验对我们至关重要！我们深知，只有通过您的实际使用和反馈，Element-Plus-X 组件库才能不断进步与完善。如果您在使用过程中发现任何问题，无论是功能上的瑕疵，还是体验上的不足，又或者您对组件库有新的期望与建议，都请毫不犹豫地告诉我们。您的每一条反馈意见，都将成为我们优化组件库的重要依据，为组件库的持续发展注入新的活力。
 
 ## 🚀四、便捷获取，轻松使用
 
@@ -28,11 +52,11 @@ Element-Plus-X 组件库正处在充满活力的持续进化阶段，我们始�
 npm install vue-element-plus-x
 ```
 
-#### 组件库开发文档地址
+#### 组件库使用文档地址
 
 组件在项目中如何使用，说明文档在这里 👉 [开发文档（后续域名通过会替换成域名地址）](http://1.12.42.192:8765/)
 
-#### 在线预览
+#### 在线预览体验
 
 项目实现，快来看看效果！👉 [在线预览（后续域名通过会替换成域名地址）](http://1.12.42.192:8878/)
 
@@ -42,6 +66,12 @@ npm install vue-element-plus-x
 
 ### 微信交流群
 
-![An image](http://1.12.42.192:8755/vx.png)
+<div align="center">
+<img height="180" src="http://1.12.42.192:8755/vx.png" calss="element-plus-x-vx" />
 
 期待您的加入🥳🥳🥳
+
+</div>
+
+[github-issues-feature-request]:
+[https://github.com/HeJiaYue520/Element-Plus-X/issues/new]:

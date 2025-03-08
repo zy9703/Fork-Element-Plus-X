@@ -1,6 +1,6 @@
 {
   "name": "vue-element-plus-x",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -30,7 +30,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/HeJiaYue520/Element-Plus-X"
+    "url": "git+https://github.com/HeJiaYue520/Element-Plus-X.git"
   },
   "homepage": "http://1.12.42.192:8765/",
   "bugs": {
