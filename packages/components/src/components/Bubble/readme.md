@@ -1,4 +1,4 @@
-# Bubble 对话气泡组件介绍
+# Bubble 气泡
 
 ## 一、概述
 
@@ -13,13 +13,13 @@
 5. **打字动画** - 支持渐进式文字输出效果
 6. **灵活插槽** - 提供头像、头部、内容、底部、加载状态等插槽
 
----
-
 ## 三、安装与使用
 
 ### 安装依赖
 
-确保项目中已经安装了 `@/components/Typography/index.vue` 组件所依赖的库，如 `github-markdown-css`、`markdown-it`、`typed.js`、`prismjs`、`dompurify` 等。
+```bash
+npm i vue-element-plus-x
+```
 
 ### 引入组件
 
@@ -31,25 +31,25 @@
 </template>
 
 <script setup>
-import Bubble from './path/to/Bubble.vue';
-import { ref } from 'vue';
+import { Bubble } from "vue-element-plus-x";
+import { ref } from "vue";
 
-const yourContent = ref('This is a bubble content.');
+const yourContent = ref("This is a bubble content.");
 </script>
 ```
 
 ## 四、组件属性
 
-| 属性名       | 类型              | 默认值   | 说明                                                         |
-| ------------ | ----------------- | -------- | ------------------------------------------------------------ |
-| `content`    | String            | ''       | 气泡内要展示的文本内容，可与 `slot` 配合使用。               |
-| `placement`  | String            | 'start'  | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。 |
-| `loading`    | Boolean           | false    | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。       |
-| `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。 |
+| 属性名       | 类型              | 默认值   | 说明                                                                                                              |
+| ------------ | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `content`    | String            | ''       | 气泡内要展示的文本内容，可与 `slot` 配合使用。                                                                    |
+| `placement`  | String            | 'start'  | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。                                                   |
+| `loading`    | Boolean           | false    | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。                                                            |
+| `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。                                                     |
 | `variant`    | String            | 'filled' | 气泡的样式变体，可选值为 `'filled'`（填充）、`'borderless'`（无边框）、`'outlined'`（轮廓）、`'shadow'`（阴影）。 |
-| `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。                |
-| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `step`（每次渲染的字符数）和 `suffix`（打字光标后缀内容）。 |
-| `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。                                         |
+| `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。                                                                     |
+| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `step`（每次渲染的字符数）和 `suffix`（打字光标后缀内容）。                    |
+| `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。                                                                                              |
 
 ## 五、组件事件
 
@@ -149,7 +149,11 @@ const yourContent = ref('This is a bubble content.');
 ```vue
 <template>
   <Bubble shape="round" variant="shadow" :content="'Rounded shadow bubble'" />
-  <Bubble shape="corner" variant="outlined" :content="'Cornered outlined bubble'" />
+  <Bubble
+    shape="corner"
+    variant="outlined"
+    :content="'Cornered outlined bubble'"
+  />
 </template>
 ```
 
@@ -159,7 +163,10 @@ const yourContent = ref('This is a bubble content.');
 
 ```vue
 <template>
-  <Bubble :typing="{ step: 3, suffix: '>' }" :content="'Typing with custom settings'" />
+  <Bubble
+    :typing="{ step: 3, suffix: '>' }"
+    :content="'Typing with custom settings'"
+  />
 </template>
 ```
 
@@ -178,41 +185,7 @@ const yourContent = ref('This is a bubble content.');
 </template>
 ```
 
-## 八、样式说明
-
-组件使用了 ElementPlus 的 CSS 变量，如 `--el-padding-sm`、`--el-border-radius-base` 等，确保在使用时 ElementPlus 的样式正常引入。同时，组件内部定义了一些动画和样式类，如 `.dot` 的波浪动画，可根据需要进行调整。
-
-```vue
-/* 基础布局 */
-.el-bubble {
-  display: flex;
-  gap: 12px; // 头像与内容间距
-}
-
-/* 布局方向 */
-.el-bubble-start { /* 左对齐 */ }
-.el-bubble-end {   /* 右对齐 */ }
-
-/* 内容区域 */
-.el-bubble-content {
-  max-width: var(--bubble-content-max-width); // 最大宽度控制
-  border-radius: calc(var(--el-border-radius-base) + 4px);
-  background-color: var(--el-fill-color);
-}
-
-/* 形状变体 */
-.el-bubble-content-round { border-radius: var(--el-border-radius-round); }
-.el-bubble-content-corner { /* 直角样式 */ }
-
-/* 视觉变体 */
-.el-bubble-content-filled { /* 填充背景 */ }
-.el-bubble-content-outlined { /* 线框样式 */ }
-.el-bubble-content-shadow { /* 投影效果 */ }
-```
-
-
-
-## 九、注意事项
+## 八、注意事项
 
 - 当同时使用`content`属性与`#content`插槽时，插槽内容优先
 - 当同时使用`loading`属性与`#loading`插槽时，插槽内容优先

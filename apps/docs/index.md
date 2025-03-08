@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: 开始使用
-      link: /markdown-examples
+      link: /components/Bubble
     - theme: alt
       text: 在线预览
-      link: /api-examples
+      link: http://1.12.42.192:8878/
 
 features:
   - title: 😄复刻经典 推陈出新

@@ -1,8 +1,8 @@
-# el-bubble-list 组件
+# BubbleList 气泡列表
 
 ## 一、概述
 
-`el-bubble-list` 是一个基于 Vue 3 开发的组件，它依赖于 `Bubble` 组件，用于展示一组对话气泡列表。该组件支持设置列表最大高度，具备自动滚动到底部的功能，无论是在普通状态还是打字效果进行中。同时，它还提供了多种滚动控制方法，方便父组件调用。
+`BubbleList` 是一个基于 Vue 3 开发的组件，它依赖于 `Bubble` 组件，用于展示一组对话气泡列表。该组件支持设置列表最大高度，具备自动滚动到底部的功能，无论是在普通状态还是打字效果进行中。同时，它还提供了多种滚动控制方法，方便父组件调用。
 
 ## 二、功能特性
 
@@ -17,45 +17,47 @@
 
 ### 1.安装依赖
 
-确保项目中已经安装了 `Bubble` 组件及其依赖的库，如 `@/components/Typography/index.vue` 所需的 `github-markdown-css`、`markdown-it`、`typed.js`、`prismjs`、`dompurify` 等。
+```bash
+npm i vue-element-plus-x
+```
 
 ### 2.引入组件
 
-在你的 Vue 3 项目中引入 `el-bubble-list` 组件：
+在你的 Vue 3 项目中引入 `BubbleList` 组件：
 
 ```vue
 <template>
-  <el-bubble-list :list="bubbleList" :max-height="'600px'">
+  <BubbleList :list="list" :max-height="'600px'">
     <template #avatar="{ item }">
-      <img :src="item.avatarUrl" alt="Avatar">
+      <img :src="item.avatarUrl" alt="Avatar" />
     </template>
-  </el-bubble-list>
+  </BubbleList>
 </template>
 
 <script setup>
-import ElBubbleList from './path/to/el-bubble-list.vue';
-import { ref } from 'vue';
+import { BubbleList } from "vue-element-plus-x";
+import { ref } from "vue";
 
-const bubbleList = ref([
+const list = ref([
   {
-    content: 'Hello!',
-    placement: 'start',
+    content: "Hello!",
+    placement: "start",
     loading: false,
-    shape: 'round',
-    variant: 'filled',
+    shape: "round",
+    variant: "filled",
     isMarkdown: false,
-    typing: false
-  }
+    typing: false,
+  },
 ]);
 </script>
 ```
 
 ## 四、组件属性
 
-| 属性名      | 类型   | 是否必填 | 默认值  | 说明                                                         |
-| ----------- | ------ | -------- | ------- | ------------------------------------------------------------ |
+| 属性名      | 类型   | 是否必填 | 默认值  | 说明                                                                                                                                                                  |
+| ----------- | ------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `list`      | Array  | 是       | 无      | 包含气泡信息的数组，每个元素为一个对象，包含 `content`、`placement`、`loading`、`shape`、`variant`、`isMarkdown`、`typing` 等属性，用于配置每个气泡的显示内容和样式。 |
-| `maxHeight` | String | 否       | '500px' | 气泡列表容器的最大高度，超过该高度会出现垂直滚动条。         |
+| `maxHeight` | String | 否       | '500px' | 气泡列表容器的最大高度，超过该高度会出现垂直滚动条。                                                                                                                  |
 
 ## 五、组件事件
 
@@ -71,7 +73,7 @@ const bubbleList = ref([
 
 ```vue
 <template #avatar="{ item }">
-  <img :src="item.avatarUrl" alt="Avatar">
+  <img :src="item.avatarUrl" alt="Avatar" />
 </template>
 ```
 
@@ -123,16 +125,16 @@ const bubbleList = ref([
 
 ```vue
 <template>
-  <el-bubble-list ref="bubbleListRef" :list="bubbleList" />
+  <BubbleList ref="bubbleListRef" :list="list" />
   <button @click="scrollToTop">Scroll to Top</button>
 </template>
 
 <script setup>
-import ElBubbleList from './path/to/el-bubble-list.vue';
+import BubbleList from 'vue-element-plus-x';
 import { ref } from 'vue';
 
 const bubbleListRef = ref(null);
-const bubbleList = ref([...]);
+const list = ref([...]);
 
 const scrollToTop = () => {
   bubbleListRef.value.scrollToTop();
@@ -146,16 +148,16 @@ const scrollToTop = () => {
 
 ```vue
 <template>
-  <el-bubble-list ref="bubbleListRef" :list="bubbleList" />
+  <BubbleList ref="bubbleListRef" :list="list" />
   <button @click="scrollToBottom">Scroll to Bottom</button>
 </template>
 
 <script setup>
-import ElBubbleList from './path/to/el-bubble-list.vue';
+import BubbleList from 'vue-element-plus-x';
 import { ref } from 'vue';
 
 const bubbleListRef = ref(null);
-const bubbleList = ref([...]);
+const list = ref([...]);
 
 const scrollToBottom = () => {
   bubbleListRef.value.scrollToBottom();
@@ -169,16 +171,16 @@ const scrollToBottom = () => {
 
 ```vue
 <template>
-  <el-bubble-list ref="bubbleListRef" :list="bubbleList" />
+  <BubbleList ref="bubbleListRef" :list="list" />
   <button @click="scrollToSpecificBubble">Scroll to Bubble at Index 2</button>
 </template>
 
 <script setup>
-import ElBubbleList from './path/to/el-bubble-list.vue';
+import BubbleList from 'vue-element-plus-x';
 import { ref } from 'vue';
 
 const bubbleListRef = ref(null);
-const bubbleList = ref([...]);
+const list = ref([...]);
 
 const scrollToSpecificBubble = () => {
   bubbleListRef.value.scrollToBubble(2);
@@ -192,16 +194,16 @@ const scrollToSpecificBubble = () => {
 
 ```vue
 <template>
-  <el-bubble-list ref="bubbleListRef" :list="bubbleList" />
+  <BubbleList ref="bubbleListRef" :list="list" />
   <button @click="scrollWithTyping">Scroll with Typing</button>
 </template>
 
 <script setup>
-import ElBubbleList from './path/to/el-bubble-list.vue';
+import BubbleList from 'vue-element-plus-x';
 import { ref } from 'vue';
 
 const bubbleListRef = ref(null);
-const bubbleList = ref([...]);
+const list = ref([...]);
 
 const scrollWithTyping = () => {
   bubbleListRef.value.scrollToBottomByTyping();
@@ -220,12 +222,6 @@ const scrollWithTyping = () => {
 - **向上滚动**：当用户向上滚动超过一定阈值（`threshold` 为 15 像素）时，停止自动滚动，由用户控制滚动条。
 - **向下滚动且接近底部**：当用户向下滚动且距离底部小于 30 像素时，如果之前停止了自动滚动且打字器正在打字中，则重新开启自动滚动。
 
-## 九、样式说明
+## 九、注意事项
 
-组件的样式使用了 CSS 变量 `--el-bubble-list-max-height` 来控制最大高度，并且设置了垂直滚动条的平滑滚动效果。
-
-## 十、注意事项
-
-- 确保 `Bubble` 组件及其依赖的 `Typography` 组件正常引入和使用。
 - 在使用插槽时，通过 `:item` 可以获取当前气泡的配置信息，方便进行自定义渲染。
-- 自动滚动逻辑依赖于 `el-is-typing` 类名来判断打字状态，确保 `Typography` 组件正常添加该类名。

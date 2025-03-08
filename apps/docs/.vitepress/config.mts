@@ -6,10 +6,10 @@ export default defineConfig({
   title: "Element-Plus-X",
   description: "一个 Vue3 + Element-Plus AI体验组件库",
   // srcDir: "",
-  head: [["link", { rel: "icon", href: "/public/favicon.ico" }]],
+  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
   themeConfig: {
     // logo
-    logo: "/public/logo.png",
+    logo: "/logo.png",
     // 显示隐藏标题
     // siteTitle: false,
 

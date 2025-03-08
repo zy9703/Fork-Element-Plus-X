@@ -30,11 +30,11 @@ npm install vue-element-plus-x
 
 #### 组件库开发文档地址
 
-组件在项目中如何使用，说明文档在这里 👉 [开发文档（后续域名通过会替换成域名地址）](https://www.npmjs.com/package/vue-element-plus-x)
+组件在项目中如何使用，说明文档在这里 👉 [开发文档（后续域名通过会替换成域名地址）](http://1.12.42.192:8765/)
 
 #### 在线预览
 
-企业级项目实现，快来看看效果！👉 [在线预览（后续域名通过会替换成域名地址）](https://www.npmjs.com/package/vue-element-plus-x)
+项目实现，快来看看效果！👉 [在线预览（后续域名通过会替换成域名地址）](http://1.12.42.192:8878/)
 
 ## 🙏五、交流互动，共享智慧
 
@@ -42,6 +42,6 @@ npm install vue-element-plus-x
 
 ### 微信交流群
 
-![An image](./vx.png)
+![An image](http://1.12.42.192:8755/vx.png)
 
 期待您的加入🥳🥳🥳

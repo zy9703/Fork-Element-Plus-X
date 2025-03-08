@@ -1,27 +1,23 @@
-# Typography 打字器组件
+# Typography 打字器
 
 ## 一、概述
+
 `Typography` 是一个基于 Vue3 和 Element Plus 的打字器组件，支持 Markdown 渲染和动态打字效果。通过配置属性，您可以轻松实现文本内容的展示、Markdown 渲染以及模拟打字机的效果。
 
----
-
 ## 二、功能特性
+
 1. **Markdown 支持**：支持渲染 Markdown 格式的文本，并应用 GitHub 风格的样式。
 2. **动态打字效果**：可以模拟打字机的效果，逐步显示文本内容。
 3. **代码高亮**：内置 Prism.js，支持代码块的语法高亮。
 4. **XSS 安全**：使用 DOMPurify 对 HTML 内容进行过滤，防止 XSS 攻击。
 5. **灵活配置**：支持自定义打字速度、光标字符、后缀等参数。
 
----
-
 ## 三、安装与使用
 
 ### 安装依赖
 
-确保项目中已经安装了以下依赖：
-
 ```bash
-npm install github-markdown-css markdown-it typed.js prismjs dompurify
+npm i vue-element-plus-x
 ```
 
 ### 引入组件
@@ -34,12 +30,11 @@ npm install github-markdown-css markdown-it typed.js prismjs dompurify
 </template>
 
 <script setup>
-import Typography from './path/to/Typography.vue';
-import { ref } from 'vue';
+import { Typography } from "vue-element-plus-x";
+import { ref } from "vue";
 
-const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.');
+const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 </script>
-
 ```
 
 ## 四、组件属性
@@ -50,7 +45,7 @@ const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.');
 | `isMarkdown` | Boolean | `false` | 是否启用 Markdown 渲染模式。                   |
 | `typing`     | Boolean | `false` | 是否启用打字机效果。                           |
 | `step`       | Number  | `2`     | 每次渲染的字符数（仅在打字机模式下生效）。     |
-| `suffix`     | String  | `'|'`   | 光标字符（仅在非 Markdown 模式下生效）。       |
+| `suffix`     | String  | `''`    | 光标字符（仅在非 Markdown 模式下生效）。       |
 
 ---
 
@@ -68,12 +63,11 @@ const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.');
 </template>
 
 <script setup>
-import Typography from './path/to/Typography.vue';
-import { ref } from 'vue';
+import Typography from "vue-element-plus-x";
+import { ref } from "vue";
 
-const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.');
+const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 </script>
-
 ```
 
 ## 六、功能详细介绍
@@ -88,10 +82,10 @@ const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.');
 </template>
 
 <script setup>
-import Typography from './path/to/Typography.vue';
-import { ref } from 'vue';
+import Typography from "vue-element-plus-x";
+import { ref } from "vue";
 
-const plainText = ref('This is a plain text example.');
+const plainText = ref("This is a plain text example.");
 </script>
 ```
 
@@ -105,8 +99,8 @@ const plainText = ref('This is a plain text example.');
 </template>
 
 <script setup>
-import Typography from './path/to/Typography.vue';
-import { ref } from 'vue';
+import Typography from "vue-element-plus-x";
+import { ref } from "vue";
 
 const markdownText = ref(`
 # Markdown Example
@@ -132,13 +126,13 @@ function hello() {
 </template>
 
 <script setup>
-import Typography from './path/to/Typography.vue';
-import { ref } from 'vue';
+import Typography from "vue-element-plus-x";
+import { ref } from "vue";
 
-const text = ref('Typing is fun!');
+const text = ref("Typing is fun!");
 
 const handleComplete = (self) => {
-  console.log('Typing completed!', self);
+  console.log("Typing completed!", self);
 };
 </script>
 ```
