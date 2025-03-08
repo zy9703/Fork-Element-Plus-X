@@ -3,23 +3,22 @@
 layout: home
 
 hero:
-  name: "Element Plus X"
-  text: "A VitePress Site"
-  tagline: My great project tagline
+  name: "🚀Element Plus X🚀"
+  text: "AI体验新秩序"
+  tagline: 开源团队匠心呈现 RICH 设计范式，打造卓越 AI 界面解决方案，引领智能新体验。
   actions:
     - theme: brand
-      text: Markdown Examples
+      text: 开始使用
       link: /markdown-examples
     - theme: alt
-      text: API Examples
+      text: 在线预览
       link: /api-examples
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 😄复刻经典 推陈出新
+    details: 复刻 ant design x 的精华，结合自身创新，无需jsx语法，带来熟悉又惊喜的组件使用感受，助力项目出彩。
+  - title: 🔥高性能 灵活性兼备
+    details: 精心优化的代码结构，保证组件高性能运行，同时支持高度自定义，适配各种复杂业务逻辑。
+  - title: 💖可视化交互 体验升级
+    details: 打字动画、加载效果等细节满满，为用户带来生动的可视化体验，增强应用交互性和吸引力。
 ---
-
