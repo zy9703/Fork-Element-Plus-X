@@ -54,11 +54,11 @@ npm install vue-element-plus-x
 
 #### 组件库使用文档地址
 
-组件在项目中如何使用，说明文档在这里 👉 [开发文档](https://element-plus-x.com/)
+组件在项目中如何使用，说明文档在这里 👉 [开发文档](https://element-plus-x.com)
 
 #### 在线预览体验
 
-项目实现，快来看看效果！👉 [在线预览](https://v.element-plus-x.com/)
+项目实现，快来看看效果！👉 [在线预览](https://v.element-plus-x.com)
 
 ## 🙏五、交流互动，共享智慧
 
