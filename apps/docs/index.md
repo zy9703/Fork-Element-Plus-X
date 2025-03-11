@@ -12,7 +12,7 @@ hero:
       link: /components/Bubble
     - theme: alt
       text: 在线预览
-      link: http://1.12.42.192:8878/
+      link: https://v.element-plus-x.com
 
 features:
   - title: 😄复刻经典 推陈出新
