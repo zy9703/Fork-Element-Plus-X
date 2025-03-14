@@ -44,7 +44,7 @@ const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 | `content`    | String  | `''`    | 要展示的文本内容，支持纯文本或 Markdown 格式。 |
 | `isMarkdown` | Boolean | `false` | 是否启用 Markdown 渲染模式。                   |
 | `typing`     | Boolean | `false` | 是否启用打字机效果。                           |
-| `step`       | Number  | `2`     | 每次渲染的字符数（仅在打字机模式下生效）。     |
+| `speed`      | Number  | `2`     | 打字速度 值越小越快（仅在打字机模式下生效）。  |
 | `suffix`     | String  | `''`    | 光标字符（仅在非 Markdown 模式下生效）。       |
 
 ---
@@ -74,7 +74,7 @@ const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 
 ### 1. 普通文本打字效果
 
-当 `isMarkdown` 为 `false` 时，组件将展示普通文本的打字效果。你可以通过设置 `typing` 为 `true` 来开启打字动画，同时可以调整 `step` 和 `suffix` 来控制打字速度和光标后缀。
+当 `isMarkdown` 为 `false` 时，组件将展示普通文本的打字效果。你可以通过设置 `typing` 为 `true` 来开启打字动画，同时可以调整 `speed` 和 `suffix` 来控制打字速度和光标后缀。
 
 ```vue
 <template>

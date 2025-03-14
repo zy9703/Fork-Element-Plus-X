@@ -5,6 +5,8 @@ export interface BubbleProps {
   shape?: "round" | "corner";
   variant?: "filled" | "borderless" | "outlined" | "shadow";
   isMarkdown?: boolean;
-  typing?: boolean | { step: number; suffix: string };
+  typing?: boolean | { speed: number; suffix: string };
   maxWidth?: string;
+  avatarSize?: string;
+  avatarGap?: string;
 }

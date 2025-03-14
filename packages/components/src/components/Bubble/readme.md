@@ -48,7 +48,7 @@ const yourContent = ref("This is a bubble content.");
 | `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。                                                     |
 | `variant`    | String            | 'filled' | 气泡的样式变体，可选值为 `'filled'`（填充）、`'borderless'`（无边框）、`'outlined'`（轮廓）、`'shadow'`（阴影）。 |
 | `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。                                                                     |
-| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `step`（每次渲染的字符数）和 `suffix`（打字光标后缀内容）。                    |
+| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `speed`（打字速度 越小越快）和 `suffix`（打字光标后缀内容）。                  |
 | `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。                                                                                              |
 
 ## 五、组件事件
@@ -164,7 +164,7 @@ const yourContent = ref("This is a bubble content.");
 ```vue
 <template>
   <Bubble
-    :typing="{ step: 3, suffix: '>' }"
+    :typing="{ speed: 3, suffix: '>' }"
     :content="'Typing with custom settings'"
   />
 </template>
@@ -193,6 +193,5 @@ const yourContent = ref("This is a bubble content.");
 - 组件的样式基于 ElementPlus 的 CSS 变量，若修改了 ElementPlus 的样式，可能会影响该组件的显示效果。
 - 加载状态下会自动隐藏内容区域
 - 使用`variant="shadow"`时建议设置浅色背景
-- 打字动画性能受`step`值影响，建议保持50ms以上间隔
 
 该组件通过灵活的配置项和样式系统，可快速适配不同业务场景的对话展示需求。

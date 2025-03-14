@@ -1,4 +1,46 @@
 <!-- Bubble 对话气泡 -->
+<script setup lang="ts">
+import type Typed from "typed.js";
+import { computed, withDefaults } from "vue";
+import Typography from "../Typography/index.vue";
+import type { BubbleProps } from "./type";
+
+const props = withDefaults(defineProps<BubbleProps>(), {
+  content: "",
+  placement: "start",
+  variant: "filled",
+  maxWidth: "500px",
+  avatarSize: "0px",
+  avatarGap: "12px",
+});
+
+const emits = defineEmits(["onComplete"]);
+
+const _speed = computed(() => {
+  if (typeof props.typing === "object" && props.typing.speed)
+    return props.typing.speed;
+  else return 2;
+});
+
+const _suffix = computed(() => {
+  if (typeof props.typing === "object" && props.typing.suffix)
+    return props.typing.suffix;
+  else return "|";
+});
+
+const _typing = computed(() => {
+  if (typeof props.typing === "boolean") return props.typing;
+  else return true;
+});
+
+function onCompleteFunc(self: Typed) {
+  emits("onComplete", self);
+}
+
+// 定义三个点-加载中样式
+const dots = [1, 2, 3];
+</script>
+
 <template>
   <div
     class="el-bubble"
@@ -13,18 +55,27 @@
       0 1px 6px -1px rgba(0, 0, 0, 0.02),
       0 2px 4px 0 rgba(0, 0, 0, 0.02)`,
       '--bubble-content-max-width': `${maxWidth}`,
+      '--el-bubble-avatar-placeholder-width': `${avatarSize}`,
+      '--el-bubble-avatar-placeholder-height': `${avatarSize}`,
+      '--el-bubble-avatar-placeholder-gap': `${avatarGap}`,
     }"
   >
     <!-- 头像 -->
-    <div class="el-bubble-avatar" v-if="$slots['avatar']">
-      <slot name="avatar"> </slot>
+    <div v-if="$slots.avatar" class="el-bubble-avatar">
+      <slot name="avatar" />
     </div>
+
+    <!-- 头像属性进行占位 -->
+    <div
+      v-if="avatarSize && !$slots.avatar"
+      class="el-bubble-avatar-placeholder"
+    />
 
     <!-- 内容 -->
     <div class="el-bubble-content-wrapper">
       <!-- 头部内容 -->
-      <div class="el-bubble-header" v-if="$slots['header']">
-        <slot name="header"> </slot>
+      <div v-if="$slots.header" class="el-bubble-header">
+        <slot name="header" />
       </div>
 
       <div
@@ -40,103 +91,53 @@
         }"
       >
         <div
+          v-if="!loading"
           class="el-typography"
           :class="{
             'no-content': !content,
           }"
-          v-if="!loading"
         >
           <Typography
+            v-if="!$slots.content && content"
             :typing="_typing"
             :content="content"
-            :isMarkdown="isMarkdown"
+            :is-markdown="isMarkdown"
             :suffix="_suffix"
-            :step="_step"
-            v-if="!$slots['content'] && content"
-            @onComplete="onCompleteFunc"
+            :speed="_speed"
+            @on-complete="onCompleteFunc"
           />
         </div>
 
         <!-- 内容-自定义 -->
-        <slot name="content" v-if="$slots['content'] && !loading"> </slot>
+        <slot v-if="$slots.content && !loading" name="content" />
 
         <!-- 加载中-默认 -->
-        <div
-          class="el-bubble-loading-wrap"
-          v-if="loading && !$slots['loading']"
-        >
+        <div v-if="loading && !$slots.loading" class="el-bubble-loading-wrap">
           <div
             v-for="(_, index) in dots"
             :key="index"
             class="dot"
             :style="{ animationDelay: `${index * 0.2}s` }"
-          ></div>
+          />
         </div>
 
         <!-- 加载中-自定义 -->
-        <div class="el-bubble-loading-wrap" v-if="loading && $slots['loading']">
-          <slot name="loading"></slot>
+        <div v-if="loading && $slots.loading" class="el-bubble-loading-wrap">
+          <slot name="loading" />
         </div>
       </div>
 
-      <div class="el-bubble-footer" v-if="$slots['footer']">
-        <slot name="footer"> </slot>
+      <div v-if="$slots.footer" class="el-bubble-footer">
+        <slot name="footer" />
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import Typography from "../Typography/index.vue";
-import type Typed from "typed.js";
-import { computed, withDefaults } from "vue";
-import type { BubbleProps } from "./type";
-
-const props = withDefaults(defineProps<BubbleProps>(), {
-  content: "",
-  placement: "start",
-  variant: "filled",
-  maxWidth: "500px",
-});
-
-const emits = defineEmits(["onComplete"]);
-
-const _step = computed(() => {
-  if (typeof props.typing === "object" && props.typing.step) {
-    return props.typing.step;
-  } else {
-    return 2;
-  }
-});
-
-const _suffix = computed(() => {
-  if (typeof props.typing === "object" && props.typing.suffix) {
-    return props.typing.suffix;
-  } else {
-    return "|";
-  }
-});
-
-const _typing = computed(() => {
-  if (typeof props.typing === "boolean") {
-    return props.typing;
-  } else {
-    return true;
-  }
-});
-
-const onCompleteFunc = (self: Typed) => {
-  emits("onComplete", self);
-};
-
-// 定义三个点-加载中样式
-const dots = [1, 2, 3];
-</script>
-
 <style scoped lang="scss">
 .el-bubble {
   display: flex;
-  gap: 12px;
+  gap: var(--el-bubble-avatar-placeholder-gap);
 }
 
 .el-bubble-start {
@@ -158,6 +159,11 @@ const dots = [1, 2, 3];
       border-start-end-radius: calc(var(--el-border-radius-base) - 2px);
     }
   }
+}
+
+.el-bubble-avatar-placeholder {
+  width: var(--el-bubble-avatar-placeholder-width);
+  height: var(--el-bubble-avatar-placeholder-height);
 }
 
 .el-bubble-content-wrapper {

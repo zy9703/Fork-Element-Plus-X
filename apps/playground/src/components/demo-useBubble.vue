@@ -2,10 +2,18 @@
 <template>
   <div class="component-container">
     <div class="component-1">
-      <Bubble placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
-        step: 30,
-        suffix: '💗',
-      }" :is-markdown="true">
+      <Bubble
+        placement="start"
+        :content="content"
+        shape="corner"
+        variant="shadow"
+        :loading="loading"
+        :typing="{
+          speed: 2,
+          suffix: '💗',
+        }"
+        :is-markdown="true"
+      >
         <template #avatar>
           <el-avatar :size="32" :src="avatar" />
         </template>
@@ -23,7 +31,12 @@
             <el-button type="info" :icon="Refresh" size="small" circle />
             <el-button type="success" :icon="Search" size="small" circle />
             <el-button type="warning" :icon="Star" size="small" circle />
-            <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
+            <el-button
+              color="#626aef"
+              :icon="DocumentCopy"
+              size="small"
+              circle
+            />
           </div>
         </template>
       </Bubble>
@@ -64,7 +77,7 @@ console.log('Hello, world!');
   .component-1 {
     .footer-container {
       :deep() {
-        .el-button+.el-button {
+        .el-button + .el-button {
           margin-left: 8px;
         }
       }
