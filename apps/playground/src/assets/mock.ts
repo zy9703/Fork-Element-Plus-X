@@ -1,5 +1,5 @@
-import type { BubbleProps } from "../../../../packages/components/types/components/Bubble/type";
-import type { BubbleListProps } from "../../../../packages/components/types/components/BubbleList/type";
+import type { BubbleProps } from "vue-element-plus-x/types/components/Bubble/types";
+import type { BubbleListProps } from "vue-element-plus-x/types/components/BubbleListProps/types";
 
 let avatar =
   "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png";
