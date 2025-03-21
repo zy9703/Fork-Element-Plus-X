@@ -4,8 +4,9 @@ import path from "path";
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Element-Plus-X",
-  description: "一个 Vue3 + Element-Plus AI体验组件库",
+  description: '一个 Vue3 + Element-Plus AI体验组件库',
   // srcDir: "",
+  
   head: [["link", { rel: "icon", href: "/favicon.ico" }]],
   themeConfig: {
     // logo
