@@ -55,7 +55,7 @@ npm install vue-element-plus-x
 #### 最简单的聊天机器人实现
 
 ```vue
-import { BubbleList, Sender } from 'element-plus-x'
+import { BubbleList, Sender } from 'vue-element-plus-x'
 const list = [
   {
     content: 'Hello, Element Plus X',
