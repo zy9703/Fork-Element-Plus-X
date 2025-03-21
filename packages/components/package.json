@@ -1,6 +1,6 @@
 {
   "name": "vue-element-plus-x",
-  "version": "0.0.92",
+  "version": "0.0.93",
   "type": "module",
   "scripts": {
     "dev": "vite",
