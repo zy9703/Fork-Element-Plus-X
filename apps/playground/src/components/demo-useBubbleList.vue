@@ -56,7 +56,7 @@ import { messageArr, type MessageItem } from "@/assets/mock";
 import { BubbleList } from "vue-element-plus-x";
 import { onMounted, ref } from "vue";
 
-const bubbleItems = ref(messageArr);
+const bubbleItems = ref<MessageItem[]>(messageArr);
 
 const bubbleListRef = ref();
 const num = ref(0);
