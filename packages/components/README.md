@@ -1,5 +1,5 @@
 <div align="center">
-<img height="180" src="http://1.12.42.192:8755/element-plus-x.png" calss="element-plus-x-logo" />
+<img height="180" src="https://cdn.element-plus-x.com/element-plus-x.png" calss="element-plus-x-logo" />
 </div>
 
 <h1 align="center">🎉Element-Plus-X</h1>
@@ -18,11 +18,11 @@
 
 <div align="center">
 
-<img height="180" src="http://1.12.42.192:8755/bubble.png" calss="element-plus-x-bubble" />
+<img height="180" src="https://cdn.element-plus-x.com/bubble.png" calss="element-plus-x-bubble" />
 
-<img height="180" src="http://1.12.42.192:8755/bubbleList.png" calss="element-plus-x-bubbleList" />
+<img height="180" src="https://cdn.element-plus-x.com/bubbleList.png" calss="element-plus-x-bubbleList" />
 
-<img height="180" src="http://1.12.42.192:8755/sender.png" calss="element-plus-x-sender" />
+<img height="180" src="https://cdn.element-plus-x.com/sender.png" calss="element-plus-x-sender" />
 
 </div>
 
@@ -78,7 +78,7 @@ const list = [
 ### 微信交流群
 
 <div align="center">
-<img height="180" src="http://1.12.42.192:8755/vx.png" calss="element-plus-x-vx" />
+<img height="180" src="https://cdn.element-plus-x.com/vx.png" calss="element-plus-x-vx" />
 
 期待您的加入🥳🥳🥳
 
