@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types'
+import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
 // 在组件中初始化时

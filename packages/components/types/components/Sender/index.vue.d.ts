@@ -1,22 +1,17 @@
-interface Props {
-    placeholder?: string;
-    autosize?: {
-        minRows: number;
-        maxRows: number;
-    };
-    readOnly?: boolean;
-    disabled?: boolean;
-    loading?: boolean;
-    clearable?: boolean;
-    allowSpeech?: boolean;
-    submitType?: "enter" | "shiftEnter";
-    headerAnimationTimer?: number;
-    inputWidth?: string;
-}
+import { SenderProps } from './types.d.ts';
+type __VLS_Props = SenderProps;
 declare const value: import('vue').ModelRef<string, string, string, string>;
-type __VLS_Props = Props;
+declare function openHeader(): false | undefined;
+declare function closeHeader(): false | undefined;
+declare function startRecognition(): false | undefined;
+declare function stopRecognition(): void;
+declare function submit(): false | undefined;
+declare function cancel(): false | undefined;
+declare function clear(): false | undefined;
+declare function blur(): false | undefined;
+declare function focus(type?: string): false | undefined;
 type __VLS_PublicProps = {
-    "value"?: typeof value['value'];
+    'value'?: typeof value['value'];
 } & __VLS_Props;
 declare function __VLS_template(): {
     attrs: Partial<{}>;
@@ -29,20 +24,28 @@ declare function __VLS_template(): {
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import('vue').DefineComponent<__VLS_PublicProps, {
-    openHeader: () => false | undefined;
-    closeHeader: () => false | undefined;
-    clear: () => false | undefined;
-    blur: () => false | undefined;
-    focus: (type?: string) => false | undefined;
+    openHeader: typeof openHeader;
+    closeHeader: typeof closeHeader;
+    clear: typeof clear;
+    blur: typeof blur;
+    focus: typeof focus;
+    submit: typeof submit;
+    cancel: typeof cancel;
+    startRecognition: typeof startRecognition;
+    stopRecognition: typeof stopRecognition;
 }, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {
+    cancel: (...args: any[]) => void;
     submit: (...args: any[]) => void;
+    recordingChange: (...args: any[]) => void;
     "update:value": (value: string) => void;
 }, string, import('vue').PublicProps, Readonly<__VLS_PublicProps> & Readonly<{
+    onCancel?: ((...args: any[]) => any) | undefined;
     onSubmit?: ((...args: any[]) => any) | undefined;
+    onRecordingChange?: ((...args: any[]) => any) | undefined;
     "onUpdate:value"?: ((value: string) => any) | undefined;
 }>, {
     placeholder: string;
-    autosize: {
+    autoSize: {
         minRows: number;
         maxRows: number;
     };
