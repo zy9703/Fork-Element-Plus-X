@@ -93,7 +93,7 @@ function scrollToBubble() {
 
 onMounted(() => {
   setTimeout(() => {
-    bubbleItems.value.map((item) => {
+    bubbleItems.value.map((item: MessageItem) => {
       item.loading = false;
     });
   }, 3000);
