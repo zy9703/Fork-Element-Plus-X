@@ -55,17 +55,20 @@ npm install vue-element-plus-x
 #### 最简单的聊天机器人实现
 
 ```vue
-import { BubbleList, Sender } from 'vue-element-plus-x'
+<script>
+import { BubbleList, Sender } from "vue-element-plus-x";
 const list = [
   {
-    content: 'Hello, Element Plus X',
-    role: 'user',
+    content: "Hello, Element Plus X",
+    role: "user",
   },
-]
+];
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; height: 230px; justify-content: space-between;">
+  <div
+    style="display: flex; flex-direction: column; height: 230px; justify-content: space-between;"
+  >
     <BubbleList :list="list" />
     <Sender />
   </div>
