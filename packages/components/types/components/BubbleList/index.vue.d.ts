@@ -1,38 +1,52 @@
-import { BubbleProps } from '../Bubble/type';
-import { BubbleListProps } from './type';
-declare const _default: <T extends BubbleProps>(__VLS_props: NonNullable<Awaited<typeof __VLS_setup>>["props"], __VLS_ctx?: __VLS_PrettifyLocal<Pick<NonNullable<Awaited<typeof __VLS_setup>>, "attrs" | "emit" | "slots">>, __VLS_expose?: NonNullable<Awaited<typeof __VLS_setup>>["expose"], __VLS_setup?: Promise<{
-    props: __VLS_PrettifyLocal<Pick<Partial<{}> & Omit<{
-        readonly onOnComplete?: ((...args: any[]) => any) | undefined;
-    } & import('vue').VNodeProps & import('vue').AllowedComponentProps & import('vue').ComponentCustomProps, never>, "onOnComplete"> & BubbleListProps<T> & Partial<{}>> & import('vue').PublicProps;
-    expose(exposed: import('vue').ShallowUnwrapRef<{
-        scrollToTop: () => void;
-        scrollToBottom: () => void;
-        scrollToBubble: (index: number) => void;
-        scrollToBottomByTyping: () => void;
-    }>): void;
-    attrs: any;
+import { BubbleListItemProps, BubbleListProps } from './types.d.ts';
+type __VLS_Props = BubbleListProps<BubbleListItemProps>;
+declare function scrollToTop(): void;
+declare function scrollToBottom(): void;
+declare function scrollToBubble(index: number): void;
+declare function __VLS_template(): {
+    attrs: Partial<{}>;
     slots: {
         avatar?(_: {
-            item: T;
+            item: BubbleListItemProps;
         }): any;
         header?(_: {
-            item: T;
+            item: BubbleListItemProps;
         }): any;
         content?(_: {
-            item: T;
+            item: BubbleListItemProps;
         }): any;
         footer?(_: {
-            item: T;
+            item: BubbleListItemProps;
         }): any;
         loading?(_: {
-            item: T;
+            item: BubbleListItemProps;
         }): any;
     };
-    emit: (event: "onComplete", ...args: any[]) => void;
-}>) => import('vue').VNode & {
-    __ctx?: Awaited<typeof __VLS_setup>;
+    refs: {
+        scrollContainer: HTMLDivElement;
+    };
+    rootEl: HTMLDivElement;
 };
+type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
+declare const __VLS_component: import('vue').DefineComponent<__VLS_Props, {
+    scrollToTop: typeof scrollToTop;
+    scrollToBottom: typeof scrollToBottom;
+    scrollToBubble: typeof scrollToBubble;
+}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {
+    complete: (...args: any[]) => void;
+}, string, import('vue').PublicProps, Readonly<__VLS_Props> & Readonly<{
+    onComplete?: ((...args: any[]) => any) | undefined;
+}>, {
+    list: BubbleListItemProps[];
+    maxHeight: string;
+    triggerIndices: "only-last" | "all" | number[];
+}, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {
+    scrollContainer: HTMLDivElement;
+}, HTMLDivElement>;
+declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
-type __VLS_PrettifyLocal<T> = {
-    [K in keyof T]: T[K];
-} & {};
+type __VLS_WithTemplateSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};

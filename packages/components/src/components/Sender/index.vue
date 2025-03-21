@@ -1,6 +1,6 @@
 <!-- Sender 输入框组件 -->
 <script setup lang="ts">
-import type { SenderProps } from './types'
+import type { SenderProps } from './types.d.ts'
 import { defineEmits, defineModel, defineProps, defineSlots, ref, getCurrentInstance, computed } from 'vue'
 import {
   ClearButton,

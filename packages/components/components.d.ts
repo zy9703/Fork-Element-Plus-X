@@ -11,6 +11,7 @@ declare module 'vue' {
     Bubble: typeof import('./src/components/Bubble/index.vue')['default']
     BubbleList: typeof import('./src/components/BubbleList/index.vue')['default']
     ClearButton: typeof import('./src/components/Sender/components/ClearButton/index.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
@@ -20,6 +21,6 @@ declare module 'vue' {
     Sender: typeof import('./src/components/Sender/index.vue')['default']
     SpeechButton: typeof import('./src/components/Sender/components/SpeechButton/index.vue')['default']
     SpeechLoadingButton: typeof import('./src/components/Sender/components/SpeechLoadingButton/index.vue')['default']
-    Typography: typeof import('./src/components/Typography/index.vue')['default']
+    Typewriter: typeof import('./src/components/Typewriter/index.vue')['default']
   }
 }
