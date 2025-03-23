@@ -14,13 +14,19 @@
 <img src="https://cdn.element-plus-x.com/demo.webp" calss="element-plus-x-bubble" />&emsp;
 </div>
 
+<div align="center">
+
+[English](./English-README.md) | **简体中文**
+
+</div>&emsp;
+
 # 🚀 Element-Plus-X
 **开箱即用的企业级 AI 组件库（基于 Vue 3 + Element-Plus）**
 
 ## 📢 快速链接
-| 资源类型         | <div style="width: 300px;" >链接</div>                                                                 |
-|------------------|----------------------------------------------------------------------|
-| **文档**         | [📖 开发文档](https://element-plus-x.com)                             |
+| 资源类型         | <div style="width: 300px;" >链接</div>   |
+|------------------|-----------------------------------------------|
+| **文档**         | [📖 开发文档](https://element-plus-x.com)       |
 | **在线演示**     | [👁️ 在线预览](https://v.element-plus-x.com)                         |
 | **代码仓库**     | [🐙 GitHub](https://github.com/HeJiaYue520/Element-Plus-X)           |
 | **NPM 包**       | [📦 npm](https://www.npmjs.com/package/vue-element-plus-x)           |
@@ -31,7 +37,7 @@
 - 🚀 **零配置集成**：基于 Element-Plus 设计体系，开箱即用
 - 📦 **按需加载**：提供 Tree Shaking 优化
 
-## 📦 安装
+## 🔎  安装
 ```bash
 # NPM
 npm install vue-element-plus-x
