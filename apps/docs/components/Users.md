@@ -14,12 +14,6 @@
 <img src="https://cdn.element-plus-x.com/demo.webp" calss="element-plus-x-bubble" />&emsp;
 </div>
 
-<div align="center">
-
-[English](./English-README.md) | **简体中文**
-
-</div>&emsp;
-
 # 🚀 Element-Plus-X
 **开箱即用的企业级 AI 组件库（基于 Vue 3 + Element-Plus）**
 
