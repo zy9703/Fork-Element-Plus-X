@@ -26,30 +26,30 @@ npm i vue-element-plus-x
 在你的 Vue 3 项目中引入 `Bubble` 组件：
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Bubble } from 'vue-element-plus-x'
+
+const yourContent = ref('This is a bubble content.')
+</script>
+
 <template>
   <Bubble :content="yourContent" :typing="true" />
 </template>
-
-<script setup>
-import { Bubble } from "vue-element-plus-x";
-import { ref } from "vue";
-
-const yourContent = ref("This is a bubble content.");
-</script>
 ```
 
 ## 四、组件属性
 
 | 属性名       | 类型              | 默认值   | 说明                                                                                                              |
 | ------------ | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `content`    | String            | ''       | 气泡内要展示的文本内容，可与 `slot` 配合使用。                                                                    |
-| `placement`  | String            | 'start'  | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。                                                   |
-| `loading`    | Boolean           | false    | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。                                                            |
-| `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。                                                     |
+| `content`    | String            | ''       | 气泡内要展示的文本内容，可与 `slot` 配合使用。        |
+| `placement`  | String            | 'start'  | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。    |
+| `loading`    | Boolean           | false    | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。       |
+| `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。     |
 | `variant`    | String            | 'filled' | 气泡的样式变体，可选值为 `'filled'`（填充）、`'borderless'`（无边框）、`'outlined'`（轮廓）、`'shadow'`（阴影）。 |
-| `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。                                                                     |
-| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `speed`（打字速度 越小越快）和 `suffix`（打字光标后缀内容）。                  |
-| `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。                                                                                              |
+| `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。     |
+| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `speed`（打字速度 越小越快）和 `suffix`（打字光标后缀内容）。  |
+| `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。   |
 
 ## 五、组件事件
 
@@ -67,7 +67,7 @@ const yourContent = ref("This is a bubble content.");
 <template>
   <Bubble>
     <template #avatar>
-      <img src="your-avatar-url" alt="Avatar" />
+      <img src="your-avatar-url" alt="Avatar">
     </template>
   </Bubble>
 </template>
@@ -137,8 +137,8 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble placement="start" :content="'Left bubble content'" />
-  <Bubble placement="end" :content="'Right bubble content'" />
+  <Bubble placement="start" content="Left bubble content" />
+  <Bubble placement="end" content="Right bubble content" />
 </template>
 ```
 
@@ -148,11 +148,11 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble shape="round" variant="shadow" :content="'Rounded shadow bubble'" />
+  <Bubble shape="round" variant="shadow" content="Rounded shadow bubble" />
   <Bubble
     shape="corner"
     variant="outlined"
-    :content="'Cornered outlined bubble'"
+    content="Cornered outlined bubble"
   />
 </template>
 ```
@@ -165,7 +165,7 @@ const yourContent = ref("This is a bubble content.");
 <template>
   <Bubble
     :typing="{ speed: 3, suffix: '>' }"
-    :content="'Typing with custom settings'"
+    content="Typing with custom settings"
   />
 </template>
 ```
@@ -176,7 +176,7 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble :loading="true" :content="'Loading...'" />
+  <Bubble :loading="true" content="Loading..." />
   <Bubble :loading="true">
     <template #loading>
       <div>Custom loading spinner...</div>

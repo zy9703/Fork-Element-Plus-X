@@ -26,30 +26,30 @@ npm i vue-element-plus-x
 在你的 Vue 3 项目中引入 `BubbleList` 组件：
 
 ```vue
-<template>
-  <BubbleList :list="list" :max-height="'600px'">
-    <template #avatar="{ item }">
-      <img :src="item.avatarUrl" alt="Avatar" />
-    </template>
-  </BubbleList>
-</template>
-
 <script setup>
-import { BubbleList } from "vue-element-plus-x";
-import { ref } from "vue";
+import { ref } from 'vue'
+import { BubbleList } from 'vue-element-plus-x'
 
 const list = ref([
   {
-    content: "Hello!",
-    placement: "start",
+    content: 'Hello!',
+    placement: 'start',
     loading: false,
-    shape: "round",
-    variant: "filled",
+    shape: 'round',
+    variant: 'filled',
     isMarkdown: false,
     typing: false,
   },
-]);
+])
 </script>
+
+<template>
+  <BubbleList :list="list" max-height="600px">
+    <template #avatar="{ item }">
+      <img :src="item.avatarUrl" alt="Avatar">
+    </template>
+  </BubbleList>
+</template>
 ```
 
 ## 四、组件属性
@@ -73,7 +73,7 @@ const list = ref([
 
 ```vue
 <template #avatar="{ item }">
-  <img :src="item.avatarUrl" alt="Avatar" />
+  <img :src="item.avatarUrl" alt="Avatar">
 </template>
 ```
 

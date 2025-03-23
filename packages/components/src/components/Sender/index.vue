@@ -1,7 +1,6 @@
 <!-- Sender 输入框组件 -->
 <script setup lang="ts">
 import type { SenderProps } from './types.d.ts'
-import { defineEmits, defineModel, defineProps, defineSlots, ref, getCurrentInstance, computed } from 'vue'
 import {
   ClearButton,
   LoadingButton,
@@ -336,7 +335,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .el-sender {
   width: 100%;
   display: flex;

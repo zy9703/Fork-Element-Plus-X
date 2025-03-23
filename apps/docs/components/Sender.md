@@ -26,15 +26,32 @@ npm i vue-element-plus-x
 在你的 Vue 3 项目中引入 `Sender` 组件：
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Sender } from 'vue-element-plus-x'
+
+const inputValue = ref('')
+const isLoading = ref(false)
+
+function handleSubmit() {
+  console.log('提交的内容：', inputValue.value)
+  isLoading.value = true
+  setTimeout(() => {
+    isLoading.value = false
+    inputValue.value = '自定义提交后的操作===> 提交成功'
+  }, 2000)
+}
+</script>
+
 <template>
   <Sender
-    allowSpeech
-    clearable
-    submitType="shiftEnter"
     v-model:value="inputValue"
-    @submit="handleSubmit"
-    :placeholder="'自定义 placeholder'"
+    allow-speech
+    clearable
+    submit-type="shiftEnter"
+    placeholder="自定义 placeholder"
     :loading="isLoading"
+    @submit="handleSubmit"
   >
     <!-- 自定义头部 -->
     <template #header>
@@ -46,23 +63,6 @@ npm i vue-element-plus-x
     </template>
   </Sender>
 </template>
-
-<script setup>
-import { Sender } from "vue-element-plus-x";
-import { ref } from "vue";
-
-const inputValue = ref("");
-const isLoading = ref(false);
-
-const handleSubmit = () => {
-  console.log("提交的内容：", inputValue.value);
-  isLoading.value = true;
-  setTimeout(() => {
-    isLoading.value = false;
-    inputValue.value = "自定义提交后的操作===> 提交成功";
-  }, 2000);
-};
-</script>
 ```
 
 ## 四、组件属性
@@ -94,7 +94,9 @@ const handleSubmit = () => {
     <template #header>
       <div class="header-self-wrap">
         <div class="header-self-title">
-          <div class="header-left">自定义头部标题</div>
+          <div class="header-left">
+            自定义头部标题
+          </div>
           <div class="header-right">
             <el-button @click.stop="closeHeader">
               <el-icon><CircleClose /></el-icon>
@@ -102,7 +104,9 @@ const handleSubmit = () => {
             </el-button>
           </div>
         </div>
-        <div class="header-self-content">自定义头部内容</div>
+        <div class="header-self-content">
+          自定义头部内容
+        </div>
       </div>
     </template>
   </Sender>
@@ -141,16 +145,18 @@ const handleSubmit = () => {
     <template #action-list>
       <div class="action-list-self-wrap">
         <span>自定义操作列表</span>
-        <el-button dark type="success" plain @click="focus('start')"
-          >文本最前方</el-button
-        >
-        <el-button dark type="success" plain @click="focus('end')"
-          >文本最后方</el-button
-        >
-        <el-button dark type="success" plain @click="focus('all')"
-          >整个文本</el-button
-        >
-        <el-button dark type="success" plain @click="blur">取消焦点</el-button>
+        <el-button dark type="success" plain @click="focus('start')">
+          文本最前方
+        </el-button>
+        <el-button dark type="success" plain @click="focus('end')">
+          文本最后方
+        </el-button>
+        <el-button dark type="success" plain @click="focus('all')">
+          整个文本
+        </el-button>
+        <el-button dark type="success" plain @click="blur">
+          取消焦点
+        </el-button>
       </div>
     </template>
   </Sender>
@@ -184,30 +190,38 @@ const handleSubmit = () => {
 通过调用 `focus` 方法可以控制输入框的焦点位置，调用 `blur` 方法可以取消焦点。
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Sender } from 'vue-element-plus-x'
+
+const senderRef = ref(null)
+
+function focus(type) {
+  senderRef.value.focus(type)
+}
+
+function blur() {
+  senderRef.value.blur()
+}
+</script>
+
 <template>
   <div>
-    <el-button @click="focus('start')">文本最前方</el-button>
-    <el-button @click="focus('end')">文本最后方</el-button>
-    <el-button @click="focus('all')">整个文本</el-button>
-    <el-button @click="blur">取消焦点</el-button>
+    <el-button @click="focus('start')">
+      文本最前方
+    </el-button>
+    <el-button @click="focus('end')">
+      文本最后方
+    </el-button>
+    <el-button @click="focus('all')">
+      整个文本
+    </el-button>
+    <el-button @click="blur">
+      取消焦点
+    </el-button>
     <Sender ref="senderRef" />
   </div>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { Sender } from "vue-element-plus-x";
-
-const senderRef = ref(null);
-
-const focus = (type) => {
-  senderRef.value.focus(type);
-};
-
-const blur = () => {
-  senderRef.value.blur();
-};
-</script>
 ```
 
 ### 2. 自定义内容
@@ -235,20 +249,20 @@ const blur = () => {
 输入框支持按 `Shift + Enter` 提交内容，提交时会触发 `submit` 事件。
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Sender } from 'vue-element-plus-x'
+
+const inputValue = ref('')
+
+function handleSubmit() {
+  console.log('提交的内容：', inputValue.value)
+}
+</script>
+
 <template>
   <Sender v-model:value="inputValue" @submit="handleSubmit" />
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { Sender } from "vue-element-plus-x";
-
-const inputValue = ref("");
-
-const handleSubmit = () => {
-  console.log("提交的内容：", inputValue.value);
-};
-</script>
 ```
 
 ### 4. 加载状态
@@ -256,24 +270,26 @@ const handleSubmit = () => {
 通过设置 `loading` 属性为 `true` 可以显示加载状态，模拟提交处理过程。
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Sender } from 'vue-element-plus-x'
+
+const isLoading = ref(false)
+
+function startLoading() {
+  isLoading.value = true
+  setTimeout(() => {
+    isLoading.value = false
+  }, 2000)
+}
+</script>
+
 <template>
   <Sender :loading="isLoading" />
-  <el-button @click="startLoading">开始加载</el-button>
+  <el-button @click="startLoading">
+    开始加载
+  </el-button>
 </template>
-
-<script setup>
-import { ref } from "vue";
-import { Sender } from "vue-element-plus-x";
-
-const isLoading = ref(false);
-
-const startLoading = () => {
-  isLoading.value = true;
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 2000);
-};
-</script>
 ```
 
 ## 九、注意事项

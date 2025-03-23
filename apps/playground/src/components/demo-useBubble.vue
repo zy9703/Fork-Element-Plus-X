@@ -1,4 +1,30 @@
 <!-- home 首页-使用 Bubble 组件 -->
+<script setup lang="ts">
+import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
+
+const avatar = ref(
+  'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
+)
+const loading = ref(true)
+const content = ref('')
+
+onMounted(() => {
+  setTimeout(() => {
+    content.value = `
+# 标题
+这是一个 Markdown 示例。
+- 列表项 1
+- 列表项 2
+**粗体文本** 和 *斜体文本*
+\`\`\`javascript
+console.log('Hello, world!');
+\`\`\`
+`.trim()
+    loading.value = false
+  }, 2000)
+})
+</script>
+
 <template>
   <div class="component-container">
     <div class="component-1">
@@ -9,7 +35,7 @@
         variant="shadow"
         :loading="loading"
         :typing="{
-          speed: 2,
+          step: 2,
           suffix: '💗',
         }"
         :is-markdown="true"
@@ -19,7 +45,9 @@
         </template>
 
         <template #header>
-          <div class="header-container">我是头部内容</div>
+          <div class="header-container">
+            我是头部内容
+          </div>
         </template>
 
         <!-- <template #content>
@@ -43,34 +71,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { Bubble } from "vue-element-plus-x";
-import { Refresh, Search, Star, DocumentCopy } from "@element-plus/icons-vue";
-
-const avatar = ref(
-  "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-);
-const loading = ref(true);
-const content = ref("");
-
-onMounted(() => {
-  setTimeout(() => {
-    content.value = `
-# 标题
-这是一个 Markdown 示例。
-- 列表项 1
-- 列表项 2
-**粗体文本** 和 *斜体文本*
-\`\`\`javascript
-console.log('Hello, world!');
-\`\`\`
-`.trim();
-    loading.value = false;
-  }, 2000);
-});
-</script>
 
 <style scoped lang="scss">
 .component-container {

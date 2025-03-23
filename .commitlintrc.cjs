@@ -25,7 +25,7 @@ module.exports = {
   prompt: {
     alias: { fd: 'docs: fix typos' },
     messages: {
-      type: "选择你要提交的类型 | Select the type of change that you're committing:",
+      type: '选择你要提交的类型 | Select the type of change that you\'re committing:',
       scope:
         '选择一个提交范围（可选）| Denote the SCOPE of this change (optional):',
       customScope: '请输入自定义的提交范围 | Denote the SCOPE of this change:',
@@ -113,4 +113,4 @@ module.exports = {
     defaultScope: '',
     defaultSubject: '',
   },
-};
+}

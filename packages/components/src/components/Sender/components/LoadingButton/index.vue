@@ -13,7 +13,7 @@ const emits = defineEmits(['cancel'])
   </div>
 </template>
 
-<style scoped lang="less">
+<style scoped lang="scss">
 .el-send-button {
   :deep(.el-button) {
     padding: 0;

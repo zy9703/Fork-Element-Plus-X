@@ -10,7 +10,9 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
+      imports: ["vue"],
       resolvers: [ElementPlusResolver()],
+      dts: 'src/auto-import.d.ts'
     }),
     Components({
       resolvers: [ElementPlusResolver()],

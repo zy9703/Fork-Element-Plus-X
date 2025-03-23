@@ -1,6 +1,6 @@
+import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
-import plugins from './.build/plugins';
-import { resolve } from 'node:path';
+import plugins from './.build/plugins'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,22 +13,22 @@ export default defineConfig({
       fileName: (format) => {
         return `${format}/index.js`
       },
-      cssFileName: 'styles.css'
+      cssFileName: 'styles.css',
     },
     rollupOptions: {
       external: ['vue', 'vue/jsx-runtime'],
       output: {
         globals: {
-          vue: 'Vue'
+          vue: 'Vue',
         },
-      }
+      },
     },
     emptyOutDir: false,
     sourcemap: true,
     minify: 'terser',
-    cssCodeSplit: false
+    cssCodeSplit: false,
   },
   esbuild: {
-    drop: ['console', 'debugger']
-  }
+    drop: ['console', 'debugger'],
+  },
 })

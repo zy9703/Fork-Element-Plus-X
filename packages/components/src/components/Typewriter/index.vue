@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
@@ -6,8 +7,6 @@ import MarkdownIt from 'markdown-it'
 import Prism from 'prismjs'
 import 'github-markdown-css'
 import 'prismjs/themes/prism.css'
-import type {ComputedRef} from 'vue'
-import { computed, defineExpose, defineProps, nextTick, onUnmounted, ref, toRef, watch } from 'vue'
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   isMarkdown: false,

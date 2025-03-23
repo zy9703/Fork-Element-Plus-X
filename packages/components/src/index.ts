@@ -1,4 +1,17 @@
-export {default as  Bubble} from './components/Bubble/index.vue';
-export {default as  BubbleList} from './components/BubbleList/index.vue';
-export {default as  Sender} from './components/Sender/index.vue';
-export {default as  Typewriter} from './components/Typewriter/index.vue';
+import type { App, Plugin } from 'vue'
+import Bubble from './components/Bubble/index.vue'
+import BubbleList from './components/BubbleList/index.vue'
+import Sender from './components/Sender/index.vue'
+import Typewriter from './components/Typewriter/index.vue'
+
+export * from './components'
+const ElementPlusX: Plugin = {
+  install(app: App) {
+    app.component('Bubble', Bubble)
+    app.component('BubbleList', BubbleList)
+    app.component('Sender', Sender)
+    app.component('Typewriter', Typewriter)
+  },
+}
+
+export default ElementPlusX

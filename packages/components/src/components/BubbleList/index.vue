@@ -1,10 +1,9 @@
 <script setup lang="ts" generic="T extends BubbleProps">
+import type { BubbleProps } from '../Bubble/types'
 import type { TypewriterInstance } from '../Typewriter/types.d.ts'
 import type { BubbleListProps } from './types.d.ts'
-import { computed, ref, watch, nextTick } from 'vue'
 
 import Bubble from '../Bubble/index.vue'
-import type { BubbleProps } from '../Bubble/types';
 
 const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   list: () => [] as T[],

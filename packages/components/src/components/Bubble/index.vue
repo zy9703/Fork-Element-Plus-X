@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { TypewriterInstance } from '../Typewriter/types.d.ts'
-import type { TypingConfig } from '../Typewriter/types.d.ts'
+import type { ComputedRef } from 'vue'
+import type { TypewriterInstance, TypingConfig } from '../Typewriter/types.d.ts'
+
 import type { BubbleProps } from './types.d.ts'
-import { computed, withDefaults, onUnmounted, ref, watch, defineExpose } from 'vue'
-import type{ ComputedRef } from 'vue'
 import Typewriter from '../Typewriter/index.vue'
 
 const props = withDefaults(defineProps<BubbleProps>(), {

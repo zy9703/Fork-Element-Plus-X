@@ -1,4 +1,45 @@
 <!-- home 首页 - 使用 BubbleList 组件 -->
+<script setup lang="ts">
+import { CircleClose, Link } from '@element-plus/icons-vue'
+
+const senderRef = ref()
+const value = ref('')
+const loading = ref(false)
+const showHeaderFlog = ref(false)
+
+function openCloseHeader() {
+  if (!showHeaderFlog.value) {
+    senderRef.value.openHeader()
+  }
+  else {
+    senderRef.value.closeHeader()
+  }
+  showHeaderFlog.value = !showHeaderFlog.value
+}
+
+function closeHeader() {
+  showHeaderFlog.value = false
+  senderRef.value.closeHeader()
+}
+
+function submit() {
+  console.log('submit 提交参数', value.value)
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+    value.value = '自定义提交后的操作===> 提交成功'
+  }, 2000)
+}
+
+function blur() {
+  senderRef.value.blur()
+}
+
+function focus(type = 'all') {
+  senderRef.value.focus(type)
+}
+</script>
+
 <template>
   <div class="component-container">
     <div class="top-wrap">
@@ -21,19 +62,21 @@
     <div class="component-1">
       <Sender
         ref="senderRef"
-        allowSpeech
-        clearable
-        submitType="shiftEnter"
         v-model:value="value"
-        @submit="submit"
-        :placeholder="'自定义 placeholder'"
+        allow-speech
+        clearable
+        submit-type="shiftEnter"
+        placeholder="自定义 placeholder"
         :loading="loading"
+        @submit="submit"
       >
         <!-- 自定义头部 -->
         <template #header>
           <div class="header-self-wrap">
             <div class="header-self-title">
-              <div class="header-left">自定义头部标题</div>
+              <div class="header-left">
+                自定义头部标题
+              </div>
               <div class="header-right">
                 <el-button @click.stop="closeHeader">
                   <el-icon><CircleClose /></el-icon>
@@ -41,7 +84,9 @@
                 </el-button>
               </div>
             </div>
-            <div class="header-self-content">自定义头部内容</div>
+            <div class="header-self-content">
+              自定义头部内容
+            </div>
           </div>
         </template>
 
@@ -81,48 +126,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { Sender } from "vue-element-plus-x";
-import { CircleClose, Link } from "@element-plus/icons-vue";
-
-const senderRef = ref();
-const value = ref("");
-const loading = ref(false);
-const showHeaderFlog = ref(false);
-
-function openCloseHeader() {
-  if (!showHeaderFlog.value) {
-    senderRef.value.openHeader();
-  } else {
-    senderRef.value.closeHeader();
-  }
-  showHeaderFlog.value = !showHeaderFlog.value;
-}
-
-function closeHeader() {
-  showHeaderFlog.value = false;
-  senderRef.value.closeHeader();
-}
-
-function submit() {
-  console.log("submit 提交参数", value.value);
-  loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    value.value = "自定义提交后的操作===> 提交成功";
-  }, 2000);
-}
-
-function blur() {
-  senderRef.value.blur();
-}
-
-function focus(type = "all") {
-  senderRef.value.focus(type);
-}
-</script>
 
 <style scoped lang="scss">
 .component-container {

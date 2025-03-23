@@ -26,16 +26,16 @@ npm i vue-element-plus-x
 在你的 Vue 3 项目中引入 `Bubble` 组件：
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import { Bubble } from 'vue-element-plus-x'
+
+const yourContent = ref('This is a bubble content.')
+</script>
+
 <template>
   <Bubble :content="yourContent" :typing="true" />
 </template>
-
-<script setup>
-import { Bubble } from "vue-element-plus-x";
-import { ref } from "vue";
-
-const yourContent = ref("This is a bubble content.");
-</script>
 ```
 
 ## 四、组件属性
@@ -67,7 +67,7 @@ const yourContent = ref("This is a bubble content.");
 <template>
   <Bubble>
     <template #avatar>
-      <img src="your-avatar-url" alt="Avatar" />
+      <img src="your-avatar-url" alt="Avatar">
     </template>
   </Bubble>
 </template>
@@ -137,8 +137,8 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble placement="start" :content="'Left bubble content'" />
-  <Bubble placement="end" :content="'Right bubble content'" />
+  <Bubble placement="start" content="Left bubble content" />
+  <Bubble placement="end" content="Right bubble content" />
 </template>
 ```
 
@@ -148,11 +148,11 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble shape="round" variant="shadow" :content="'Rounded shadow bubble'" />
+  <Bubble shape="round" variant="shadow" content="Rounded shadow bubble" />
   <Bubble
     shape="corner"
     variant="outlined"
-    :content="'Cornered outlined bubble'"
+    content="Cornered outlined bubble"
   />
 </template>
 ```
@@ -165,7 +165,7 @@ const yourContent = ref("This is a bubble content.");
 <template>
   <Bubble
     :typing="{ speed: 3, suffix: '>' }"
-    :content="'Typing with custom settings'"
+    content="Typing with custom settings"
   />
 </template>
 ```
@@ -176,7 +176,7 @@ const yourContent = ref("This is a bubble content.");
 
 ```vue
 <template>
-  <Bubble :loading="true" :content="'Loading...'" />
+  <Bubble :loading="true" content="Loading..." />
   <Bubble :loading="true">
     <template #loading>
       <div>Custom loading spinner...</div>

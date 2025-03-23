@@ -25,16 +25,16 @@ npm i vue-element-plus-x
 在你的 Vue 3 项目中引入 `Typography` 组件：
 
 ```vue
-<template>
-  <Typography :content="yourContent" :isMarkdown="true" :typing="true" />
-</template>
-
 <script setup>
-import { Typography } from "vue-element-plus-x";
-import { ref } from "vue";
+import { ref } from 'vue'
+import { Typography } from 'vue-element-plus-x'
 
-const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
+const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.')
 </script>
+
+<template>
+  <Typography :content="yourContent" :is-markdown="true" :typing="true" />
+</template>
 ```
 
 ## 四、组件属性
@@ -58,16 +58,16 @@ const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 ---
 
 ```vue
-<template>
-  <Typography :content="yourContent" :isMarkdown="true" :typing="true" />
-</template>
-
 <script setup>
-import Typography from "vue-element-plus-x";
-import { ref } from "vue";
+import { ref } from 'vue'
+import Typography from 'vue-element-plus-x'
 
-const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
+const yourContent = ref('# Hello, World!\nThis is a **Markdown** example.')
 </script>
+
+<template>
+  <Typography :content="yourContent" :is-markdown="true" :typing="true" />
+</template>
 ```
 
 ## 六、功能详细介绍
@@ -77,16 +77,16 @@ const yourContent = ref("# Hello, World!\nThis is a **Markdown** example.");
 当 `isMarkdown` 为 `false` 时，组件将展示普通文本的打字效果。你可以通过设置 `typing` 为 `true` 来开启打字动画，同时可以调整 `step` 和 `suffix` 来控制打字速度和光标后缀。
 
 ```vue
+<script setup>
+import { ref } from 'vue'
+import Typography from 'vue-element-plus-x'
+
+const plainText = ref('This is a plain text example.')
+</script>
+
 <template>
   <Typography :content="plainText" :typing="true" />
 </template>
-
-<script setup>
-import Typography from "vue-element-plus-x";
-import { ref } from "vue";
-
-const plainText = ref("This is a plain text example.");
-</script>
 ```
 
 ### 2. Markdown 内容展示与打字效果
@@ -94,13 +94,9 @@ const plainText = ref("This is a plain text example.");
 当 `isMarkdown` 为 `true` 时，组件会将 `content` 中的 Markdown 内容渲染为 HTML，并支持代码高亮。同样，你可以通过设置 `typing` 为 `true` 来开启打字动画。
 
 ```vue
-<template>
-  <Typography :content="markdownText" :isMarkdown="true" :typing="true" />
-</template>
-
 <script setup>
-import Typography from "vue-element-plus-x";
-import { ref } from "vue";
+import { ref } from 'vue'
+import Typography from 'vue-element-plus-x'
 
 const markdownText = ref(`
 # Markdown Example
@@ -112,8 +108,12 @@ function hello() {
   console.log('Hello, World!');
 }
 \`\`\`
-`);
+`)
 </script>
+
+<template>
+  <Typography :content="markdownText" :is-markdown="true" :typing="true" />
+</template>
 ```
 
 ### 3. 打字完成回调
@@ -121,20 +121,20 @@ function hello() {
 当打字动画完成时，组件会触发 `onComplete` 事件，你可以通过监听该事件来执行一些操作。
 
 ```vue
-<template>
-  <Typography :content="text" :typing="true" @onComplete="handleComplete" />
-</template>
-
 <script setup>
-import Typography from "vue-element-plus-x";
-import { ref } from "vue";
+import { ref } from 'vue'
+import Typography from 'vue-element-plus-x'
 
-const text = ref("Typing is fun!");
+const text = ref('Typing is fun!')
 
-const handleComplete = (self) => {
-  console.log("Typing completed!", self);
-};
+function handleComplete(self) {
+  console.log('Typing completed!', self)
+}
 </script>
+
+<template>
+  <Typography :content="text" :typing="true" @on-complete="handleComplete" />
+</template>
 ```
 
 ## 七、样式说明
