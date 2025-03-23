@@ -18,6 +18,9 @@
     "lint:fix": "oxlint ./packages --fix && eslint . --fix",
     "lint:ic": "eslint --inspect-config"
   },
+  "dependencies": {
+    "esno": "^4.8.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^4.10.2",
     "@changesets/cli": "^2.28.1",
@@ -41,8 +44,5 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
-  },
-  "dependencies": {
-    "esno": "^4.8.0"
   }
 }
