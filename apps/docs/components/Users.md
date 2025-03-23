@@ -1,25 +1,27 @@
 <div align="center">
   <a href="https://element-plus-x.com">
-    <img src="https://cdn.element-plus-x.com/element-plus-x.png" alt="Element-Plus-X" width="360" class="logo" />
-  </a>
+    <img src="https://cdn.element-plus-x.com/element-plus-x.png" alt="Element-Plus-X" width="180" class="logo" />
+  </a>&emsp;
+
+  <a href="https://github.com/HeJiaYue520/Element-Plus-X" target="_blank"><img align=center src="https://img.shields.io/github/stars/HeJiaYue520?style=social&logoColor=%231677ff&labelColor=rgb(89, 89, 89)&color=rgb(3, 126, 187)" style="margin: 0 5px" /></a>
 </div>
 
 <div align="center">
   <a href="https://github.com/HeJiaYue520" target="_blank"><img align=center src="https://img.shields.io/badge/author-HeJiaYue520-%231677ff?style=plastic"/></a>&emsp;
 
-  [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/HeJiaYue520/Element-Plus-X/blob/main/LICENSE)&emsp;[![npm version](https://img.shields.io/npm/v/vue-element-plus-x)](https://www.npmjs.com/package/vue-element-plus-x)&emsp;<a href="https://github.com/HeJiaYue520/Element-Plus-X" target="_blank"><img align=center src="https://img.shields.io/github/stars/HeJiaYue520?style=social&logoColor=%231677ff&labelColor=rgb(89, 89, 89)&color=rgb(3, 126, 187)" style="margin: 0 5px" /></a>&emsp;[![npm](https://img.shields.io/npm/dm/vue-element-plus-x.svg)](https://www.npmjs.com/package/vue-element-plus-x)
+  [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/HeJiaYue520/Element-Plus-X/blob/main/LICENSE)&emsp;[![npm version](https://img.shields.io/npm/v/vue-element-plus-x)](https://www.npmjs.com/package/vue-element-plus-x)&emsp;[![npm](https://img.shields.io/npm/dm/vue-element-plus-x.svg)](https://www.npmjs.com/package/vue-element-plus-x)
 
 </div>
 
 <div align="center">
-<img height="180" src="https://cdn.element-plus-x.com/demo.webp" calss="element-plus-x-bubble" />
+<img src="https://cdn.element-plus-x.com/demo.webp" calss="element-plus-x-bubble" />&emsp;
 </div>
 
 # 🚀 Element-Plus-X
 **开箱即用的企业级 AI 组件库（基于 Vue 3 + Element-Plus）**
 
 ## 📢 快速链接
-| 资源类型         | 链接                                                                 |
+| 资源类型         | <div style="width: 300px;" >链接</div>                                                                 |
 |------------------|----------------------------------------------------------------------|
 | **文档**         | [📖 开发文档](https://element-plus-x.com)                             |
 | **在线演示**     | [👁️ 在线预览](https://v.element-plus-x.com)                         |
