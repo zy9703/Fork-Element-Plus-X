@@ -41,5 +41,8 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
+  },
+  "dependencies": {
+    "esno": "^4.8.0"
   }
 }
