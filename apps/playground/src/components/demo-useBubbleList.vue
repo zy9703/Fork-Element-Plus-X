@@ -108,12 +108,13 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .component-container {
-  width: 1200px;
-  height: calc(100vh - 64px);
+  background-color: white;
   padding: 12px;
+  border-radius: 15px;
 
   .btn-list {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
   }
 

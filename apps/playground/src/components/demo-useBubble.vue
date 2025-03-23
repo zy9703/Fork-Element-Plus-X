@@ -74,6 +74,9 @@ console.log('Hello, world!');
 
 <style scoped lang="scss">
 .component-container {
+  background-color: white;
+  padding: 12px;
+  border-radius: 15px;
   .component-1 {
     .footer-container {
       :deep() {

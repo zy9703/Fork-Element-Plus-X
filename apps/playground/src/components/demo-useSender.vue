@@ -6,6 +6,7 @@ const senderRef = ref()
 const value = ref('')
 const loading = ref(false)
 const showHeaderFlog = ref(false)
+const time = ref<null | number>(null)
 
 function openCloseHeader() {
   if (!showHeaderFlog.value) {
@@ -24,11 +25,21 @@ function closeHeader() {
 
 function submit() {
   console.log('submit 提交参数', value.value)
+  ElMessage.warning('提交中,💌 注意组件内置提交按钮的变化 ~')
   loading.value = true
-  setTimeout(() => {
+  time.value = setTimeout(() => {
     loading.value = false
-    value.value = '自定义提交后的操作===> 提交成功'
-  }, 2000)
+    ElMessage.success('提交成功')
+  }, 3500)
+}
+
+// 取消提交
+function cancel() {
+  ElMessage.info('取消提交')
+  loading.value = false
+  if (time.value)
+    clearTimeout(time.value)
+  time.value = null
 }
 
 function blur() {
@@ -55,6 +66,25 @@ function focus(type = 'all') {
         </el-button>
         <el-button dark type="success" plain @click="blur">
           取消焦点
+        </el-button>
+        <el-button dark type="success" plain @click="senderRef.openHeader()">
+          打开头部
+        </el-button>
+        <el-button dark type="success" plain @click="senderRef.closeHeader()">
+          关闭头部
+        </el-button>
+        <el-button dark type="success" plain @click="senderRef.submit()">
+          提交
+        </el-button>
+        <el-button dark type="success" plain @click="cancel">
+          取消提交
+        </el-button>
+
+        <el-button dark type="success" plain @click="senderRef.startRecognition()">
+          开始录音
+        </el-button>
+        <el-button dark type="success" plain @click="senderRef.stopRecognition()">
+          结束录音
         </el-button>
       </div>
     </div>
@@ -93,13 +123,9 @@ function focus(type = 'all') {
         <!-- 自定义前缀 -->
         <template #prefix>
           <div class="prefix-self-wrap">
-            <el-button dark>
+            <el-button dark @click="openCloseHeader">
               <el-icon><Link /></el-icon>
               <span>自定义前缀</span>
-            </el-button>
-
-            <el-button color="#626aef" :dark="true" @click="openCloseHeader">
-              打开/关闭头部
             </el-button>
           </div>
         </template>
@@ -129,28 +155,39 @@ function focus(type = 'all') {
 
 <style scoped lang="scss">
 .component-container {
-  width: fit-content;
-  height: calc(100vh - 64px);
+  background-color: white;
   padding: 12px;
-  // background-color: aquamarine;
+  border-radius: 15px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   // overflow: auto;
 
   .top-wrap {
     margin: 12px 0;
+    .btn-list {
+      display: flex;
+      flex-wrap: wrap;
+      :deep() {
+        .el-button + .el-button {
+          margin-left: 8px;
+          margin-bottom: 8px;
+        }
+      }
+    }
   }
 
   .component-1 {
     .header-self-wrap {
+      flex: 1;
+      display: block;
       display: flex;
       flex-direction: column;
-      padding: 16px;
       height: 200px;
-      width: 1300px;
+      margin: 0;
       .header-self-title {
-        width: 100%;
+        padding: 16px;
         display: flex;
         height: 30px;
         align-items: center;
