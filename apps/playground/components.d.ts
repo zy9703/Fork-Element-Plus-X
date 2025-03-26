@@ -18,5 +18,6 @@ declare module 'vue' {
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
+    UseRecord: typeof import('./src/components/useRecord.vue')['default']
   }
 }

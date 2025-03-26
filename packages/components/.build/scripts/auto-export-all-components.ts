@@ -10,7 +10,8 @@ interface ComponentInfo {
 
 async function generateAutoEntry() {
   const componentsDir = path.resolve(cwd(), 'src/components')
-  const components: ComponentInfo[] = []
+  const components: ComponentInfo[] = [];
+
 
   // 扫描组件目录
   if (await fs.exists(componentsDir)) {
@@ -35,6 +36,7 @@ async function generateAutoEntry() {
   const entryContent = [
     '// Auto-Element-Plus-X by auto-export-all-components script',
     ...components.map(c => `export { default as ${c.name} } from '${c.path}'`),
+    '',
   ].join('\n')
 
   // 生成安装文件内容
@@ -43,6 +45,8 @@ async function generateAutoEntry() {
     ...components.map(c => `import ${c.name} from '${c.path}'`),
     '',
     `export * from './components'`,
+    `export * from './hooks'`,
+    '',
     'const ElementPlusX: Plugin = {',
     '  install(app: App) {',
     ...components.map(c => `    app.component('${c.name}', ${c.name})`),
@@ -68,4 +72,4 @@ async function generateAutoEntry() {
 }
 
 // 执行生成
-generateAutoEntry()
+void generateAutoEntry()

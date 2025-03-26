@@ -5,6 +5,8 @@ import Sender from './components/Sender/index.vue'
 import Typewriter from './components/Typewriter/index.vue'
 
 export * from './components'
+export * from './hooks'
+
 const ElementPlusX: Plugin = {
   install(app: App) {
     app.component('Bubble', Bubble)
