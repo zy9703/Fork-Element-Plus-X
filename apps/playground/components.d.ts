@@ -19,5 +19,6 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     UseRecord: typeof import('./src/components/useRecord.vue')['default']
+    UseSend: typeof import('./src/components/useSend.vue')['default']
   }
 }

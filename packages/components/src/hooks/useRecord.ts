@@ -1,16 +1,16 @@
-interface UseRecordError {
+export interface UseRecordError {
   code: number
   message: string
 }
 
-interface UseRecordProps {
+export interface UseRecordProps {
   onError?: (err: SpeechRecognitionErrorEvent | UseRecordError) => void
   onStart?: () => void
   onEnd?: (v: string) => void
   onResult?: (result: string) => void
 }
 
-function useRecord({ onError, onStart, onEnd, onResult }: UseRecordProps = {}) {
+export function useRecord({ onError, onStart, onEnd, onResult }: UseRecordProps = {}) {
   const loading = ref<boolean>(false)
   const recognition = ref<null | SpeechRecognition>(null)
   const value = ref<string>('')
@@ -70,5 +70,3 @@ function useRecord({ onError, onStart, onEnd, onResult }: UseRecordProps = {}) {
     value,
   }
 }
-
-export default useRecord
