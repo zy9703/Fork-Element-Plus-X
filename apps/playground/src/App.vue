@@ -3,11 +3,13 @@ import UseBubble from './components/demo-useBubble.vue'
 import UseBubbleList from './components/demo-useBubbleList.vue'
 import UseSender from './components/demo-useSender.vue'
 import UseRecord from './components/useRecord.vue'
+import UseSend from './components/useSend.vue'
 </script>
 
 <template>
   <div id="app">
     <UseRecord />
+    <UseSend />
     <el-alert
       title="💖 欢迎使用 Element-Plus-X"
       type="success"
