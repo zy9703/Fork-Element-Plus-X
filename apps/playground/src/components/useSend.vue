@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { useSend } from 'vue-element-plus-x'
 
-const es = ref<EventSource | null>(null);
-const str = ref<string>('');
+const es = ref<EventSource | null>(null)
+const str = ref<string>('')
 
-const clearEs = () => {
+function clearEs() {
   if (es.value) {
-    es.value.close();
-    es.value = null;
+    es.value.close()
+    es.value = null
   }
 }
-const startFn = () => {
-  str.value = '';
-  es.value = new EventSource('https://sse.dev/test');
+function startFn() {
+  str.value = ''
+  es.value = new EventSource('https://sse.dev/test')
   es.value.onopen = () => {
-    console.log("onOpen");
+    console.log('onOpen')
   }
   es.value.onerror = () => {
-    clearEs();
+    clearEs()
   }
   es.value.onmessage = (e) => {
-    console.log("getData:", e.data);
-    const r = JSON.parse(e.data);
-    str.value += `\n${r.msg}`;
+    console.log('getData:', e.data)
+    const r = JSON.parse(e.data)
+    str.value += `\n${r.msg}`
   }
 }
 
@@ -30,15 +30,19 @@ const { send, loading, abort } = useSend({
   onSend: startFn,
   onAbort: clearEs,
   eventSource: es.value!,
-});
+})
 
 setTimeout(() => {
-  abort();
+  abort()
 }, 20_000)
 </script>
 
 <template>
   <div>{{ str }}</div>
-  <button @click="send" v-if="!loading">开始发送</button>
-  <button @click="abort" v-else>终止发送</button>
+  <button v-if="!loading" @click="send">
+    开始发送
+  </button>
+  <button v-else @click="abort">
+    终止发送
+  </button>
 </template>
