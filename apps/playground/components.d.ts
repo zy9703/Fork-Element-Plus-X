@@ -8,16 +8,22 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    copy: typeof import('./src/components/hooks-useXStream-scenarioSSE copy.vue')['default']
     DemoUseBubble: typeof import('./src/components/demo-useBubble.vue')['default']
     DemoUseBubbleList: typeof import('./src/components/demo-useBubbleList.vue')['default']
     DemoUseSender: typeof import('./src/components/demo-useSender.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
+    HooksScenarioSSE: typeof import('./src/components/hooks-scenarioSSE.vue')['default']
+    HooksUseXStreamScenarioSIP: typeof import('./src/components/hooks-useXStream-scenarioSIP.vue')['default']
+    HooksUseXStreamScenarioSSE: typeof import('./src/components/hooks-useXStream-scenarioSSE.vue')['default']
+    HooksUseXStreamScenarioSSE1: typeof import('./src/components/hooks-useXStream-scenarioSSE-1.vue')['default']
+    'ScenarioSIP&': typeof import('./src/components/scenarioSIP&.vue')['default']
+    'ScenarioSIP&Uint8Array': typeof import('./src/components/scenarioSIP&Uint8Array.vue')['default']
+    'ScenarioSIP&Uint8Array1': typeof import('./src/components/scenarioSIP&Uint8Array-1.vue')['default']
+    ScenarioSSE: typeof import('./src/components/scenarioSSE.vue')['default']
     UseRecord: typeof import('./src/components/useRecord.vue')['default']
   }
 }

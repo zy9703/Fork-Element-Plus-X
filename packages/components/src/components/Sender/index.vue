@@ -31,7 +31,12 @@ const hasOnRecordingChangeListener = computed(() => {
   return !!instance?.vnode.props?.onRecordingChange
 })
 // vue 3.4 新增的 defineModel 语法糖，用于定义 props 和 v-model 的双向绑定
-const value = defineModel('value', { type: String, default: '' })
+const value = defineModel('value', { type: String, default: '', set(newVal) {
+  // 当 readOnly 为 true 时阻止更新
+  // 修复 readOnly 时，父组件还是可以修改输入框的值
+  // 添加防御性逻辑
+  return props.readOnly ? value.value : newVal
+} })
 const senderRef = ref()
 const inputRef = ref()
 
