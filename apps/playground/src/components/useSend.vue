@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { useSend, SSE } from 'vue-element-plus-x/src/hooks/useSend'
+import { useSend, XRequest } from 'vue-element-plus-x/src/hooks/useSend'
 
 const es = ref<EventSource | null>(null)
 const str = ref<string>('')
 
-const sse = new SSE({
-  baseURL: 'https://sse.dev',
+const sse = new XRequest({
+  baseURL: 'http://localhost:3000',
   type: 'fetch',
   transformer: (e) => {
     console.log('transformer:', e)
-    return JSON.parse(e).msg
+    const a = e.trim().split('\n')
+    const r = a.pop()
+    return r
   },
   onMessage: (msg) => {
     console.log('onMessage:', msg)
@@ -39,7 +41,7 @@ function clearEs() {
 }
 function startFn() {
   str.value = ''
-  sse.send('/test')
+  sse.send('/api/sip')
   // es.value = new EventSource('https://sse.dev/test')
   // es.value.onopen = () => {
   //   console.log('onOpen')
