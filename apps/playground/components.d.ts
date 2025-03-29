@@ -11,13 +11,6 @@ declare module 'vue' {
     DemoUseBubble: typeof import('./src/components/demo-useBubble.vue')['default']
     DemoUseBubbleList: typeof import('./src/components/demo-useBubbleList.vue')['default']
     DemoUseSender: typeof import('./src/components/demo-useSender.vue')['default']
-    ElAlert: typeof import('element-plus/es')['ElAlert']
-    ElAvatar: typeof import('element-plus/es')['ElAvatar']
-    ElButton: typeof import('element-plus/es')['ElButton']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
-    ElTabPane: typeof import('element-plus/es')['ElTabPane']
-    ElTabs: typeof import('element-plus/es')['ElTabs']
     UseRecord: typeof import('./src/components/useRecord.vue')['default']
   }
 }
