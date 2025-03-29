@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import UseBubble from './components/demo-useBubble.vue'
-import UseBubbleList from './components/demo-useBubbleList.vue'
+// import UseBubbleList from './components/demo-useBubbleList.vue'
 import UseSender from './components/demo-useSender.vue'
+import ScenarioSIP from './components/hooks-useXStream-scenarioSIP.vue'
+import ScenarioSSE from './components/hooks-useXStream-scenarioSSE.vue'
 import UseRecord from './components/useRecord.vue'
 </script>
 
 <template>
   <div id="app">
-    <UseRecord />
     <el-alert
       title="💖 欢迎使用 Element-Plus-X"
       type="success"
@@ -21,12 +22,29 @@ import UseRecord from './components/useRecord.vue'
     <el-tabs type="border-card" class="demo-tabs">
       <el-tab-pane label="Bubble">
         <UseBubble />
-      </el-tab-pane>
-      <el-tab-pane label="BubbleList">
+      </el-tab-pane> -->
+      <!-- <el-tab-pane label="BubbleList">
         <UseBubbleList />
-      </el-tab-pane>
+      </el-tab-pane> -->
+
       <el-tab-pane label="Sender">
         <UseSender />
+      </el-tab-pane>
+
+      <el-tab-pane label="UseRecord">
+        <UseRecord />
+      </el-tab-pane>
+
+      <el-tab-pane label="UseSend">
+        <UseSend />
+      </el-tab-pane>
+
+      <el-tab-pane label="ScenarioSSE">
+        <ScenarioSSE />
+      </el-tab-pane>
+
+      <el-tab-pane label="ScenarioSIP">
+        <ScenarioSIP />
       </el-tab-pane>
     </el-tabs>
   </div>
