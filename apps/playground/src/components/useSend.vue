@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { useSend, SSE } from 'vue-element-plus-x/src/hooks/useSend'
+import { useSend, XRequest } from 'vue-element-plus-x'
 
 const es = ref<EventSource | null>(null)
 const str = ref<string>('')
+let finish = () => {
+}
 
-const sse = new SSE({
+const sse = new XRequest({
   baseURL: 'https://sse.dev',
   type: 'fetch',
   transformer: (e) => {
@@ -24,10 +26,10 @@ const sse = new SSE({
   onAbort: (messages) => {
     console.log('onAbort', messages)
   },
-  onFinish: (data)=> {
+  onFinish: (data) => {
     console.log('onFinish:', data)
-    finish();
-  }
+    finish()
+  },
 })
 
 function clearEs() {
@@ -54,11 +56,13 @@ function startFn() {
   // }
 }
 
-const { send, loading, abort, finish } = useSend({
+const { send, loading, abort, finish: _finish } = useSend({
   sendHandler: startFn,
   onAbort: clearEs,
   abortHandler: sse.abort,
 })
+
+finish = _finish
 
 setTimeout(() => {
   abort()

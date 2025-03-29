@@ -22,7 +22,7 @@ import UseRecord from './components/useRecord.vue'
     <el-tabs type="border-card" class="demo-tabs">
       <el-tab-pane label="Bubble">
         <UseBubble />
-      </el-tab-pane> -->
+      </el-tab-pane>
       <!-- <el-tab-pane label="BubbleList">
         <UseBubbleList />
       </el-tab-pane> -->
