@@ -1,4 +1,5 @@
 export interface SenderProps {
+  value?: string
   placeholder?: string
   autoSize?: {
     minRows: number

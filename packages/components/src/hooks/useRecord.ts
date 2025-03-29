@@ -47,17 +47,17 @@ export interface UseRecordProps {
  * @param {UseRecordProps} [props] - Configuration options for the hook.
  * @param {UseRecordProps} [props] - 钩子的配置选项。
  *
- * @returns {Object} - An object containing the state and methods for speech recognition.
- * @returns {Object} - 包含语音识别状态和方法的对象。
+ * @returns {object} - An object containing the state and methods for speech recognition.
+ * @returns {object} - 包含语音识别状态和方法的对象。
  *
  * @property {Ref<boolean>} loading - Indicates whether speech recognition is currently active.
  * @property {Ref<boolean>} loading - 指示语音识别是否正在进行。
  *
- * @property {function} start - Starts the speech recognition process.
- * @property {function} start - 开始语音识别过程。
+ * @property {Function} start - Starts the speech recognition process.
+ * @property {Function} start - 开始语音识别过程。
  *
- * @property {function} stop - Stops the speech recognition process.
- * @property {function} stop - 停止语音识别过程。
+ * @property {Function} stop - Stops the speech recognition process.
+ * @property {Function} stop - 停止语音识别过程。
  *
  * @property {Ref<string>} value - Holds the recognized text.
  * @property {Ref<string>} value - 保存识别的文本。

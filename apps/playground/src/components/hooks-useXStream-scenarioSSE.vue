@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useXStream } from 'vue-element-plus-x'
-// import axios from 'axios'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
 
@@ -10,16 +9,7 @@ async function startSSE() {
       headers: { 'Content-Type': 'text/event-stream' },
     })
     const readableStream = response.body!
-
-    // 自定义 transformStream 处理 SIP 数据
-    const sseTransFormStream = new TransformStream<string, any>({
-      transform(chunk, controller) {
-        // 这里可以添加 SIP 数据的解析逻辑
-        controller.enqueue(chunk)
-      },
-    })
-
-    await startStream({ readableStream, transformStream: sseTransFormStream })
+    await startStream({ readableStream })
   }
   catch (err) {
     console.error('Fetch error:', err)
@@ -72,7 +62,7 @@ watch(() => data.value, () => {
       {{ error.message }}
     </div>
 
-    <Bubble :content="content" is-markdown max-width="700px" />
+    <Bubble v-if="content" :content="content" is-markdown max-width="700px" />
   </div>
 </template>
 
