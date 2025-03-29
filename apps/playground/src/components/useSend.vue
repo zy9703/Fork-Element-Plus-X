@@ -1,10 +1,37 @@
 <script setup lang="ts">
-import { useSend } from 'vue-element-plus-x'
+import { useSend, SSE } from 'vue-element-plus-x'
 
 const es = ref<EventSource | null>(null)
 const str = ref<string>('')
 
+const sse = new SSE({
+  baseURL: 'https://sse.dev',
+  transformer: (e) => {
+    console.log('transformer:', e)
+    return JSON.parse(e).msg
+  },
+  onMessage: (msg) => {
+    console.log('onMessage:', msg)
+    str.value += `\n${msg}`
+  },
+  onError: (es, e) => {
+    console.log('onError:', es, e)
+  },
+  onOpen: () => {
+    console.log('onOpen')
+  },
+  onAbort: (messages) => {
+    console.log('onAbort', messages)
+  },
+  type: 'fetch',
+  onFinish: (data)=> {
+    console.log('onFinish:', data)
+    finish();
+  }
+})
+
 function clearEs() {
+  console.log('clearEs')
   if (es.value) {
     es.value.close()
     es.value = null
@@ -12,24 +39,25 @@ function clearEs() {
 }
 function startFn() {
   str.value = ''
-  es.value = new EventSource('https://sse.dev/test')
-  es.value.onopen = () => {
-    console.log('onOpen')
-  }
-  es.value.onerror = () => {
-    clearEs()
-  }
-  es.value.onmessage = (e) => {
-    console.log('getData:', e.data)
-    const r = JSON.parse(e.data)
-    str.value += `\n${r.msg}`
-  }
+  sse.send('/test')
+  // es.value = new EventSource('https://sse.dev/test')
+  // es.value.onopen = () => {
+  //   console.log('onOpen')
+  // }
+  // es.value.onerror = () => {
+  //   clearEs()
+  // }
+  // es.value.onmessage = (e) => {
+  //   console.log('getData:', e.data)
+  //   const r = JSON.parse(e.data)
+  //   str.value += `\n${r.msg}`
+  // }
 }
 
-const { send, loading, abort } = useSend({
+const { send, loading, abort, finish } = useSend({
   sendHandler: startFn,
   onAbort: clearEs,
-  eventSource: es.value!,
+  abortHandler: sse.abort,
 })
 
 setTimeout(() => {
@@ -38,11 +66,11 @@ setTimeout(() => {
 </script>
 
 <template>
-  <div>{{ str }}</div>
   <button v-if="!loading" @click="send">
     开始发送
   </button>
   <button v-else @click="abort">
     终止发送
   </button>
+  <div>{{ str }}</div>
 </template>
