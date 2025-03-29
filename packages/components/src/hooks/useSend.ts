@@ -6,7 +6,6 @@ export type UseSendProps = {
 }
 
 type OnError = (eventSource: EventSource, event: Event) => void;
-type Message<T, R = T> = MessageEvent<T> | R;
 
 type BaseHeaders = Omit<HeadersInit, 'Content-Type'>;
 
@@ -14,54 +13,54 @@ type BaseFetchOptions = Omit<RequestInit, 'headers' | 'signal'> & {
   headers?: BaseHeaders;
 }
 
-type BaseSSEProps<T, R = T> = {
+type Transformer<T> = (message: string) => T;
+
+type BaseSSEProps<T = string> = {
   baseURL?: string;
   type?: SSEType;
-  onFinish?: (data: R[]) => void;
-  onAbort?: (data: R[]) => void;
+  onFinish?: (data: T[]) => void;
+  onAbort?: (data: T[]) => void;
+  transformer?: Transformer<T>;
+  onMessage?: (message: T)=> void;
 }
 
-type SSEWithFetchProps<T = string> = {
+type SSEWithFetchProps = {
   baseOptions?: BaseFetchOptions;
   onError?: (e: unknown) => void;
-  onMessage?: (message: T) => void;
-  transformer?: (message: string) => T;
 }
 
-type SSEWithSSEProps<T, R = T> = {
+type SSEWithSSEProps = {
   baseOptions?: EventSourceInit;
   onError?: OnError;
-  onMessage?: (message: Message<T, R>) => void;
-  transformer?: (data: Message<T>) => R;
   onOpen?: () => void;
 }
 
 type SSEType = 'fetch' | 'sse' | 'sip';
 
-export type SSEProps<T, R = T> = BaseSSEProps<T, R> & (SSEWithSSEProps<T, R> | SSEWithFetchProps<T>)
+export type SSEProps<T> = BaseSSEProps<T> & (SSEWithSSEProps | SSEWithFetchProps)
 
 
-export class SSE<T, R = T> {
+export class XRequest<T> {
   #instance: EventSource | null = null;
-  #transformer?: SSEWithSSEProps<T, R>['transformer'] | SSEWithFetchProps<T>['transformer'];
+  #transformer?: Transformer<T>;
   #baseURL: string;
   #baseOptions?: EventSourceInit | BaseFetchOptions;
-  #onAbort?: BaseSSEProps<T, R>['onAbort'];
-  #onMessage?: SSEWithSSEProps<T, R>['onMessage'] | SSEWithFetchProps<T>['onMessage'];
-  #onError?: SSEWithSSEProps<T, R>['onError'] | SSEWithFetchProps<T>['onError'];
+  #onAbort?: BaseSSEProps<T>['onAbort'];
+  #onMessage?: BaseSSEProps<T>['onMessage'];
+  #onError?: SSEWithSSEProps['onError'] | SSEWithFetchProps['onError'];
   #onOpen?: () => void;
   #type: SSEType = 'sse';
   #controller: AbortController | null = null;
-  #onFinish?: BaseSSEProps<T, R>['onFinish'];
-  #messages: R[] = [];
-  constructor({ baseURL, onAbort, onMessage, onError, baseOptions, transformer, type, onFinish, ...props }: SSEProps<T, R> = {}) {
+  #onFinish?: BaseSSEProps<T>['onFinish'];
+  #messages: T[] = [];
+  constructor({ baseURL, onAbort, onMessage, onError, baseOptions, transformer, type, onFinish, ...props }: SSEProps<T> = {}) {
     this.#baseURL = baseURL ?? '';
     this.#baseOptions = baseOptions ?? {};
     onAbort && (this.#onAbort = onAbort);
     onMessage && (this.#onMessage = onMessage);
     onError && (this.#onError = onError);
     onFinish && (this.#onFinish = onFinish);
-    (props as SSEWithSSEProps<T, R>).onOpen && (this.#onOpen = (props as SSEWithSSEProps<T, R>).onOpen);
+    (props as SSEWithSSEProps).onOpen && (this.#onOpen = (props as SSEWithSSEProps).onOpen);
     transformer && (this.#transformer = transformer);
     type && (this.#type = type);
     this.abort = this.abort.bind(this);
@@ -91,11 +90,11 @@ export class SSE<T, R = T> {
           const chunk = decoder.decode(value, { stream: true });
           const chunkUse = chunk.startsWith('data: ') ? chunk.slice(6) : chunk;
           try {
-            const res = this.#transformer ? (this.#transformer as Exclude<SSEWithFetchProps<T>['transformer'], undefined>)(chunkUse) : chunkUse as T;
-            this.#messages.push(res as unknown as R);
-            (this.#onMessage as SSEWithFetchProps<T>['onMessage'])?.(res)
+            const res = this.#transformer ? (this.#transformer as Transformer<T>)(chunkUse) : chunkUse as T;
+            this.#messages.push(res);
+            this.#onMessage?.(res)
           } catch (error) {
-            (this.#onError as SSEWithFetchProps<T>['onError'])?.(error)
+            (this.#onError as SSEWithFetchProps['onError'])?.(error)
             this.#controller?.abort();
             return Promise.reject(error);
           }
@@ -106,7 +105,7 @@ export class SSE<T, R = T> {
         this.#onAbort?.(this.#messages);
         return
       }
-      (this.#onError as SSEWithFetchProps<T>['onError'])?.(err)
+      (this.#onError as SSEWithFetchProps['onError'])?.(err)
       this.#controller?.abort();
     });
   }
@@ -114,8 +113,8 @@ export class SSE<T, R = T> {
   #sendWithSSE(url: string, options: EventSourceInit = {}) {
     const es = new EventSource(this.#baseURL + url, { ...this.#baseOptions, ...options });
     es.onmessage = (e) => {
-      const res = this.#transformer ? (this.#transformer as Exclude<SSEWithSSEProps<T>['transformer'], undefined>)(e) : e as MessageEvent<T>;
-      (this.#onMessage as SSEWithSSEProps<T, R>['onMessage'])?.(res as R)
+      const res = this.#transformer ? this.#transformer(e.data) : e as MessageEvent<T>;
+      this.#onMessage?.(res as T)
     }
     es.onopen = () => {
       this.#onOpen?.()

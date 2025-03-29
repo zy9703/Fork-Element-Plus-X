@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useSend, SSE } from 'vue-element-plus-x'
+import { useSend, SSE } from 'vue-element-plus-x/src/hooks/useSend'
 
 const es = ref<EventSource | null>(null)
 const str = ref<string>('')
 
 const sse = new SSE({
   baseURL: 'https://sse.dev',
+  type: 'fetch',
   transformer: (e) => {
     console.log('transformer:', e)
     return JSON.parse(e).msg
@@ -23,7 +24,6 @@ const sse = new SSE({
   onAbort: (messages) => {
     console.log('onAbort', messages)
   },
-  type: 'fetch',
   onFinish: (data)=> {
     console.log('onFinish:', data)
     finish();
