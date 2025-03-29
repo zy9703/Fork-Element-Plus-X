@@ -27,7 +27,7 @@ function startFn() {
 }
 
 const { send, loading, abort } = useSend({
-  onSend: startFn,
+  sendHandler: startFn,
   onAbort: clearEs,
   eventSource: es.value!,
 })
