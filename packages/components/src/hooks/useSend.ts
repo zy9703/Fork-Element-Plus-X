@@ -133,13 +133,15 @@ export class XRequest<T> {
     return es;
   }
 
-  public async send(url: string, options: EventSourceInit | BaseFetchOptions = {}) {
+  public send(url: string, options: EventSourceInit | BaseFetchOptions = {}) {
     switch (this.#type) {
       case 'fetch':
-        return await this.#sendWithFetch(url, options as BaseFetchOptions);
+        this.#sendWithFetch(url, options as BaseFetchOptions);
+        break;
       default:
-        return this.#sendWithSSE(url, options as EventSourceInit);
+        this.#sendWithSSE(url, options as EventSourceInit);
     }
+    return this;
   }
 
   public abort() {
