@@ -113,7 +113,7 @@ function XStream<Output = SSEOutput>(
 }
 
 // Vue3 Hooks 实现
-export default function useXStream() {
+export function useXStream() {
   const data = ref<SSEOutput[]>([])
   const error = ref<Error | null>(null)
   const isLoading = ref<boolean>(false)
