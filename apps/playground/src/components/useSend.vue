@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useSend, XRequest } from 'vue-element-plus-x'
 
-const es = ref<EventSource | null>(null)
 const str = ref<string>('')
 let finish = () => {
 }
@@ -11,7 +10,9 @@ const sse = new XRequest({
   type: 'fetch',
   transformer: (e) => {
     console.log('transformer:', e)
-    return JSON.parse(e).msg
+    const a = e.trim().split('\n')
+    const r = a.pop()
+    return r
   },
   onMessage: (msg) => {
     console.log('onMessage:', msg)
@@ -32,16 +33,9 @@ const sse = new XRequest({
   },
 })
 
-function clearEs() {
-  console.log('clearEs')
-  if (es.value) {
-    es.value.close()
-    es.value = null
-  }
-}
 function startFn() {
   str.value = ''
-  sse.send('/test')
+  sse.send('/api/sip')
   // es.value = new EventSource('https://sse.dev/test')
   // es.value.onopen = () => {
   //   console.log('onOpen')
@@ -58,7 +52,6 @@ function startFn() {
 
 const { send, loading, abort, finish: _finish } = useSend({
   sendHandler: startFn,
-  onAbort: clearEs,
   abortHandler: sse.abort,
 })
 
