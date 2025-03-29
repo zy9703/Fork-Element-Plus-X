@@ -13,7 +13,7 @@ const ElementPlusX: Plugin = {
     app.component('BubbleList', BubbleList)
     app.component('Sender', Sender)
     app.component('Typewriter', Typewriter)
-  },
+  }
 }
 
 export default ElementPlusX
