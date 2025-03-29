@@ -55,5 +55,10 @@
     "pcss",
     "postcss"
   ],
-  "oxc.enable": true
+  "oxc.enable": true,
+  "cSpell.words": [
+    "aeac",
+    "esno",
+    "unplugin"
+  ]
 }
