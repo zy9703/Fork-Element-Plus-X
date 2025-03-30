@@ -35,21 +35,12 @@ const sse = new XRequest({
 
 function startFn() {
   str.value = ''
-  sse.send('/api/sip')
-  // es.value = new EventSource('https://sse.dev/test')
-  // es.value.onopen = () => {
-  //   console.log('onOpen')
-  // }
-  // es.value.onerror = () => {
-  //   clearEs()
-  // }
-  // es.value.onmessage = (e) => {
-  //   console.log('getData:', e.data)
-  //   const r = JSON.parse(e.data)
-  //   str.value += `\n${r.msg}`
-  // }
+  sse.send('/test')
 }
 
+// useSend 的 abort 和 finish 是一样的方法。
+// 为了体现 这边 xrequest 请求，支持手动中断，和结束回调。
+// 所以 也在 useSend 中，也暴露了一个名字叫 finish 的方法。
 const { send, loading, abort, finish: _finish } = useSend({
   sendHandler: startFn,
   abortHandler: sse.abort,
@@ -63,11 +54,11 @@ setTimeout(() => {
 </script>
 
 <template>
-  <button v-if="!loading" @click="send">
-    开始发送
-  </button>
-  <button v-else @click="abort">
-    终止发送
-  </button>
+  <el-button v-if="!loading" @click="send">
+    开始请求流式接口
+  </el-button>
+  <el-button v-else @click="abort">
+    终止请求
+  </el-button>
   <div>{{ str }}</div>
 </template>

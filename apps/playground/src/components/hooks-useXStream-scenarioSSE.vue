@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useXStream } from 'vue-element-plus-x'
+import { useXStream } from 'vue-element-plus-x/src/hooks/useXStream'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
 
 async function startSSE() {
   try {
-    const response = await fetch('http://localhost:3000/api/sse', {
+    const response = await fetch('https://node-test.element-plus-x.com/api/sse', {
       headers: { 'Content-Type': 'text/event-stream' },
     })
     const readableStream = response.body!
@@ -16,7 +16,7 @@ async function startSSE() {
   }
 }
 
-// 计算属性
+// 机器人的 content 计算属性
 const content = computed(() => {
   if (!data.value.length)
     return ''
@@ -41,10 +41,6 @@ const content = computed(() => {
   console.log('Text:', text)
   return text
 })
-
-watch(() => data.value, () => {
-  console.log('New data:', data.value)
-}, { deep: true })
 </script>
 
 <template>

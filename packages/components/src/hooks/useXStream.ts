@@ -1,6 +1,3 @@
-// 常量定义
-import { onUnmounted, ref, shallowRef } from 'vue'
-
 const DEFAULT_STREAM_SEPARATOR = '\n\n'
 const DEFAULT_PART_SEPARATOR = '\n'
 const DEFAULT_KV_SEPARATOR = ':'
@@ -151,11 +148,6 @@ export function useXStream() {
       abortController.value.abort()
     }
   }
-
-  // 组件卸载时自动中断
-  onUnmounted(() => {
-    cancel()
-  })
 
   return {
     startStream,

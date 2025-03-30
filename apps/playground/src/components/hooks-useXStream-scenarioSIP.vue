@@ -5,7 +5,7 @@ const { startStream, cancel, data, error, isLoading } = useXStream()
 
 async function startSIPStream() {
   try {
-    const response = await fetch('http://localhost:3000/api/sip', {
+    const response = await fetch('https://node-test.element-plus-x.com/api/sip', {
       headers: { 'Content-Type': 'application/sip' },
     })
     const readableStream = response.body!

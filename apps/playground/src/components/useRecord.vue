@@ -109,6 +109,10 @@ watch(text, (val) => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 12px;
+  background: white;
+  border-radius: 15px;
+
   .btn-list {
     display: flex;
     gap: 12px;
