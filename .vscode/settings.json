@@ -60,5 +60,6 @@
     "aeac",
     "esno",
     "unplugin"
-  ]
+  ],
+  "npm-scripts.showStartNotification": false
 }
