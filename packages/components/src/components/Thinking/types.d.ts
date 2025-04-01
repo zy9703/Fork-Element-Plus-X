@@ -1,4 +1,5 @@
 import type { Component } from 'vue'
+import type { TypingConfig } from '../Typewriter/types'
 
 /**
  * 思考节点的id类型
@@ -57,6 +58,14 @@ export interface ThinkingItemBase {
    * 节点的加载图标
    */
   loadingIcon?: Component
+  /**
+   *  是否使用markdown语法
+   */
+  isMarkdown?: boolean
+  /**
+   * 是否开启打字效果
+   */
+  typing?: TypingConfig
 }
 
 /**
@@ -78,7 +87,6 @@ export interface ThinkingProps {
    * 节点图标大小
    */
   dotSize?: 'large' | 'default' | 'small'
-
 }
 
 export interface ThinkingInstance {

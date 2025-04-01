@@ -10,7 +10,7 @@ const thinkings = ref<ThinkingItem[]>([{
   dotIcon: markRaw(Check),
   isCanExpand: true,
   isDefaultExpand: false,
-  expandContent: '进行搜索文字',
+  expandContent: '进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
 }])
 
 const thinkingItems = ref<ThinkingItem[]>([
@@ -22,7 +22,7 @@ const thinkingItems = ref<ThinkingItem[]>([
     dotIcon: markRaw(Check),
     isCanExpand: true,
     isDefaultExpand: true,
-    expandContent: '进行搜索文字',
+    expandContent: '进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
   },
   {
     id: '2',
@@ -50,7 +50,12 @@ setTimeout(() => {
     isLoading: true,
     isCanExpand: true,
     isDefaultExpand: true,
-    expandContent: '进行搜索文字',
+    isMarkdown: false,
+    typing: {
+      step: 4,
+      interval: 60,
+    },
+    expandContent: '进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
   })
 }, 4000)
 </script>

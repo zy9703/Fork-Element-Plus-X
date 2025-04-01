@@ -1,6 +1,7 @@
 <script lang='ts' setup>
 import type { ThinkingInstance, ThinkingProps } from './types'
 import { computed, ref, watch } from 'vue'
+import { Typewriter } from '../../components'
 
 const props = withDefaults(defineProps<ThinkingProps>(), {
   thinkingItems: () => [],
@@ -49,16 +50,28 @@ watch(() => activeNamesComputed.value, (v) => {
           :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'"
         >
           <div v-if="!item.isCanExpand">
-            {{ item.content }}
+            <Typewriter
+              :content="item.content"
+              :is-markdown="item.isMarkdown"
+              :typing="item.typing"
+            />
           </div>
           <el-collapse v-else-if="!item.isDefaultExpand" @change="handleExpand">
             <el-collapse-item :title="item.content">
-              {{ item.expandContent }}
+              <Typewriter
+                :content="item.expandContent"
+                :is-markdown="item.isMarkdown"
+                :typing="item.typing"
+              />
             </el-collapse-item>
           </el-collapse>
           <el-collapse v-else-if="item.isDefaultExpand" v-model="defaultActiveNodes" @change="handleExpand">
             <el-collapse-item :title="item.content" :name="String(item.id)">
-              {{ item.expandContent }}
+              <Typewriter
+                :content="item.expandContent"
+                :is-markdown="item.isMarkdown"
+                :typing="item.typing"
+              />
             </el-collapse-item>
           </el-collapse>
 
@@ -80,8 +93,6 @@ watch(() => activeNamesComputed.value, (v) => {
 .el-thinking {
   width: 100%;
   margin: 0 0 0 7px;
-
-
 
   &-item-dot {
     width: 100%;
