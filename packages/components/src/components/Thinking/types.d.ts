@@ -15,7 +15,8 @@ export interface ThinkingItemBase {
    */
   id: ThinkingItemId
   /**
-   * 思考的内容
+   * 思考的内容 没有展开选项时content会作为思维显示的内容
+   * 当展开选项时content会作为展开选项的标题  expandContent会作为展开选项后显示的思维内容
    */
   content: string
   /**
@@ -87,6 +88,14 @@ export interface ThinkingProps {
    * 节点图标大小
    */
   dotSize?: 'large' | 'default' | 'small'
+  /**
+   * 思维链最大宽度
+   */
+  maxWidth?: string
+  /**
+   * 是否启用节点之间链接线的渐变颜色 false默认颜色
+   */
+  lineGradient?: boolean
 }
 
 export interface ThinkingInstance {

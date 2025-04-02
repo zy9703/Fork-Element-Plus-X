@@ -1,11 +1,14 @@
 <script lang='ts' setup>
-import type { ThinkingInstance, ThinkingProps } from './types'
+import type { ElTimeline } from 'element-plus'
+import type { ThinkingInstance, ThinkingItemBase, ThinkingProps } from './types'
 import { computed, ref, watch } from 'vue'
 import { Typewriter } from '../../components'
 
 const props = withDefaults(defineProps<ThinkingProps>(), {
   thinkingItems: () => [],
   dotSize: 'default',
+  maxWidth: '600px',
+  lineGradient: false,
 })
 
 const emits = defineEmits<{
@@ -23,6 +26,30 @@ const dotMargin = computed(() => {
   }
 })
 
+const colorArr: Record<Required<ThinkingItemBase>['type'], string> = {
+  info: 'var(--el-color-primary)',
+  success: 'var(--el-color-success)',
+  warning: 'var(--el-color-warning)',
+  danger: 'var(--el-color-danger)',
+  primary: 'var(--el-color-primary)',
+}
+
+const timelineRef = ref<InstanceType<typeof ElTimeline>>()
+
+const getLineColor = computed(() => {
+  if (props.thinkingItems.length && props.thinkingItems.length) {
+    const arr = props.thinkingItems.map((item) => {
+      if (item.type) {
+        return colorArr[item.type]
+      }
+      return ''
+    })
+
+    return arr
+  }
+  return []
+})
+
 // 计算默认展开项
 const activeNamesComputed = computed(() =>
   props.thinkingItems
@@ -36,17 +63,52 @@ function handleExpand(activeNames: string[]) {
   emits('handleExpand', activeNames)
 }
 
+function setRadialGradient(colors: typeof getLineColor.value, ele: HTMLElement[]) {
+  const length = ele.length
+  Array.from(ele).forEach((item, index) => {
+    const line = item.children[0]
+    if (line) {
+      line.setAttribute('style', `
+      border: none;
+      width:2px;
+      background: linear-gradient(to bottom, ${colors[index]} 0% , ${colors[index < length ? index + 1 : index]} 100%);
+    `)
+    }
+  })
+}
+
+function getEle() {
+  if (getLineColor.value && timelineRef.value && props.lineGradient) {
+    const ele = timelineRef.value.$el.children[0].children
+    setRadialGradient(getLineColor.value, ele)
+  }
+}
+
 watch(() => activeNamesComputed.value, (v) => {
   defaultActiveNodes.value = [...v]
+})
+
+watch(() => getLineColor.value, () => {
+  getEle()
+})
+
+onMounted(() => {
+  getEle()
 })
 </script>
 
 <template>
   <div class="el-thinking">
-    <el-timeline style="max-width: 600px">
+    <el-timeline
+      ref="timelineRef"
+      :style="{
+        maxWidth: `${maxWidth}`,
+      }"
+    >
       <TransitionGroup name="thinking" tag="el-timeline-item">
         <el-timeline-item
-          v-for="item in props.thinkingItems" :key="item.id" :type="item.type" :timestamp="item.title"
+          v-for="item in props.thinkingItems"
+          :key="item.id" :type="item.type" :timestamp="item.title"
           :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'"
         >
           <div v-if="!item.isCanExpand">
@@ -78,9 +140,11 @@ watch(() => activeNamesComputed.value, (v) => {
           <template #dot>
             <div class="el-thinking-item-dot">
               <el-button
+                v-if="!$slots.customDot"
                 :size="props.dotSize" :type="item.type" :icon="item.dotIcon" :loading="item.isLoading"
                 :loading-icon="item.loadingIcon" circle
               />
+              <slot v-else name="customDot" :item="{ ...item }" :parent-props="{ ...props }" />
             </div>
           </template>
         </el-timeline-item>
