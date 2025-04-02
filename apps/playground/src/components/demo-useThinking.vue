@@ -65,7 +65,7 @@ setTimeout(() => {
     <Thinking :thinking-items="thinkings" :line-gradient="true" /> <br>
     <Thinking :thinking-items="thinkingItems" :line-gradient="true" /> <br>
     <Thinking :thinking-items="thinkingItems" @handle-expand="(id:string[]) => console.log(id)">
-      <template #dot="{ item, parentProps }">
+      <template #customDot="{ item, parentProps }">
         <el-button
           :size="parentProps.dotSize" :type="item.type" :icon="item.dotIcon" :loading="item.isLoading"
           :loading-icon="item.loadingIcon" circle
