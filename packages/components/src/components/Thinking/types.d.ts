@@ -6,6 +6,23 @@ import type { TypingConfig } from '../Typewriter/types'
  */
 type ThinkingItemId = string | number
 
+export type ThinkType = 'info' | 'success' | 'warning' | 'danger' | 'primary'
+
+export interface ThinkStatusEnum {
+  loading: {
+    value: string | number
+    type: ThinkType
+  }
+  error: {
+    value: string | number
+    type: ThinkType
+  }
+  success: {
+    value: string | number
+    type: ThinkType
+  }
+}
+
 /**
  * 思考节点的基础类型
  */
@@ -15,18 +32,28 @@ export interface ThinkingItemBase {
    */
   id: ThinkingItemId
   /**
-   * 思考的内容 没有展开选项时content会作为思维显示的内容
-   * 当展开选项时content会作为展开选项的标题  expandContent会作为展开选项后显示的思维内容
+   * 节点标题
    */
-  content: string
+  title?: string
   /**
-   * 节点的图标
+   * 思考的内容 没有展开选项时content会作为思维显示的内容
+   * 当展开选项时content会作为展开选项的标题 `thinkTitle` 会作为展开选项后显示的思维内容
    */
-  dotIcon: Component
+  thinkTitle?: string
+  /**
+   * 展开思考的详细内容
+   */
+  thinkContent?: string
+  // /**
+  //  * 节点的图标
+  //  */
+  // 去掉, 使用slot处理
+  // dotIcon: Component
+  status?: 'loading' | 'error' | 'success',
   /**
    * 节点类型
    */
-  type?: 'info' | 'success' | 'warning' | 'danger' | 'primary'
+  // type?: 'info' | 'success' | 'warning' | 'danger' | 'primary',
   /**
    * footer对齐位置
    */
@@ -34,31 +61,15 @@ export interface ThinkingItemBase {
   /**
    * 是否可以展开
    */
-  isCanExpand?: boolean
+  isCanExpand?: boolean | ((item: ThinkingItemBase)=> boolean)
   /**
    * 是否默认展开
    */
-  isDefaultExpand?: boolean
-  /**
-   * 展开思考的详细内容
-   */
-  expandContent?: string
-  /**
-   * 节点是否正在加载
-   */
-  isLoading?: boolean
-  /**
-   * 节点标题
-   */
-  title?: string
+  isDefaultExpand?: boolean | ((item: ThinkingItemBase)=> boolean)
   /**
    * 是否隐藏节点标题内容
    */
-  hideTitle?: boolean
-  /**
-   * 节点的加载图标
-   */
-  loadingIcon?: Component
+  hideTitle?: boolean | ((item: ThinkingItemBase)=> boolean)
   /**
    *  是否使用markdown语法
    */
@@ -69,21 +80,29 @@ export interface ThinkingItemBase {
   typing?: TypingConfig
 }
 
+export type ThinkingItemUseProps<T = ThinkingItemBase> = Pick<ThinkingItemBase, 'hideTitle' | 'isMarkdown' | 'typing' | 'isDefaultExpand' | 'isCanExpand' | 'placement'> & T;
+
 /**
  * 思考节点的类型
  */
 export type ThinkingItem =
   | ThinkingItemBase & { isCanExpand?: false }
-  | ThinkingItemBase & { isCanExpand: true, expandContent: string }
+  | ThinkingItemBase & { isCanExpand: true, thinkContent: string }
 
 /**
  * 思考组件的属性
  */
-export interface ThinkingProps {
+export interface ThinkingProps<T = ThinkingItemBase> {
   /**
    * 显示的节点列表
    */
-  thinkingItems: ThinkingItem[]
+  thinkingItems: ThinkingItemUseProps<T>[]
+  rowKey?: string
+  titleKey?: string
+  thinkTitleKey?: string
+  thinkContentKey?: string
+  statusKey?: string
+  statusEnum?: ThinkStatusEnum
   /**
    * 节点图标大小
    */

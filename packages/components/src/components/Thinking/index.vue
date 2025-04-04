@@ -1,14 +1,35 @@
-<script lang='ts' setup>
+<script lang='ts' setup generic="T = ThinkingItemBase">
 import type { ElTimeline } from 'element-plus'
-import type { ThinkingInstance, ThinkingItemBase, ThinkingProps } from './types'
+import type { ThinkingInstance, ThinkingItemBase, ThinkingProps, ThinkType } from './types'
+import { Loading, Check, Close } from '@element-plus/icons-vue'
 import { computed, ref, watch } from 'vue'
 import { Typewriter } from '../../components'
+import { get } from 'radash';
 
-const props = withDefaults(defineProps<ThinkingProps>(), {
+const props = withDefaults(defineProps<ThinkingProps<T>>(), {
   thinkingItems: () => [],
   dotSize: 'default',
   maxWidth: '600px',
   lineGradient: false,
+  rowKey: 'id',
+  statusKey: 'status',
+  statusEnum: () => ({
+    loading: {
+      value: 'loading',
+      type: 'warning',
+    },
+    error: {
+      value: 'error',
+      type: 'danger',
+    },
+    success: {
+      value: 'success',
+      type: 'success',
+    },
+  }),
+  titleKey: 'title',
+  thinkTitleKey: 'thinkTitle',
+  thinkContentKey: 'thinkContent'
 })
 
 const emits = defineEmits<{
@@ -26,7 +47,7 @@ const dotMargin = computed(() => {
   }
 })
 
-const colorArr: Record<Required<ThinkingItemBase>['type'], string> = {
+const colorArr: Record<ThinkType, string> = {
   info: 'var(--el-color-primary)',
   success: 'var(--el-color-success)',
   warning: 'var(--el-color-warning)',
@@ -39,8 +60,9 @@ const timelineRef = ref<InstanceType<typeof ElTimeline>>()
 const getLineColor = computed(() => {
   if (props.thinkingItems.length && props.thinkingItems.length) {
     const arr = props.thinkingItems.map((item) => {
-      if (item.type) {
-        return colorArr[item.type]
+      const _type_ = getType(item)
+      if (_type_) {
+        return colorArr[_type_]
       }
       return ''
     })
@@ -54,7 +76,7 @@ const getLineColor = computed(() => {
 const activeNamesComputed = computed(() =>
   props.thinkingItems
     .filter(item => item.isCanExpand && item.isDefaultExpand)
-    .map(item => String(item.id)),
+    .map(item => String(getId(item))),
 )
 
 const defaultActiveNodes = ref<string[]>([...activeNamesComputed.value])
@@ -84,6 +106,41 @@ function getEle() {
   }
 }
 
+function isLoading(item: T): boolean {
+  const status = getStatus(item)
+  return status === props.statusEnum.loading.value
+}
+
+function isError(item: T): boolean {
+  const status = getStatus(item)
+  return status === props.statusEnum.error.value
+}
+
+function getId(item: T) {
+  return get(item, props.rowKey)
+}
+
+function getType(item: T): ThinkType {
+  const status = getStatus(item)
+  return props.statusEnum[status as keyof typeof props.statusEnum]?.type ?? 'success'
+}
+
+function getTitle(item: T) {
+  return get(item, props.titleKey) as string ?? ''
+}
+
+function getThinkTitle(item: T) {
+  return get(item, props.thinkTitleKey) as string ?? ''
+}
+function getThinkContent(item: T) {
+  return get(item, props.thinkContentKey) as string ?? ''
+}
+
+function getStatus(item: T) {
+  return get(item, props.statusKey)
+}
+
+
 watch(() => activeNamesComputed.value, (v) => {
   defaultActiveNodes.value = [...v]
 })
@@ -99,52 +156,55 @@ onMounted(() => {
 
 <template>
   <div class="el-thinking">
-    <el-timeline
-      ref="timelineRef"
-      :style="{
-        maxWidth: `${maxWidth}`,
-      }"
-    >
+    <el-timeline ref="timelineRef" :style="{
+      maxWidth: `${maxWidth}`,
+    }">
       <TransitionGroup name="thinking" tag="el-timeline-item">
-        <el-timeline-item
-          v-for="item in props.thinkingItems"
-          :key="item.id" :type="item.type" :timestamp="item.title"
-          :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'"
-        >
+        <el-timeline-item v-for="item in props.thinkingItems" :key="getId(item)" :type="getType(item)"
+          :timestamp="getTitle(item)" :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'">
           <div v-if="!item.isCanExpand">
-            <Typewriter
-              :content="item.content"
-              :is-markdown="item.isMarkdown"
-              :typing="item.typing"
-            />
+            <Typewriter :content="getThinkTitle(item)" :is-markdown="item.isMarkdown" :typing="item.typing" />
           </div>
           <el-collapse v-else-if="!item.isDefaultExpand" @change="handleExpand">
-            <el-collapse-item :title="item.content">
-              <Typewriter
-                :content="item.expandContent"
-                :is-markdown="item.isMarkdown"
-                :typing="item.typing"
-              />
+            <el-collapse-item :title="getThinkTitle(item)">
+              <Typewriter :content="getThinkContent(item)" :is-markdown="item.isMarkdown" :typing="item.typing" />
             </el-collapse-item>
           </el-collapse>
           <el-collapse v-else-if="item.isDefaultExpand" v-model="defaultActiveNodes" @change="handleExpand">
-            <el-collapse-item :title="item.content" :name="String(item.id)">
-              <Typewriter
-                :content="item.expandContent"
-                :is-markdown="item.isMarkdown"
-                :typing="item.typing"
-              />
+            <el-collapse-item :title="getThinkTitle(item)" :name="String(getId(item))">
+              <Typewriter :content="getThinkContent(item)" :is-markdown="item.isMarkdown" :typing="item.typing" />
             </el-collapse-item>
           </el-collapse>
 
           <template #dot>
             <div class="el-thinking-item-dot">
-              <el-button
+              <!-- <el-button
                 v-if="!$slots.customDot"
                 :size="props.dotSize" :type="item.type" :icon="item.dotIcon" :loading="item.isLoading"
                 :loading-icon="item.loadingIcon" circle
               />
-              <slot v-else name="customDot" :item="{ ...item }" :parent-props="{ ...props }" />
+              <slot v-else name="customDot" :item="{ ...item }" :parent-props="{ ...props }" /> -->
+              <slot name="icon">
+                <el-button circle :type="getType(item)" :loading="isLoading(item)">
+                  <template #loading>
+                    <el-icon class="thinking-loading">
+                      <slot name="loading-icon">
+                        <Loading />
+                      </slot>
+                    </el-icon>
+                  </template>
+                  <template #icon>
+                    <el-icon v-if="!isLoading(item)">
+                      <slot name="error-icon" v-if="isError(item)">
+                        <Close />
+                      </slot>
+                      <slot name="error-icon" v-else>
+                        <Check />
+                      </slot>
+                    </el-icon>
+                  </template>
+                </el-button>
+              </slot>
             </div>
           </template>
         </el-timeline-item>
@@ -221,5 +281,31 @@ onMounted(() => {
 
 .thinking-leave-active {
   position: absolute;
+}
+
+.thinking-loading{
+  animation: rotating 1.5s linear infinite;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes rotating {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  75% {
+    transform: rotate(270deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
