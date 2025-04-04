@@ -1,7 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 import type { ThinkingItem } from 'vue-element-plus-x/types/components/Thinking/types'
-import { Check, DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
+import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
 
 const avatar = ref(
   'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
@@ -9,38 +9,36 @@ const avatar = ref(
 const loading = ref(true)
 const content = ref('')
 
-const thinkingItems = ref<ThinkingItem[]>([
-  {
-    id: '1',
-    content: '收到问题',
-    title: '进行搜索文字',
-    type: 'success',
-    dotIcon: markRaw(Check),
-    isCanExpand: true,
-    isDefaultExpand: true,
-    isLoading: true,
-    expandContent: '进行搜索文字',
-  },
-])
+const thinkings = ref<ThinkingItem[]>([{
+  id: '1',
+  thinkTitle: 'content--收到问题',
+  title: 'title--进行搜索文字',
+  status: 'success',
+  isCanExpand: true,
+  isDefaultExpand: true,
+  thinkContent: '进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
+}])
 
 onMounted(() => {
   setTimeout(() => {
-    thinkingItems.value[0] = {
-      ...thinkingItems.value[0],
+    thinkings.value[0] = {
+      ...thinkings.value[0],
       isLoading: false,
-      type: 'success',
     }
-    thinkingItems.value.push({
+    thinkings.value.push({
       id: '2',
-      content: '解决问题',
-      title: '进行搜索文字',
+      thinkTitle: 'content--解决问题 title--被隐藏了  打字动画建议只给最后一个思维链接',
+      title: 'title--进行搜索文字',
       hideTitle: true,
-      type: 'primary',
-      dotIcon: Check,
-      isLoading: false,
+      status: 'success',
       isCanExpand: true,
       isDefaultExpand: true,
-      expandContent: '进行搜索文字',
+      isMarkdown: false,
+      typing: {
+        step: 4,
+        interval: 60,
+      },
+      thinkContent: 'expandContent--进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
     })
 
     // 模拟思考结束
@@ -82,7 +80,7 @@ console.log('Hello, world!');
 
         <template #header>
           <div class="header-container">
-            <Thinking :thinking-items="thinkingItems" @handle-expand="(id: string[]) => console.log(id)" />
+            <Thinking :thinking-items="thinkings" :line-gradient="true" @handle-expand="(id: string[]) => console.log(id)" />
           </div>
         </template>
 

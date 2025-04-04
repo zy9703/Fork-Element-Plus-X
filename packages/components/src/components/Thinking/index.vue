@@ -1,10 +1,10 @@
 <script lang='ts' setup generic="T = ThinkingItemBase">
 import type { ElTimeline } from 'element-plus'
 import type { ThinkingInstance, ThinkingItemBase, ThinkingProps, ThinkType } from './types'
-import { Loading, Check, Close } from '@element-plus/icons-vue'
+import { Check, Close, Loading } from '@element-plus/icons-vue'
+import { get } from 'radash'
 import { computed, ref, watch } from 'vue'
 import { Typewriter } from '../../components'
-import { get } from 'radash';
 
 const props = withDefaults(defineProps<ThinkingProps<T>>(), {
   thinkingItems: () => [],
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<ThinkingProps<T>>(), {
   }),
   titleKey: 'title',
   thinkTitleKey: 'thinkTitle',
-  thinkContentKey: 'thinkContent'
+  thinkContentKey: 'thinkContent',
 })
 
 const emits = defineEmits<{
@@ -140,7 +140,6 @@ function getStatus(item: T) {
   return get(item, props.statusKey)
 }
 
-
 watch(() => activeNamesComputed.value, (v) => {
   defaultActiveNodes.value = [...v]
 })
@@ -156,12 +155,16 @@ onMounted(() => {
 
 <template>
   <div class="el-thinking">
-    <el-timeline ref="timelineRef" :style="{
-      maxWidth: `${maxWidth}`,
-    }">
+    <el-timeline
+      ref="timelineRef" :style="{
+        maxWidth: `${maxWidth}`,
+      }"
+    >
       <TransitionGroup name="thinking" tag="el-timeline-item">
-        <el-timeline-item v-for="item in props.thinkingItems" :key="getId(item)" :type="getType(item)"
-          :timestamp="getTitle(item)" :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'">
+        <el-timeline-item
+          v-for="item in props.thinkingItems" :key="getId(item)" :type="getType(item)"
+          :timestamp="getTitle(item)" :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'"
+        >
           <div v-if="!item.isCanExpand">
             <Typewriter :content="getThinkTitle(item)" :is-markdown="item.isMarkdown" :typing="item.typing" />
           </div>
@@ -195,10 +198,10 @@ onMounted(() => {
                   </template>
                   <template #icon>
                     <el-icon v-if="!isLoading(item)">
-                      <slot name="error-icon" v-if="isError(item)">
+                      <slot v-if="isError(item)" name="error-icon">
                         <Close />
                       </slot>
-                      <slot name="error-icon" v-else>
+                      <slot v-else name="error-icon">
                         <Check />
                       </slot>
                     </el-icon>
@@ -224,7 +227,18 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: v-bind(dotMargin)
+    margin: v-bind(dotMargin);
+    :deep(.el-button){
+      cursor:default !important;
+      &:active {
+        background-color: var(--el-button-bg-color) !important;
+        border-color: var(--el-button-bg-color) !important;
+      };
+      &:hover {
+        background-color: var(--el-button-bg-color) !important;
+        border-color: var(--el-button-bg-color) !important;
+      }
+    }
   }
 
   :deep(.el-collapse) {
