@@ -10,9 +10,9 @@ export interface WelcomeProps {
   variant?: 'filled' | 'borderless'
   classNames?: Partial<Record<SemanticType, string>>
   styles?: Partial<Record<SemanticType, CSSProperties>>
-  icon?: any
-  title?: any
-  description?: any
-  extra?: any
+  icon?: string
+  title?: string
+  description?: string
+  extra?: string
   direction?: 'ltr' | 'rtl'
 }

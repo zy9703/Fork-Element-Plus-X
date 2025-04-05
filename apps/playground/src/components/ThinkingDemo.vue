@@ -11,7 +11,8 @@ import Typewriter from 'vue-element-plus-x/src/components/Typewriter/index.vue'
 const { startStream, cancel, data, error, isLoading } = useXStream()
 
 const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions'
-const API_KEY = 'sk-vfjyscildobjnrijtcllnkhtcouidcxdgjxtldzqzeowrbga'
+const API_KEY = ref('sk-vfjyscildobjnrijtcllnkhtcouidcxdgjxtldzqzeowrbga')
+// const API_KEY = ''
 const MODEL = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B'
 
 const inputValue = ref('一加一等于多少？')
@@ -73,6 +74,10 @@ function handleError(err: any) {
 }
 
 async function startSSE() {
+  if (!API_KEY.value) {
+    ElMessage.error('请先输入 API_KEY')
+    return
+  }
   try {
     // 添加用户输入的消息
     console.log('inputValue.value', inputValue.value)
@@ -85,7 +90,7 @@ async function startSSE() {
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${API_KEY.value}`,
         'Content-Type': 'application/json',
         'Accept': 'text/event-stream',
       },
@@ -139,11 +144,14 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
 
 <template>
   <div class="component-container">
-    <div v-if="error" class="error">
-      {{ error.message }}
+    <div class="header-wrap">
+      此处是拿硅基流动中的免费模型进行测试，仅供预览使用
     </div>
 
     <div class="chat-warp">
+      <div v-if="error" class="error">
+        {{ error.message }}
+      </div>
       <BubbleList ref="bubbleListRef" :list="bubbleItems">
         <template #header="{ item }">
           <Thought v-if="item.reasoning_content" :content="item.reasoning_content" :status="item.thinkingStatus" class="thinking-chain-warp" @change="handleChange" />
@@ -191,7 +199,7 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
           <Typewriter :content="item.content" :loading="item.loading" :typing="item.typing" :is-markdown="item.isMarkdown" />
         </template>
       </BubbleList>
-      <Sender ref="senderRef" v-model:value="inputValue" @submit="startSSE">
+      <Sender ref="senderRef" v-model="inputValue" @submit="startSSE">
         <template #action-list>
           <div class="footer-container">
             <el-button v-if="!isLoading" type="danger" circle @click="senderRef.submit()">
@@ -214,8 +222,12 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
   background-color: white;
   padding: 12px;
   border-radius: 15px;
+
+  .header-wrap {
+    padding: 12px;
+  }
   .chat-warp {
-    height: calc(100vh - 215px);
+    height: calc(100vh - 265px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -242,17 +254,6 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
 
     .markdown-body {
       background-color: transparent;
-      // background: linear-gradient(to right, #ffd3d8e0, #ff6969e7);
-      // padding: 12px;
-
-      // hr {
-      //   background-color: white;
-      // }
-
-      // h1,h2,h3,h4,h5,h6 {
-      //   padding-bottom: 8px;
-      //   border-bottom: 1px solid white;
-      // }
     }
   }
 }

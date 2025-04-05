@@ -1,5 +1,7 @@
 <script lang='ts' setup>
 import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/components/ThoughtChain/types'
+import { CircleCloseFilled, Loading, SuccessFilled } from '@element-plus/icons-vue'
+import ThoughtChain from 'vue-element-plus-x/src/components/ThoughtChain/index.vue'
 
 const thinkings = ref<ThoughtChainItemProps[]>([{
   id: '1',
@@ -33,6 +35,7 @@ setTimeout(() => {
   thinkingItems.value[1] = {
     ...thinkingItems.value[1],
     status: 'error',
+    title: 'title--思考失败',
   }
   thinkingItems.value.push({
     id: '3',
@@ -44,8 +47,8 @@ setTimeout(() => {
     isDefaultExpand: true,
     isMarkdown: false,
     typing: {
-      step: 4,
-      interval: 60,
+      step: 2,
+      interval: 30,
     },
     thinkContent: 'expandContent--进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
   })
@@ -57,11 +60,25 @@ setTimeout(() => {
     <ThoughtChain :thinking-items="thinkings" :line-gradient="true" /> <br>
     <ThoughtChain :thinking-items="thinkingItems" :line-gradient="true" /> <br>
     <ThoughtChain :thinking-items="thinkingItems" @handle-expand="(id:string[]) => console.log(id)">
-      <template #customDot="{ item, parentProps }">
-        <el-button
-          :size="parentProps.dotSize" :type="item.type" :icon="item.dotIcon" :loading="item.isLoading"
-          :loading-icon="item.loadingIcon" circle
-        />
+      <template #icon="{ item }">
+        <span
+          v-if="item.status === 'success'"
+          style="font-size: 18px; margin-left: 7px; color: var(--el-color-success);"
+        >
+          <el-icon><SuccessFilled /></el-icon>
+        </span>
+        <span
+          v-if="item.status === 'error'"
+          style="font-size: 18px; margin-left: 7px; color: var(--el-color-danger);"
+        >
+          <el-icon><CircleCloseFilled /></el-icon>
+        </span>
+        <span
+          v-if="item.status === 'loading'"
+          style="font-size: 18px; margin-left: 7px; "
+        >
+          <el-icon class="is-loading"><Loading /></el-icon>
+        </span>
       </template>
     </ThoughtChain>
   </div>

@@ -154,13 +154,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="el-thinking">
+  <div class="el-thought-chain">
     <el-timeline
       ref="timelineRef" :style="{
         maxWidth: `${maxWidth}`,
       }"
     >
-      <TransitionGroup name="thinking" tag="el-timeline-item">
+      <TransitionGroup name="thought-chain" tag="el-timeline-item">
         <el-timeline-item
           v-for="item in props.thinkingItems" :key="getId(item)" :type="getType(item)"
           :timestamp="getTitle(item)" :hide-timestamp="item.hideTitle" :placement="item.placement ?? 'top'"
@@ -180,16 +180,17 @@ onMounted(() => {
           </el-collapse>
 
           <template #dot>
-            <div class="el-thinking-item-dot">
-              <slot name="icon">
+            <div class="el-thought-chain-item-dot">
+              <slot name="icon" :item="item">
                 <el-button circle :type="getType(item)" :loading="isLoading(item)">
                   <template #loading>
-                    <el-icon class="thinking-loading">
+                    <el-icon class="thought-chain-loading">
                       <slot name="loading-icon">
                         <Loading />
                       </slot>
                     </el-icon>
                   </template>
+
                   <template #icon>
                     <el-icon v-if="!isLoading(item)">
                       <slot v-if="isError(item)" name="error-icon">
@@ -211,11 +212,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.el-thinking {
+.el-thought-chain {
 
   &-item-dot {
-    width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -273,23 +272,23 @@ onMounted(() => {
   }
 }
 
-.thinking-move,
-.thinking-enter-active,
-.thinking-leave-active {
+.thought-chain-move,
+.thought-chain-enter-active,
+.thought-chain-leave-active {
   transition: all 0.5s ease;
 }
 
-.thinking-enter-from,
-.thinking-leave-to {
+.thought-chain-enter-from,
+.thought-chain-leave-to {
   opacity: 0;
   transform: translateY(10px) scaleY(0.9);
 }
 
-.thinking-leave-active {
+.thought-chain-leave-active {
   position: absolute;
 }
 
-.thinking-loading{
+.thought-chain-loading{
   animation: rotating 1.5s linear infinite;
   transform-origin: center center;
   will-change: transform;

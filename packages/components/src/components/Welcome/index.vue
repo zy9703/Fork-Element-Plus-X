@@ -1,26 +1,41 @@
 <script setup lang="ts">
 import type { WelcomeProps } from './types'
-import { computed } from 'vue'
 
 const props = withDefaults(defineProps<WelcomeProps>(), {
-  variant: 'filled',
-  direction: 'ltr',
+  variant: 'filled' as const,
+  direction: 'ltr' as const,
 })
 
-const containerClass = computed(() => [
-  props.prefixCls || 'welcome',
-  props.className,
-  props.rootClassName,
-  `welcome-${props.variant}`,
-  {
-    'welcome-rtl': props.direction === 'rtl',
-  },
-])
+const solts = defineSlots()
+const { prefixCls, className, rootClassName, variant, direction, classNames, icon, title, extra, description, style, styles } = toRefs(props)
+// 提取计算逻辑到独立函数
+function getContainerClass() {
+  return [
+    prefixCls.value || 'welcome',
+    className.value,
+    rootClassName.value,
+    `welcome-${variant.value}`,
+    {
+      'welcome-rtl': direction.value === 'rtl',
+    },
+  ]
+}
 
-const iconClass = computed(() => props.classNames?.icon)
-const titleClass = computed(() => props.classNames?.title)
-const extraClass = computed(() => props.classNames?.extra)
-const descriptionClass = computed(() => props.classNames?.description)
+const getIconClass = () => classNames.value?.icon
+const getTitleClass = () => classNames.value?.title
+const getExtraClass = () => classNames.value?.extra
+const getDescriptionClass = () => classNames.value?.description
+
+const hasIcon = computed(() => !!icon.value)
+const hasTitleOrExtra = computed(() => !!title.value || !!extra.value)
+const hasExtraOrSlot = computed(() => !!extra.value || !!solts.extra)
+const hasDescription = computed(() => !!description.value)
+
+const containerClass = computed(getContainerClass)
+const iconClass = computed(getIconClass)
+const titleClass = computed(getTitleClass)
+const extraClass = computed(getExtraClass)
+const descriptionClass = computed(getDescriptionClass)
 </script>
 
 <template>
@@ -31,39 +46,31 @@ const descriptionClass = computed(() => props.classNames?.description)
   >
     <!-- S Icon -->
     <div
-      v-if="icon"
+      v-if="hasIcon"
       :class="iconClass"
       :style="styles?.icon"
       class="welcome-icon"
     >
-      <img
-        v-if="typeof icon === 'string' && icon.startsWith('http')"
-        :src="icon"
-        alt="icon"
-        class="icon-image"
-      >
-      <el-icon v-else>
-        <component :is="icon" />
-      </el-icon>
+      <el-image :src="icon" class="icon-image" />
     </div>
     <!-- E Icon -->
 
     <div class="content-wrapper">
       <!-- S 标题 & Extra -->
       <div
-        v-if="title || extra"
+        v-if="hasTitleOrExtra"
         class="title-wrapper"
       >
-        <h4
+        <div
           v-if="title"
           :class="titleClass"
           :style="styles?.title"
           class="welcome-title"
         >
           {{ title }}
-        </h4>
+        </div>
         <div
-          v-if="extra || $slots.extra"
+          v-if="hasExtraOrSlot"
           :class="extraClass"
           :style="styles?.extra"
           class="welcome-extra"
@@ -76,14 +83,14 @@ const descriptionClass = computed(() => props.classNames?.description)
       <!-- E 标题 & Extra -->
 
       <!-- S 描述信息 -->
-      <p
-        v-if="description"
+      <div
+        v-if="hasDescription"
         :class="descriptionClass"
         :style="styles?.description"
         class="welcome-description"
       >
         {{ description }}
-      </p>
+      </div>
       <!-- E 描述信息 -->
     </div>
   </div>
@@ -91,14 +98,25 @@ const descriptionClass = computed(() => props.classNames?.description)
 
 <style lang="scss" scoped>
 .welcome-container {
+  --border-radius: 8px;
+  --icon-size: 64px;
+  --icon-size-small: 48px;
+  --gap: 16px;
+  --gap-small: 8px;
+  --padding: 24px;
+  --color-filled-bg: #e6f4ff;
+  --color-filled-border: #91caff;
+  --color-title: rgba(0, 0, 0, 0.88);
+  --color-description: rgba(0, 0, 0, 0.65);
+
   display: flex;
-  gap: 16px;
-  padding: 24px;
-  border-radius: 8px;
+  gap: var(--gap);
+  padding: var(--padding);
+  border-radius: var(--border-radius);
 
   &.welcome-filled {
-    background-color: #e6f4ff;
-    border: 1px solid #91caff;
+    background-color: var(--color-filled-bg);
+    border: 1px solid var(--color-filled-border);
   }
 
   &.welcome-borderless {
@@ -113,12 +131,12 @@ const descriptionClass = computed(() => props.classNames?.description)
 .welcome-icon {
   // 图标容器样式
   flex: 0 0 auto;
-  width: 64px;
-  height: 64px;
+  width: var(--icon-size);
+  height: var(--icon-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: calc(var(--border-radius) / 2);
   overflow: hidden;
   font-size: 24px;
 
@@ -131,8 +149,8 @@ const descriptionClass = computed(() => props.classNames?.description)
 
   // 小尺寸适配
   @media (max-width: 480px) {
-    width: 48px;
-    height: 48px;
+    width: var(--icon-size-small);
+    height: var(--icon-size-small);
   }
 }
 
@@ -140,28 +158,28 @@ const descriptionClass = computed(() => props.classNames?.description)
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--gap-small);
 }
 
 .title-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--gap-small);
 }
 
 .welcome-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--color-title);
 }
 
 .welcome-extra {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--gap-small);
 
   /* 如果内容需要换行 */
   :deep(*) {
@@ -172,7 +190,7 @@ const descriptionClass = computed(() => props.classNames?.description)
 .welcome-description {
   margin: 0;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--color-description);
   line-height: 1.5;
 }
 </style>
