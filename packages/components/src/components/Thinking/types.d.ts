@@ -1,4 +1,3 @@
-import type { Component } from 'vue'
 import type { TypingConfig } from '../Typewriter/types'
 
 /**
@@ -44,16 +43,10 @@ export interface ThinkingItemBase {
    * 展开思考的详细内容
    */
   thinkContent?: string
-  // /**
-  //  * 节点的图标
-  //  */
-  // 去掉, 使用slot处理
-  // dotIcon: Component
-  status?: 'loading' | 'error' | 'success',
   /**
-   * 节点类型
+   * 节点的图标
    */
-  // type?: 'info' | 'success' | 'warning' | 'danger' | 'primary',
+  status?: 'loading' | 'error' | 'success'
   /**
    * footer对齐位置
    */
@@ -61,15 +54,15 @@ export interface ThinkingItemBase {
   /**
    * 是否可以展开
    */
-  isCanExpand?: boolean | ((item: ThinkingItemBase)=> boolean)
+  isCanExpand?: boolean | ((item: ThinkingItemBase) => boolean)
   /**
    * 是否默认展开
    */
-  isDefaultExpand?: boolean | ((item: ThinkingItemBase)=> boolean)
+  isDefaultExpand?: boolean | ((item: ThinkingItemBase) => boolean)
   /**
    * 是否隐藏节点标题内容
    */
-  hideTitle?: boolean | ((item: ThinkingItemBase)=> boolean)
+  hideTitle?: boolean | ((item: ThinkingItemBase) => boolean)
   /**
    *  是否使用markdown语法
    */
@@ -80,7 +73,7 @@ export interface ThinkingItemBase {
   typing?: TypingConfig
 }
 
-export type ThinkingItemUseProps<T = ThinkingItemBase> = Pick<ThinkingItemBase, 'hideTitle' | 'isMarkdown' | 'typing' | 'isDefaultExpand' | 'isCanExpand' | 'placement'> & T;
+export type ThinkingItemUseProps<T = ThinkingItemBase> = Pick<ThinkingItemBase, 'hideTitle' | 'isMarkdown' | 'typing' | 'isDefaultExpand' | 'isCanExpand' | 'placement'> & T
 
 /**
  * 思考节点的类型
@@ -97,11 +90,29 @@ export interface ThinkingProps<T = ThinkingItemBase> {
    * 显示的节点列表
    */
   thinkingItems: ThinkingItemUseProps<T>[]
+  /**
+   * 节点id的key
+   */
   rowKey?: string
+  /**
+   * 标题的key
+   */
   titleKey?: string
+  /**
+   * 思考内容标题的key
+   */
   thinkTitleKey?: string
+  /**
+   * 展开思考内容的key
+   */
   thinkContentKey?: string
+  /**
+   * 状态的key
+   */
   statusKey?: string
+  /**
+   * 节点状态枚举
+   */
   statusEnum?: ThinkStatusEnum
   /**
    * 节点图标大小
