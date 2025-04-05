@@ -1,5 +1,6 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
+import type { ThinkingItem } from 'vue-element-plus-x/types/components/Thinking/types'
 import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
 
 const avatar = ref(
@@ -8,9 +9,41 @@ const avatar = ref(
 const loading = ref(true)
 const content = ref('')
 
+const thinkings = ref<ThinkingItem[]>([{
+  id: '1',
+  thinkTitle: 'content--收到问题',
+  title: 'title--进行搜索文字',
+  status: 'success',
+  isCanExpand: true,
+  isDefaultExpand: true,
+  thinkContent: '进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
+}])
+
 onMounted(() => {
   setTimeout(() => {
-    content.value = `
+    thinkings.value[0] = {
+      ...thinkings.value[0],
+      isLoading: false,
+    }
+    thinkings.value.push({
+      id: '2',
+      thinkTitle: 'content--解决问题 title--被隐藏了  打字动画建议只给最后一个思维链接',
+      title: 'title--进行搜索文字',
+      hideTitle: true,
+      status: 'success',
+      isCanExpand: true,
+      isDefaultExpand: true,
+      isMarkdown: false,
+      typing: {
+        step: 4,
+        interval: 60,
+      },
+      thinkContent: 'expandContent--进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字进行搜索文字',
+    })
+
+    // 模拟思考结束
+    setTimeout(() => {
+      content.value = `
 # 标题
 这是一个 Markdown 示例。
 - 列表项 1
@@ -20,7 +53,8 @@ onMounted(() => {
 console.log('Hello, world!');
 \`\`\`
 `.trim()
-    loading.value = false
+      loading.value = false
+    }, 500)
   }, 2000)
 })
 </script>
@@ -46,7 +80,7 @@ console.log('Hello, world!');
 
         <template #header>
           <div class="header-container">
-            我是头部内容
+            <Thinking :thinking-items="thinkings" :line-gradient="true" @handle-expand="(id: string[]) => console.log(id)" />
           </div>
         </template>
 
