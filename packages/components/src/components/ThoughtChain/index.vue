@@ -1,6 +1,6 @@
 <script lang='ts' setup generic="T = DefaultThoughtChainItemProps">
 import type { ElTimeline } from 'element-plus'
-import type { ThinkingInstance, DefaultThoughtChainItemProps, ThoughtChainProps, ThoughtChainType } from './types'
+import type { DefaultThoughtChainItemProps, ThinkingInstance, ThoughtChainProps, ThoughtChainType } from './types'
 import { Check, Close, Loading } from '@element-plus/icons-vue'
 import { get } from 'radash'
 import { computed, ref, watch } from 'vue'
@@ -212,8 +212,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .el-thinking {
-  width: 100%;
-  margin: 0 0 0 7px;
 
   &-item-dot {
     width: 100%;

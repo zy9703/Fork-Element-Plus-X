@@ -98,7 +98,6 @@ function startRecognition() {
       }
       if (!props.readOnly) {
         internalValue.value = results
-        // emits('update:value', results)
       }
     }
     recognition.value.onstart = () => {
@@ -106,7 +105,6 @@ function startRecognition() {
     }
     recognition.value.onend = () => {
       speechLoading.value = false
-      // console.log("语音识别结束");
     }
     recognition.value.onerror = (event: SpeechRecognitionError) => {
       console.error('语音识别出错:', event.error)
@@ -165,7 +163,6 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
       const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
       const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
       internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      // emits('update:value', internalValue.value)
       e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
@@ -189,7 +186,6 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
       const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
       const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
       internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      // emits('update:value', internalValue.value)
       e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
     }
   }

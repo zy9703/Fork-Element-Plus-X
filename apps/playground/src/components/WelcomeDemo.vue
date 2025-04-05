@@ -12,7 +12,7 @@ import { MoreFilled, Share } from '@element-plus/icons-vue'
       :style="{ background: 'linear-gradient(97deg, rgba(90,196,255,0.12) 0%, rgba(174,136,255,0.12) 100%)' }"
     >
       <template #extra>
-        <el-button type="text">
+        <el-button link type="primary">
           关于我
         </el-button>
       </template>

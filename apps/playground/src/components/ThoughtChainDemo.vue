@@ -32,7 +32,7 @@ const thinkingItems = ref<ThoughtChainItemProps[]>([
 setTimeout(() => {
   thinkingItems.value[1] = {
     ...thinkingItems.value[1],
-    status: 'success',
+    status: 'error',
   }
   thinkingItems.value.push({
     id: '3',
@@ -72,5 +72,7 @@ setTimeout(() => {
   background-color: white;
   padding: 12px;
   border-radius: 15px;
+  height: calc(100vh - 230px);
+  overflow-x: auto;
 }
 </style>

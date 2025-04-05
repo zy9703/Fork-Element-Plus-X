@@ -5,7 +5,7 @@ import type { ThinkingStatus } from 'vue-element-plus-x/types/components/Thought
 import { Loading, Position } from '@element-plus/icons-vue'
 import { useXStream } from 'vue-element-plus-x'
 import BubbleList from 'vue-element-plus-x/src/components/BubbleList/index.vue'
-import Thought from 'vue-element-plus-x/src/components/Thought/index.vue'
+import Thought from 'vue-element-plus-x/src/components/Thinking/index.vue'
 import Typewriter from 'vue-element-plus-x/src/components/Typewriter/index.vue'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
