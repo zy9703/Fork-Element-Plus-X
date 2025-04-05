@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import type { MessageItem } from '@/assets/mock'
 import type { BubbleListInstance } from 'vue-element-plus-x/types/components/BubbleList/types'
-import type { ThinkingStatus } from 'vue-element-plus-x/types/components/Thought/types'
+import type { ThinkingStatus } from 'vue-element-plus-x/types/components/Thinking/types'
 import { Loading, Position } from '@element-plus/icons-vue'
 import { useXStream } from 'vue-element-plus-x'
-import BubbleList from 'vue-element-plus-x/src/components/BubbleList/index.vue'
-import Thought from 'vue-element-plus-x/src/components/Thinking/index.vue'
-import Typewriter from 'vue-element-plus-x/src/components/Typewriter/index.vue'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
 
 const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions'
-const API_KEY = ref('sk-vfjyscildobjnrijtcllnkhtcouidcxdgjxtldzqzeowrbga')
-// const API_KEY = ''
+// 仅供测试，请勿拿去测试其他付费模型
+const API_KEY = 'sk-vfjyscildobjnrijtcllnkhtcouidcxdgjxtldzqzeowrbga'
 const MODEL = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B'
 
 const inputValue = ref('一加一等于多少？')
@@ -74,10 +71,6 @@ function handleError(err: any) {
 }
 
 async function startSSE() {
-  if (!API_KEY.value) {
-    ElMessage.error('请先输入 API_KEY')
-    return
-  }
   try {
     // 添加用户输入的消息
     console.log('inputValue.value', inputValue.value)
@@ -90,7 +83,7 @@ async function startSSE() {
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${API_KEY.value}`,
+        'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
         'Accept': 'text/event-stream',
       },
@@ -154,11 +147,11 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
       </div>
       <BubbleList ref="bubbleListRef" :list="bubbleItems">
         <template #header="{ item }">
-          <Thought v-if="item.reasoning_content" :content="item.reasoning_content" :status="item.thinkingStatus" class="thinking-chain-warp" @change="handleChange" />
+          <Thinking v-if="item.reasoning_content" :content="item.reasoning_content" :status="item.thinkingStatus" class="thinking-chain-warp" @change="handleChange" />
         </template>
 
         <template #content="{ item }">
-          <Thought
+          <Thinking
             v-if="item.reasoning_content"
             :content="item.reasoning_content"
             :status="item.thinkingStatus"
@@ -194,7 +187,7 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
             <template #content="{ content }">
               这里是自定义内容 + 返回：{{ content }}
             </template>
-          </Thought>
+          </Thinking>
 
           <Typewriter :content="item.content" :loading="item.loading" :typing="item.typing" :is-markdown="item.isMarkdown" />
         </template>

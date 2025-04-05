@@ -185,20 +185,14 @@ onMounted(() => {
                 <el-button circle :type="getType(item)" :loading="isLoading(item)">
                   <template #loading>
                     <el-icon class="thought-chain-loading">
-                      <slot name="loading-icon">
-                        <Loading />
-                      </slot>
+                      <Loading />
                     </el-icon>
                   </template>
 
                   <template #icon>
                     <el-icon v-if="!isLoading(item)">
-                      <slot v-if="isError(item)" name="error-icon">
-                        <Close />
-                      </slot>
-                      <slot v-else name="error-icon">
-                        <Check />
-                      </slot>
+                      <Close v-if="isError(item)" />
+                      <Check v-else />
                     </el-icon>
                   </template>
                 </el-button>
