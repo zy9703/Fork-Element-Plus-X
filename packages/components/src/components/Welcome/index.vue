@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WelcomeProps } from './types'
+import type { WelcomeProps } from './types.d.ts'
 
 const props = withDefaults(defineProps<WelcomeProps>(), {
   variant: 'filled' as const,
@@ -44,16 +44,18 @@ const descriptionClass = computed(getDescriptionClass)
     :style="style"
     class="welcome-container"
   >
-    <!-- S Icon -->
-    <div
-      v-if="hasIcon"
-      :class="iconClass"
-      :style="styles?.icon"
-      class="welcome-icon"
-    >
-      <el-image :src="icon" class="icon-image" />
-    </div>
-    <!-- E Icon -->
+    <!-- S image -->
+    <slot name="image">
+      <div
+        v-if="hasIcon"
+        :class="iconClass"
+        :style="styles?.icon"
+        class="welcome-icon"
+      >
+        <el-image :src="icon" class="icon-image" />
+      </div>
+    </slot>
+    <!-- E image -->
 
     <div class="content-wrapper">
       <!-- S 标题 & Extra -->

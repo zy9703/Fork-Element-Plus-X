@@ -123,7 +123,6 @@ function addMessage(message: string, isUser: boolean) {
     loading: !isUser,
     content: message || '',
     reasoning_content: '',
-    expanded: false,
     thinkingStatus: 'start',
   }
   bubbleItems.value.push(obj)

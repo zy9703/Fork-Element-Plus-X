@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { ThinkingStatus, ThoughtProps } from './types.d.ts'
+import type { ThinkingStatus, ThoughtProps } from './types.ts'
 import { ArrowUpBold, CircleCloseFilled, Loading, Opportunity, SuccessFilled } from '@element-plus/icons-vue'
 
 const props = withDefaults(defineProps<ThoughtProps>(), {
   content: '',
+  modelValue: true,
   status: 'start' as ThinkingStatus,
   disabled: false,
-  initialExpanded: true,
+  autoCollapse: false,
   buttonWidth: '160px',
   duration: '0.2s',
   maxWidth: '500px',
@@ -20,9 +21,12 @@ const emit = defineEmits<{
   (e: 'update:expanded', value: boolean): void
 }>()
 
-console.log(props.color)
+const isExpanded = ref(props.modelValue)
 
-const isExpanded = ref(props.initialExpanded)
+// 监听 modelValue 变化
+watch(() => props.modelValue, (newVal) => {
+  isExpanded.value = newVal
+})
 
 // 处理展开/收起
 function changeExpand() {
@@ -42,7 +46,7 @@ const displayedContent = computed(() => {
 
 // 自动收起逻辑
 watch(() => props.status, (newVal) => {
-  if (newVal === 'start') {
+  if (newVal === 'end' && props.autoCollapse) {
     isExpanded.value = false
   }
 })
@@ -101,7 +105,7 @@ watch(() => props.status, (newVal) => {
 
       <transition name="rotate">
         <span v-if="!props.disabled" class="arrow el-icon-center" :class="{ expanded: isExpanded }">
-          <slot name="arrow" :extends="isExpanded">
+          <slot name="arrow">
             <el-icon class="el-icon-center">
               <ArrowUpBold />
             </el-icon>
@@ -114,6 +118,7 @@ watch(() => props.status, (newVal) => {
     <Transition name="slide">
       <div
         v-show="isExpanded"
+        v-if="displayedContent"
         class="content-wrapper"
         :class="{ 'error-state': status === 'error' }"
       >
