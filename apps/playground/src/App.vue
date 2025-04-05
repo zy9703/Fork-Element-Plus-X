@@ -3,6 +3,7 @@ import UseBubble from './components/demo-useBubble.vue'
 import UseBubbleList from './components/demo-useBubbleList.vue'
 import UseSender from './components/demo-useSender.vue'
 import UseThought from './components/demo-useThought.vue'
+import UseWelcome from './components/demo-useWelcome.vue'
 import UseThinking from './components/ThoughtChainDemo.vue'
 import ScenarioSIP from './components/hooks-useXStream-scenarioSIP.vue'
 import ScenarioSSE from './components/hooks-useXStream-scenarioSSE.vue'
@@ -32,6 +33,10 @@ import UseRecord from './components/useRecord.vue'
 
       <el-tab-pane label="Sender">
         <UseSender />
+      </el-tab-pane>
+
+      <el-tab-pane label="Welcome">
+        <UseWelcome />
       </el-tab-pane>
 
       <el-tab-pane label="Thought">

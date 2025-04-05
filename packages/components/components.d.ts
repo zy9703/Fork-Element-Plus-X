@@ -28,5 +28,6 @@ declare module 'vue' {
     Thought: typeof import('./src/components/Thought/index.vue')['default']
     ThoughtChain: typeof import('./src/components/ThoughtChain/index.vue')['default']
     Typewriter: typeof import('./src/components/Typewriter/index.vue')['default']
+    Welcome: typeof import('./src/components/Welcome/index.vue')['default']
   }
 }

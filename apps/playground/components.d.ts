@@ -8,14 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    copy: typeof import('./src/components/demo-thought-chain copy.vue')['default']
-    DemoThought: typeof import('./src/components/demo-thought-chain.vue')['default']
-    DemoThoughtChain: typeof import('./src/components/demo-thought-chain.vue')['default']
     DemoUseBubble: typeof import('./src/components/demo-useBubble.vue')['default']
     DemoUseBubbleList: typeof import('./src/components/demo-useBubbleList.vue')['default']
     DemoUseSender: typeof import('./src/components/demo-useSender.vue')['default']
     DemoUseThinking: typeof import('./src/components/ThoughtChainDemo.vue')['default']
     DemoUseThought: typeof import('./src/components/demo-useThought.vue')['default']
+    DemoUseWelcome: typeof import('./src/components/demo-useWelcome.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
