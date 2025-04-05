@@ -4,6 +4,7 @@ import BubbleList from './components/BubbleList/index.vue'
 import Sender from './components/Sender/index.vue'
 import Thought from './components/Thought/index.vue'
 import Typewriter from './components/Typewriter/index.vue'
+import Welcome from './components/Welcome/index.vue'
 
 export * from './components'
 export * from './hooks'
@@ -15,6 +16,7 @@ const ElementPlusX: Plugin = {
     app.component('Sender', Sender)
     app.component('Thought', Thought)
     app.component('Typewriter', Typewriter)
+    app.component('Welcome', Welcome)
   }
 }
 
