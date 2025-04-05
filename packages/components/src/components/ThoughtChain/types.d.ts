@@ -1,4 +1,5 @@
 import type { TypingConfig } from '../Typewriter/types'
+import type { RequiredDependency } from 'typescript-api-pro'
 
 /**
  * 思考节点的id类型
