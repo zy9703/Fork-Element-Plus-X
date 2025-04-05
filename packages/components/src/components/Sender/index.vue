@@ -17,30 +17,23 @@ const props = withDefaults(defineProps<SenderProps>(), {
   submitType: 'enter',
   headerAnimationTimer: 300,
   inputWidth: '100%',
-  value: '', // 显式定义value的默认值
+  modelValue: '', // 显式定义value的默认值
 })
 
-const emits = defineEmits(['update:value', 'submit', 'cancel', 'recordingChange'])
+const emits = defineEmits(['update:modelValue', 'submit', 'cancel', 'recordingChange'])
 
 const slots = defineSlots()
 
-// 内部状态管理
-const internalValue = ref(props.value)
-
-// 监听父组件value变化
-watch(() => props.value, (newVal) => {
-  if (props.readOnly || props.disabled) {
-    internalValue.value = props.value
-    return
-  }
-  internalValue.value = newVal
-}, { deep: true })
-
-// watch(() => internalValue.value, () => {
-//   if (props.readOnly || props.disabled) {
-//     internalValue.value = props.value
-//   }
-// }, { deep: true })
+const internalValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    if (props.readOnly || props.disabled)
+      return
+    emits('update:modelValue', val)
+  },
+})
 
 // 获取当前组件实例
 const instance = getCurrentInstance()
@@ -105,7 +98,7 @@ function startRecognition() {
       }
       if (!props.readOnly) {
         internalValue.value = results
-        emits('update:value', results)
+        // emits('update:value', results)
       }
     }
     recognition.value.onstart = () => {
@@ -144,14 +137,12 @@ function stopRecognition() {
 function submit() {
   if (props.readOnly || props.loading || props.disabled)
     return
-  emits('update:value', internalValue.value)
   emits('submit', internalValue.value)
 }
 // 取消按钮
 function cancel() {
   if (props.readOnly)
     return
-  emits('update:value', internalValue.value)
   emits('cancel', internalValue.value)
 }
 
@@ -160,7 +151,6 @@ function clear() {
     return // 直接返回，不执行后续逻辑
   inputRef.value.clear()
   internalValue.value = ''
-  emits('update:value', '')
 }
 
 // 在这判断组合键的回车键 (目前支持两种模式)
@@ -175,7 +165,7 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
       const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
       const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
       internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      emits('update:value', internalValue.value)
+      // emits('update:value', internalValue.value)
       e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
@@ -199,7 +189,7 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
       const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
       const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
       internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      emits('update:value', internalValue.value)
+      // emits('update:value', internalValue.value)
       e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
     }
   }
