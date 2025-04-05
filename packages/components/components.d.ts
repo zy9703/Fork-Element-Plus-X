@@ -21,6 +21,7 @@ declare module 'vue' {
     Sender: typeof import('./src/components/Sender/index.vue')['default']
     SpeechButton: typeof import('./src/components/Sender/components/SpeechButton/index.vue')['default']
     SpeechLoadingButton: typeof import('./src/components/Sender/components/SpeechLoadingButton/index.vue')['default']
+    Thought: typeof import('./src/components/Thought/index.vue')['default']
     Typewriter: typeof import('./src/components/Typewriter/index.vue')['default']
   }
 }

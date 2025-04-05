@@ -29,16 +29,18 @@ const internalValue = ref(props.value)
 
 // 监听父组件value变化
 watch(() => props.value, (newVal) => {
-  if (props.readOnly || props.disabled)
+  if (props.readOnly || props.disabled) {
+    internalValue.value = props.value
     return
+  }
   internalValue.value = newVal
 }, { deep: true })
 
-watch(() => internalValue.value, () => {
-  if (props.readOnly || props.disabled) {
-    internalValue.value = props.value
-  }
-}, { deep: true })
+// watch(() => internalValue.value, () => {
+//   if (props.readOnly || props.disabled) {
+//     internalValue.value = props.value
+//   }
+// }, { deep: true })
 
 // 获取当前组件实例
 const instance = getCurrentInstance()
