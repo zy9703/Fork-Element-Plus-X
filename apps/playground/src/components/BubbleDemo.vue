@@ -10,7 +10,8 @@ const content = ref('')
 
 onMounted(() => {
   setTimeout(() => {
-    content.value = `
+    setTimeout(() => {
+      content.value = `
 # 标题
 这是一个 Markdown 示例。
 - 列表项 1
@@ -20,7 +21,8 @@ onMounted(() => {
 console.log('Hello, world!');
 \`\`\`
 `.trim()
-    loading.value = false
+      loading.value = false
+    }, 500)
   }, 2000)
 })
 </script>
@@ -42,12 +44,6 @@ console.log('Hello, world!');
       >
         <template #avatar>
           <el-avatar :size="32" :src="avatar" />
-        </template>
-
-        <template #header>
-          <div class="header-container">
-            我是头部内容
-          </div>
         </template>
 
         <!-- <template #content>
