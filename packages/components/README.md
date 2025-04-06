@@ -12,7 +12,7 @@
 
 <div align="center">
 <img src="https://cdn.element-plus-x.com/demo.webp" calss="element-plus-x-bubble" />&emsp;
-<img src="https://cdn.element-plus-x.com/demo2.webp" calss="element-plus-x-bubble" />&emsp;
+<img src="https://cdn.element-plus-x.com/demo1.webp" calss="element-plus-x-bubble" />&emsp;
 <img src="https://cdn.element-plus-x.com/demo3.webp" calss="element-plus-x-bubble" />&emsp;
 </div>
 
@@ -125,7 +125,7 @@ app.mount('#app')
 
 ## 👥 社区支持
 <div align="center">
-<img src="https://cdn.element-plus-x.com/vx2.png" alt="微信交流群" width="180" style="margin: 20px;" />
+<img src="https://cdn.element-plus-x.com/vx-2025-4-6.png" alt="微信交流群" width="180" style="margin: 20px;" />
 <p>加入微信交流群，获取最新动态和技术支持</p>
 
 <p>交流群如果过期或者失效，可以添加作者 vx</p>
