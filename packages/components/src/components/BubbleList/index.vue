@@ -253,7 +253,7 @@ defineExpose({
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .el-bubble-list {
   display: flex;
   flex-direction: column;

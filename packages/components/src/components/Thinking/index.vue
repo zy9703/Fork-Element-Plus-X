@@ -138,7 +138,7 @@ watch(() => props.status, (newVal) => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .el-thought-chain {
   font-family: system-ui, sans-serif;
   margin: 0 auto;
