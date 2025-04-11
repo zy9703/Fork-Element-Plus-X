@@ -2,8 +2,7 @@
 <script setup lang="ts">
 // import type { TriggerEvent } from 'vue-element-plus-x/src/components/Sender/types.d.ts'
 import { CircleClose, Link } from '@element-plus/icons-vue'
-import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
-import Sender from 'vue-element-plus-x/src/components/Sender/index.vue'
+import MentionSender from 'vue-element-plus-x/src/components/MentionSender/index.vue'
 
 const senderRef = ref()
 const value = ref('')
@@ -53,7 +52,24 @@ function focus(type = 'all') {
   senderRef.value.focus(type)
 }
 
-const triggerPopoverVisible = ref(false)
+const options = ref([
+  {
+    label: 'Fuphoenixes',
+    value: 'Fuphoenixes',
+  },
+  {
+    label: 'kooriookami',
+    value: 'kooriookami',
+  },
+  {
+    label: 'Jeremy',
+    value: 'Jeremy',
+  },
+  {
+    label: 'btea',
+    value: 'btea',
+  },
+])
 </script>
 
 <template>
@@ -95,19 +111,16 @@ const triggerPopoverVisible = ref(false)
     </div>
 
     <div class="component-1">
-      <Bubble :content="'默认内容'.repeat(100)" :typing="{ step: 1, interval: 50, suffix: '💖' }" is-fog is-markdown />
-      <!-- <Bubble :content="'默认内容'.repeat(1000)" typing is-fog placement="end" /> -->
-      <Sender
-        v-if="false"
+      <MentionSender
         ref="senderRef"
         v-model="value"
-        v-model:trigger-popover-visible="triggerPopoverVisible"
+        :trigger-strings="['@']"
         allow-speech
         clearable
         submit-type="shiftEnter"
         placeholder="请输入"
+        :options="options"
         :loading="loading"
-        :trigger-strings="['/', '@']"
         @submit="submit"
       >
         <!-- 自定义头部 -->
@@ -163,7 +176,7 @@ const triggerPopoverVisible = ref(false)
             >
           </div>
         </template> -->
-      </Sender>
+      </MentionSender>
     </div>
   </div>
 </template>

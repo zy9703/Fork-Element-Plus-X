@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
@@ -12,9 +12,7 @@ const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
   isMarkdown: false,
   typing: false,
-  isFog: false,
 })
-
 const emit = defineEmits<{
   /** 开始打字时触发 */
   start: [instance: TypewriterInstance]
@@ -23,14 +21,6 @@ const emit = defineEmits<{
   /** 打字结束时触发 */
   finish: [instance: TypewriterInstance]
 }>()
-
-const markdownContentRef = ref<HTMLElement | null>(null)
-const typeWriterRef = ref<HTMLElement | null>(null)
-
-onMounted(() => {
-  // 初始化雾化背景色
-  updateFogColor()
-})
 
 const md = new MarkdownIt({
   html: true,
@@ -212,54 +202,6 @@ function destroy() {
   isTyping.value = false
 }
 
-// 雾化颜色跟随背景色 丑陋的代码 💩💩💩，后面在找时间优化
-// 如果你是拉取源码修改的话，可以不用这个方法 
-// 因为组件逻辑支持用户自己设置 雾化背景
-function updateFogColor() {
-  // 雾化背景跟随-方法 // 暂定-可能需要修改
-  // 如果用户不想特殊设置 雾化背景和宽度属性
-  // 则在此处，自动处理 雾化背景
-  // 在组件初始化时候，获取盒子的背景色，赋值给雾化背景
-  if (markdownContentRef.value) {
-    const markdownContentRefColor = getComputedStyle(markdownContentRef.value).backgroundColor
-    const isTransparent = markdownContentRefColor === 'rgba(0, 0, 0, 0)' || markdownContentRefColor === 'transparent' || markdownContentRefColor === 'initial'
-    if (isTransparent) {
-      if (typeWriterRef.value) {
-        // 就找 typeWriterRef 的背景色
-        const typeWriterRefColor = getComputedStyle(typeWriterRef.value).backgroundColor
-        const isTypeWriterRefTransparent = typeWriterRefColor === 'rgba(0, 0, 0, 0)' || typeWriterRefColor === 'transparent' || typeWriterRefColor === 'initial'
-        if (isTypeWriterRefTransparent) {
-          // 找 .el-bubble-content 的背景色
-          const bubbleContent = document.querySelector('.el-bubble-content')
-          if (bubbleContent) {
-            const bubbleContentColor = getComputedStyle(bubbleContent).backgroundColor
-            const isBubbleContentTransparent = bubbleContentColor === 'rgba(0, 0, 0, 0)' || bubbleContentColor === 'transparent' || bubbleContentColor === 'initial'
-            if (isBubbleContentTransparent) {
-              // 找 .el-bubble 的背景色
-              const bubbleContent = document.querySelector('.el-bubble')
-              if (bubbleContent) {
-                const bubbleContentColor = window.getComputedStyle(bubbleContent).getPropertyValue('background-color')
-                const isBubbleContentTransparent = bubbleContentColor === 'rgba(0, 0, 0, 0)' || bubbleContentColor === 'transparent' || bubbleContentColor === 'initial'
-                if (!isBubbleContentTransparent) {
-                  // 这个没有就不往后找了，用默认的
-                  markdownContentRef.value.style.setProperty('--el-fill-color', bubbleContentColor)
-                }
-              }
-            } else {
-              markdownContentRef.value.style.setProperty('--el-fill-color', bubbleContentColor)
-            }
-          }
-        } else {
-          markdownContentRef.value.style.setProperty('--el-fill-color', typeWriterRefColor)
-        }
-      }
-    }
-    else {
-      markdownContentRef.value.style.setProperty('--el-fill-color', markdownContentRefColor)
-    }
-  }
-}
-
 // 生命周期
 onUnmounted(destroy)
 
@@ -268,57 +210,23 @@ defineExpose(instance)
 </script>
 
 <template>
-  <div ref="typeWriterRef" class="typer-container">
+  <div class="typer-container">
     <div
-      ref="markdownContentRef"
       class="typer-content"
       :class="[
         {
           'markdown-content': isMarkdown,
           'typing-cursor': typing && mergedConfig.suffix && isTyping,
-          'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
         },
         isMarkdown ? 'markdown-body' : '',
       ]"
-      :style="{
-        '--cursor-char': `'${mergedConfig.suffix}'`,
-        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ? props.isFog.bgColor : 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
-        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ? props.isFog.width : '80px' : '80px') : '',
-      }"
+      :style="{ '--cursor-char': `'${mergedConfig.suffix}'` }"
       v-html="renderedContent"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
-/* Markdown基础样式 */
-.markdown-content :deep(ul) { list-style-type: disc; }
-.markdown-body {
-  width: 100%; // 修复 md 格式宽度问题
-}
-// 新增 md 雾化效果
-// 添加对 h1-h6, ol, ul 的特殊处理
-.markdown-content :deep() h1,
-.markdown-content :deep() h2,
-.markdown-content :deep() h3,
-.markdown-content :deep() h4,
-.markdown-content :deep() h5,
-.markdown-content :deep() h6,
-.markdown-content :deep() p,
-.markdown-content :deep() ol:last-child li,
-.markdown-content :deep() ul:last-child li {
-  position: relative;
-  overflow: hidden;
-  &:last-child:after {
-    content: '';
-    width: var(--cursor-fog-width);
-    height: 1.5em;
-    background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-    position: absolute;
-    margin-left: calc(-1 * var(--cursor-fog-width));
-  }
-}
-
 /* 修改光标样式 */
 .typer-content.typing-cursor::after {
   content: var(--cursor-char);
@@ -326,18 +234,6 @@ defineExpose(instance)
   display: inline-block; /* 确保光标对齐 */
 }
 
-// 新增 雾化样式
-.typer-content.typing-cursor-foggy {
-  position: relative;
-  overflow: hidden;
-
-  &:last-child:after {
-    content: '';
-    width: var(--cursor-fog-width);
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-    position: absolute;
-    margin-left: calc(-1 * var(--cursor-fog-width));
-  }
-}
+/* Markdown基础样式 */
+.markdown-content :deep(ul) { list-style-type: disc; }
 </style>

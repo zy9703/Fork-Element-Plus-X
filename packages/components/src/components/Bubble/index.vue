@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
-import type { TypewriterInstance, TypingConfig } from '../Typewriter/types.d.ts'
+import type { TypewriterInstance, TypingConfig, TypingFogfig } from '../Typewriter/types.d.ts'
 
 import type { BubbleProps } from './types.d.ts'
 import Typewriter from '../Typewriter/index.vue'
@@ -86,6 +86,7 @@ const _typing = computed(() => {
     }
   }
 }) as boolean | TypingConfig
+
 function onStart(instance: TypewriterInstance) {
   emits('start', instance)
 }
@@ -186,7 +187,7 @@ defineExpose(instance)
           }"
         >
           <Typewriter
-            v-if="!$slots.content && content" ref="typewriterRef" :typing="_typing" :content="content" :is-markdown="isMarkdown" @start="onStart" @writing="onWriting" @finish="onFinish"
+            v-if="!$slots.content && content" ref="typewriterRef" :typing="_typing" :content="content" :is-markdown="isMarkdown" :is-fog="props.isFog" @start="onStart" @writing="onWriting" @finish="onFinish"
           />
         </div>
 

@@ -2,6 +2,8 @@
 <script setup lang="ts">
 import type { MessageItem } from '@/assets/mock'
 import { messageArr } from '@/assets/mock'
+import { ArrowDownBold } from '@element-plus/icons-vue'
+import BubbleList from 'vue-element-plus-x/src/components/BubbleList/index.vue'
 
 const bubbleItems = ref<MessageItem[]>(messageArr)
 
@@ -101,6 +103,12 @@ onMounted(() => {
               item.role === "ai" ? "机器人自定义加载动画" : "用户自定义加载动画"
             }}
           </div>
+        </template>
+
+        <template #backToBottom>
+          <el-button type="warning" circle>
+            <el-icon><ArrowDownBold /></el-icon>
+          </el-button>
         </template>
       </BubbleList>
     </div>

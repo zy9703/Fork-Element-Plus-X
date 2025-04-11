@@ -4,6 +4,7 @@ import type { BubbleListInstance } from 'vue-element-plus-x/types/components/Bub
 import type { ThinkingStatus } from 'vue-element-plus-x/types/components/Thinking/types'
 import { Loading, Position } from '@element-plus/icons-vue'
 import { useXStream } from 'vue-element-plus-x'
+import BubbleList from 'vue-element-plus-x/src/components/BubbleList/index.vue'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
 
