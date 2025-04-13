@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import UseBubble from './components/BubbleDemo.vue'
 import UseBubbleList from './components/BubbleListDemo.vue'
+import UseMentionSender from './components/MentionSenderDemo.vue'
 import UseSender from './components/SenderDemo.vue'
 import UseThinking from './components/ThinkingDemo.vue'
 import UseThoughtChain from './components/ThoughtChainDemo.vue'
@@ -9,7 +10,6 @@ import UseSend from './components/useSendDemo.vue'
 import useXStreamSIP from './components/useXStreamSIPDemo.vue'
 import useXStreamSSE from './components/useXStreamSSEDemo.vue'
 import UseWelcome from './components/WelcomeDemo.vue'
-import UseMentionSender from './components/MentionSenderDemo.vue'
 </script>
 
 <template>
