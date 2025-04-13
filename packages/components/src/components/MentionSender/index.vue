@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SenderProps } from './types.d.ts'
+import type { MentionOption, SenderProps } from './types.d.ts'
 import {
   ClearButton,
   LoadingButton,
@@ -23,38 +23,24 @@ const props = withDefaults(defineProps<SenderProps>(), {
   showUpdown: true,
 
   // el-input 属性透传
-  inputStyle: () => {},
+  inputStyle: '',
 
-  triggerStrings: () => [], // 指令字符数组，默认空数组
-  triggerPopoverVisible: false,
-  triggerPopoverWidth: 'fit-content',
-  triggerPopoverLeft: '0px',
-  triggerPopoverOffset: 8,
-  triggerPopoverPlacement: 'top-start',
+  // el-mention 属性透传
+  options: () => [],
+  filterOption: () => true,
+  whole: false,
+  checkIsWhole: () => false,
+  triggerLoading: false,
+  triggerStrings: () => [],
+  triggerPopoverPlacement: 'top',
+  triggerPopoverOffset: 20,
+  triggerPopoverClass: '',
 })
 
-const emits = defineEmits([
-  'update:modelValue',
-
-  'update:triggerPopoverVisible',
-
-  'submit',
-  'cancel',
-  'recordingChange',
-
-  'trigger',
-])
+const emits = defineEmits(['update:modelValue', 'submit', 'cancel', 'recordingChange', 'search', 'select'])
 
 const slots = defineSlots()
 
-// 获取当前组件实例
-const instance = getCurrentInstance()
-// 判断是否存在 submit 监听器
-const hasOnRecordingChangeListener = computed(() => {
-  return !!instance?.vnode.props?.onRecordingChange
-})
-const senderRef = ref()
-const inputRef = ref()
 const internalValue = computed({
   get() {
     return props.modelValue
@@ -66,91 +52,14 @@ const internalValue = computed({
   },
 })
 
-// 处理输入法组合状态
-const isComposing = ref(false)
-const popoverRef = ref()
-// 判断是否存在 trigger 监听器
-const hasOnTriggerListener = computed(() => {
-  return !!instance?.vnode.props?.onTrigger
+// 获取当前组件实例
+const instance = getCurrentInstance()
+// 判断是否存在 submit 监听器
+const hasOnRecordingChangeListener = computed(() => {
+  return !!instance?.vnode.props?.onRecordingChange
 })
-
-const popoverVisible = computed({
-  get() {
-    return props.triggerPopoverVisible
-  },
-  set(value) {
-    if (props.readOnly || props.disabled)
-      return
-    emits('update:triggerPopoverVisible', value)
-  },
-})
-
-// 当前触发 指令的 字符
-const triggerString = ref('')
-
-// 监听输入值变化
-watch(
-  () => internalValue.value,
-  (newVal, oldVal) => {
-    if (isComposing.value)
-      return
-    // 触发逻辑：当输入值等于数组中的任意一个指令字符时触发
-    // 确保 oldVal 是字符串类型
-    const triggerStrings = props.triggerStrings || [] // 如果为 undefined，就使用空数组
-    const validOldVal = typeof oldVal === 'string' ? oldVal : ''
-    const wasOldValTrigger = triggerStrings.includes(validOldVal)
-    const isNewValTrigger = triggerStrings.includes(newVal)
-
-    // 触发显示：从空变为触发字符
-    if (oldVal === '' && isNewValTrigger) {
-      triggerString.value = newVal
-      if (hasOnTriggerListener.value) {
-        emits('trigger', {
-          oldValue: oldVal, // 关闭时返回之前触发的字符
-          newValue: newVal,
-          triggerString: newVal,
-          isOpen: true,
-        })
-        popoverVisible.value = true
-      }
-      else {
-        popoverVisible.value = true
-      }
-    }
-    // 关闭：从触发字符变为非触发字符
-    else if (!isNewValTrigger && wasOldValTrigger) {
-      if (hasOnTriggerListener.value) {
-        emits('trigger', {
-          oldValue: oldVal, // 关闭时返回之前触发的字符
-          newValue: newVal,
-          triggerString: undefined,
-          isOpen: false,
-        })
-        popoverVisible.value = false
-      }
-      else {
-        popoverVisible.value = false
-      }
-    }
-    // 触发显示：从非空且非触发字符变为触发字符
-    else if (oldVal !== '' && isNewValTrigger && !wasOldValTrigger) {
-      triggerString.value = newVal
-      if (hasOnTriggerListener.value) {
-        emits('trigger', {
-          oldValue: oldVal, // 关闭时返回之前触发的字符
-          newValue: newVal,
-          triggerString: newVal,
-          isOpen: true,
-        })
-        popoverVisible.value = true
-      }
-      else {
-        popoverVisible.value = true
-      }
-    }
-  },
-  { deep: true, immediate: true },
-)
+const senderRef = ref()
+const inputRef = ref()
 
 /* 内容容器聚焦 开始 */
 function onContentMouseDown(e: MouseEvent) {
@@ -158,7 +67,7 @@ function onContentMouseDown(e: MouseEvent) {
   if (e.target !== senderRef.value.querySelector(`.el-textarea__inner`)) {
     e.preventDefault()
   }
-  inputRef.value.focus()
+  inputRef.value.input.focus()
 }
 /* 内容容器聚焦 结束 */
 
@@ -241,7 +150,7 @@ function stopRecognition() {
 
 /* 输入框事件 开始 */
 function submit() {
-  if (props.readOnly || props.loading || props.disabled || !internalValue.value)
+  if (props.readOnly || props.loading || props.disabled)
     return
   emits('submit', internalValue.value)
 }
@@ -255,7 +164,7 @@ function cancel() {
 function clear() {
   if (props.readOnly)
     return // 直接返回，不执行后续逻辑
-  inputRef.value.clear()
+  inputRef.value.input.clear()
   internalValue.value = ''
 }
 
@@ -305,7 +214,7 @@ function blur() {
   if (props.readOnly) {
     return false
   }
-  inputRef.value.blur()
+  inputRef.value.input.blur()
 }
 
 function focus(type = 'all') {
@@ -313,7 +222,7 @@ function focus(type = 'all') {
     return false
   }
   if (type === 'all') {
-    inputRef.value.select()
+    inputRef.value.input.select()
   }
   else if (type === 'start') {
     focusToStart()
@@ -327,7 +236,7 @@ function focus(type = 'all') {
 function focusToStart() {
   if (inputRef.value) {
     // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.$el.querySelector('textarea')
+    const textarea = inputRef.value.input.$el.querySelector('textarea')
     if (textarea) {
       textarea.focus() // 聚焦到输入框
       textarea.setSelectionRange(0, 0) // 设置光标到最前方
@@ -339,7 +248,7 @@ function focusToStart() {
 function focusToEnd() {
   if (inputRef.value) {
     // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.$el.querySelector('textarea')
+    const textarea = inputRef.value.input.$el.querySelector('textarea')
     if (textarea) {
       textarea.focus() // 聚焦到输入框
       textarea.setSelectionRange(internalValue.value.length, internalValue.value.length) // 设置光标到最后方
@@ -348,14 +257,15 @@ function focusToEnd() {
 }
 /* 焦点 事件 结束 */
 
-// 处理输入法开始/结束 (此方法是拼音输入法的时候用)
-function handleCompositionStart() {
-  isComposing.value = true
+/* 指令相关 开始 */
+function handleSearch(pattern: string, prefix: string) {
+  emits('search', pattern, prefix)
 }
 
-function handleCompositionEnd() {
-  isComposing.value = false
+function handleSelect(option: MentionOption, prefix: string) {
+  emits('select', option, prefix)
 }
+/* 指令相关 开始 */
 
 defineExpose({
   openHeader, // 打开头部
@@ -374,11 +284,7 @@ defineExpose({
 <template>
   <div
     class="el-sender-wrap"
-    :style="{
-      'cursor': disabled ? 'not-allowed' : 'default',
-      '--el-sender-trigger-popover-width': props.triggerPopoverWidth,
-      '--el-sender-trigger-popover-left': props.triggerPopoverLeft,
-    }"
+    :style="{ cursor: disabled ? 'not-allowed' : 'default' }"
   >
     <div
       ref="senderRef"
@@ -404,7 +310,7 @@ defineExpose({
           </div>
         </div>
       </Transition>
-      <!-- 内容容器 内置变体逻辑 -->
+      <!-- 内容容器 -->
       <div
         class="el-sender-content"
         :class="{ 'content-variant-updown': props.variant === 'updown' }"
@@ -415,7 +321,7 @@ defineExpose({
           <slot name="prefix" />
         </div>
         <!-- 输入框 -->
-        <el-input
+        <el-mention
           ref="inputRef"
           v-model="internalValue"
           class="el-sender-input"
@@ -432,17 +338,44 @@ defineExpose({
           :placeholder="placeholder"
           :read-only="readOnly || disabled"
           :disabled="disabled"
+          :options="props.options"
+          :filter-option="props.filterOption"
+          :whole="props.whole"
+          :check-is-whole="props.checkIsWhole"
+          :loading="props.triggerLoading"
+          :prefix="props.triggerStrings"
+          :placement="props.triggerPopoverPlacement"
+          :offset="props.triggerPopoverOffset"
+          :popper-class="props.triggerPopoverClass"
           @keydown.stop="handleKeyDown"
-          @compositionstart="handleCompositionStart"
-          @compositionend="handleCompositionEnd"
-        />
+          @search="handleSearch"
+          @select="handleSelect"
+        >
+          <!-- 自定义标签内容 -->
+          <template v-if="$slots['trigger-label']" #label="{ item, index }">
+            <slot name="trigger-label" :item="item" :index="index" />
+          </template>
+          <!-- 自定义加载中内容 -->
+          <template v-if="$slots['trigger-loading']" #loading>
+            <slot name="trigger-loading" />
+          </template>
+          <!-- 自定义下拉列表头部 -->
+          <template v-if="$slots['trigger-header']" #header>
+            <slot name="trigger-header" />
+          </template>
+          <!-- 自定义下拉列表底部 -->
+          <template v-if="$slots['trigger-footer']" #footer>
+            <slot name="trigger-footer" />
+          </template>
+        </el-mention>
+
         <!-- 操作列表 -->
         <div v-if="props.variant === 'default'" class="el-sender-action-list">
           <slot name="action-list">
             <div
               class="el-sender-action-list-presets"
             >
-              <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+              <SendButton v-if="!loading" @submit="submit" />
 
               <LoadingButton v-if="loading" @cancel="cancel" />
 
@@ -502,24 +435,6 @@ defineExpose({
         </div>
       </Transition>
     </div>
-
-    <!-- 虚拟触发 popover -->
-    <el-popover
-      ref="popoverRef"
-      :virtual-ref="senderRef"
-      virtual-triggering
-      :visible="popoverVisible"
-      :disabled="props.disabled"
-      :show-arrow="false"
-      :placement="props.triggerPopoverPlacement"
-      :offset="props.triggerPopoverOffset"
-      popper-class="el-sender-trigger-popover"
-      :teleported="false"
-    >
-      <slot name="trigger-popover" :trigger-string="triggerString" :readonly="props.readOnly">
-        当前触发的字符为：{{ `${triggerString}` }} 在这里定义的内容，但注意这里的回车事件将会被 输入框 覆盖
-      </slot>
-    </el-popover>
   </div>
 </template>
 
@@ -583,7 +498,7 @@ defineExpose({
   .slide-enter-from,
   .slide-leave-to {
     height: 0;
-    opacity: 0 !important;
+    opacity: 0;
   }
 
   .el-sender-header {
@@ -611,34 +526,40 @@ defineExpose({
       display: flex;
       align-items: center;
       align-self: center;
-
-      :deep(.el-textarea__inner) {
-        padding: 0;
-        margin: 0;
-        color: var(--el-text-color-primary);
-        font-size: var(--el-sender-input-input-font-size);
-        line-height: var(--el-font-line-height-primary);
-        list-style: none;
-        position: relative;
-        display: inline-block;
-        box-sizing: border-box;
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        height: auto;
-        min-height: auto !important;
-        border-radius: 0;
-        border: none;
-        flex: auto;
-        align-self: center;
-        vertical-align: bottom;
-        resize: none;
-        background-color: transparent;
-        transition:
-          all var(--el-transition-duration),
-          height 0s;
-        box-shadow: none !important;
-      }
+    }
+    // el-mention
+    .el-mention {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      align-self: center;
+    }
+    :deep(.el-textarea__inner) {
+      padding: 0;
+      margin: 0;
+      color: var(--el-text-color-primary);
+      font-size: var(--el-sender-input-input-font-size);
+      line-height: var(--el-font-line-height-primary);
+      list-style: none;
+      position: relative;
+      display: inline-block;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      height: auto;
+      min-height: auto !important;
+      border-radius: 0;
+      border: none;
+      flex: auto;
+      align-self: center;
+      vertical-align: bottom;
+      resize: none;
+      background-color: transparent;
+      transition:
+        all var(--el-transition-duration),
+        height 0s;
+      box-shadow: none !important;
     }
     // 操作列表
     .el-sender-action-list-presets {
@@ -675,11 +596,5 @@ defineExpose({
 .el-sender-disabled {
   background-color: var(--el-fill-color);
   pointer-events: none;
-}
-
-:deep(.el-sender-trigger-popover) {
-  width: var(--el-sender-trigger-popover-width) !important;
-  max-width: calc(100% - 54px) !important;
-  margin-left: var(--el-sender-trigger-popover-left) !important;
 }
 </style>

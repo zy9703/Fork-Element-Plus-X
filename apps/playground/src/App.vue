@@ -9,6 +9,7 @@ import UseSend from './components/useSendDemo.vue'
 import useXStreamSIP from './components/useXStreamSIPDemo.vue'
 import useXStreamSSE from './components/useXStreamSSEDemo.vue'
 import UseWelcome from './components/WelcomeDemo.vue'
+import UseMentionSender from './components/MentionSenderDemo.vue'
 </script>
 
 <template>
@@ -34,6 +35,10 @@ import UseWelcome from './components/WelcomeDemo.vue'
 
       <el-tab-pane label="Sender">
         <UseSender />
+      </el-tab-pane>
+
+      <el-tab-pane label="MentionSender">
+        <UseMentionSender />
       </el-tab-pane>
 
       <el-tab-pane label="Welcome">

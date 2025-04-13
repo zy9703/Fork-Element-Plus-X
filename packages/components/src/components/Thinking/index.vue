@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<ThinkingProps>(), {
   disabled: false,
   autoCollapse: false,
   buttonWidth: '160px',
-  duration: '0.2s',
+  duration: '0.25s',
   maxWidth: '500px',
   backgroundColor: '#fcfcfc',
   color: 'var(--el-color-info)',
@@ -140,7 +140,7 @@ watch(() => props.status, (newVal) => {
 </template>
 
 <style scoped lang="scss">
-.el-thinking {
+.el-thought-chain {
   font-family: system-ui, sans-serif;
   margin: 0 auto;
 }
@@ -149,7 +149,7 @@ watch(() => props.status, (newVal) => {
   display: flex;
   align-items: center;
   height: 100%;
-  width: var(--el-thinking-button-width);
+  width: var(--el-thought-chaian-button-width);
   gap: 8px;
   padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
   border: 1px solid #e4e4e4;
@@ -157,6 +157,7 @@ watch(() => props.status, (newVal) => {
   background: white;
   cursor: pointer;
   transition: all 0.2s;
+  margin-bottom: 8px;
 
   /* 居中 */
   .el-icon-center {
@@ -205,7 +206,7 @@ watch(() => props.status, (newVal) => {
 
 .arrow {
   margin-left: auto;
-  transition: transform var(--el-thinking-animation-duration);
+  transition: transform var(--el-thought-chaian-animation-duration);
 }
 
 .arrow.expanded {
@@ -217,8 +218,8 @@ watch(() => props.status, (newVal) => {
 .slide-leave-active {
   height: calc-size(max-content, size);
   transition:
-    height var(--el-thinking-animation-duration) ease-in-out,
-    opacity var(--el-thinking-animation-duration) ease-in-out;
+    height var(--el-thought-chaian-animation-duration) ease-in-out,
+    opacity var(--el-thought-chaian-animation-duration) ease-in-out;
   overflow: hidden;
 }
 
@@ -230,19 +231,18 @@ watch(() => props.status, (newVal) => {
 
 /* 内容区域样式 */
 .content-wrapper {
-  margin-top: 8px;
-  border: 1px solid #eee;
-  background: var(--el-thinking-content-wrapper-background-color);
   box-sizing: border-box;
   min-width: 0;
-  padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
-  border-radius: calc(var(--el-border-radius-base) + 4px);
-  max-width: var(--el-thinking-content-wrapper-width);
 }
 
 .content pre {
+  max-width: var(--el-thought-chaian-content-wrapper-width);
+  background: var(--el-thought-chaian-content-wrapper-background-color);
+  border: 1px solid #eee;
+  border-radius: calc(var(--el-border-radius-base) + 4px);
+  padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
   font-size: 14px;
-  color: var(--el-thinking-content-wrapper-color);
+  color: var(--el-thought-chaian-content-wrapper-color);
   white-space: pre-wrap;
   font-family: DeepSeek-CJK-patch,Inter,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Oxygen,Open Sans,sans-serif;
   margin: 0;
@@ -255,26 +255,12 @@ watch(() => props.status, (newVal) => {
 }
 
 .error-message {
+  border: 1px solid #e76875;
+  border-radius: calc(var(--el-border-radius-base) + 4px);
   color: #dc3545;
   height: fit-content;
   padding: 8px;
   background: #ffeef0;
   border-radius: 4px;
-}
-
-/* 加载动画 */
-@keyframes dot-pulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
-}
-
-.loading-dot {
-  animation: dot-pulse 1.4s infinite;
-}
-.loading-dot:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.loading-dot:nth-child(3) {
-  animation-delay: 0.4s;
 }
 </style>

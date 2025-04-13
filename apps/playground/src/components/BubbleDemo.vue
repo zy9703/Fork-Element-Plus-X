@@ -29,6 +29,7 @@ console.log('Hello, world!');
 
 <template>
   <div class="component-container">
+    <p>新版本支持 打字器 雾化效果</p>
     <div class="component-1">
       <Bubble
         placement="start"
@@ -41,6 +42,7 @@ console.log('Hello, world!');
           suffix: '💗',
         }"
         :is-markdown="true"
+        :is-fog="{ bgColor: '#FFFFFF' }"
       >
         <template #avatar>
           <el-avatar :size="32" :src="avatar" />

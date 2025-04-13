@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SenderProps } from './types.d.ts'
+import EditorInput from '../EditorInput/index.vue'
 import {
   ClearButton,
   LoadingButton,
@@ -55,6 +56,7 @@ const hasOnRecordingChangeListener = computed(() => {
 })
 const senderRef = ref()
 const inputRef = ref()
+const contentRef = ref()
 const internalValue = computed({
   get() {
     return props.modelValue
@@ -267,11 +269,12 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
     // 判断是否按下了 Shift + 回车键
     if (e.shiftKey && e.keyCode === 13) {
       e.preventDefault()
-      const cursorPosition = e.target.selectionStart // 获取光标位置
-      const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
-      const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
-      internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      // const cursorPosition = e.target.selectionStart // 获取光标位置
+      // const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
+      // const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
+      // internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
+      // e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      inputRef.value.insertNewLine()
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
       // 阻止掉 Enter 的默认换行行为
@@ -290,11 +293,12 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
-      const cursorPosition = e.target.selectionStart // 获取光标位置
-      const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
-      const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
-      internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      // const cursorPosition = e.target.selectionStart // 获取光标位置
+      // const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
+      // const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
+      // internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
+      // e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      inputRef.value.insertNewLine()
     }
   }
 }
@@ -316,34 +320,10 @@ function focus(type = 'all') {
     inputRef.value.select()
   }
   else if (type === 'start') {
-    focusToStart()
+    inputRef.value.moveToStart()
   }
   else if (type === 'end') {
-    focusToEnd()
-  }
-}
-
-// 聚焦到文本最前方
-function focusToStart() {
-  if (inputRef.value) {
-    // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.$el.querySelector('textarea')
-    if (textarea) {
-      textarea.focus() // 聚焦到输入框
-      textarea.setSelectionRange(0, 0) // 设置光标到最前方
-    }
-  }
-}
-
-// 聚焦到文本最后方
-function focusToEnd() {
-  if (inputRef.value) {
-    // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.$el.querySelector('textarea')
-    if (textarea) {
-      textarea.focus() // 聚焦到输入框
-      textarea.setSelectionRange(internalValue.value.length, internalValue.value.length) // 设置光标到最后方
-    }
+    inputRef.value.moveToEnd()
   }
 }
 /* 焦点 事件 结束 */
@@ -406,16 +386,16 @@ defineExpose({
       </Transition>
       <!-- 内容容器 内置变体逻辑 -->
       <div
+        ref="contentRef"
         class="el-sender-content"
-        :class="{ 'content-variant-updown': props.variant === 'updown' }"
-        @mousedown="onContentMouseDown"
+        :class="{ 'content-variant-updown': props.variant === 'updown' }" @mousedown="onContentMouseDown"
       >
         <!-- Prefix 前缀 -->
         <div v-if="$slots.prefix && props.variant === 'default'" class="el-sender-prefix">
           <slot name="prefix" />
         </div>
         <!-- 输入框 -->
-        <el-input
+        <EditorInput
           ref="inputRef"
           v-model="internalValue"
           class="el-sender-input"
@@ -423,7 +403,6 @@ defineExpose({
             'resize': 'none',
             'max-height': '176px',
             'max-width': inputWidth,
-            ...props.inputStyle,
           }"
           :rows="1"
           :autosize="autoSize"
@@ -432,6 +411,7 @@ defineExpose({
           :placeholder="placeholder"
           :read-only="readOnly || disabled"
           :disabled="disabled"
+          :inpurt-style="props.inputStyle"
           @keydown.stop="handleKeyDown"
           @compositionstart="handleCompositionStart"
           @compositionend="handleCompositionEnd"
