@@ -55,7 +55,6 @@ const hasOnRecordingChangeListener = computed(() => {
 })
 const senderRef = ref()
 const inputRef = ref()
-const contentRef = ref()
 const internalValue = computed({
   get() {
     return props.modelValue
@@ -407,9 +406,9 @@ defineExpose({
       </Transition>
       <!-- 内容容器 内置变体逻辑 -->
       <div
-        ref="contentRef"
         class="el-sender-content"
-        :class="{ 'content-variant-updown': props.variant === 'updown' }" @mousedown="onContentMouseDown"
+        :class="{ 'content-variant-updown': props.variant === 'updown' }"
+        @mousedown="onContentMouseDown"
       >
         <!-- Prefix 前缀 -->
         <div v-if="$slots.prefix && props.variant === 'default'" class="el-sender-prefix">
@@ -424,6 +423,7 @@ defineExpose({
             'resize': 'none',
             'max-height': '176px',
             'max-width': inputWidth,
+            ...props.inputStyle,
           }"
           :rows="1"
           :autosize="autoSize"
@@ -432,7 +432,6 @@ defineExpose({
           :placeholder="placeholder"
           :read-only="readOnly || disabled"
           :disabled="disabled"
-          :inpurt-style="props.inputStyle"
           @keydown.stop="handleKeyDown"
           @compositionstart="handleCompositionStart"
           @compositionend="handleCompositionEnd"

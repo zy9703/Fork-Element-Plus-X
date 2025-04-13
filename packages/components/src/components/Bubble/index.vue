@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
-import type { TypewriterInstance, TypingConfig, TypingFogfig } from '../Typewriter/types.d.ts'
+import type { TypewriterInstance, TypingConfig } from '../Typewriter/types.d.ts'
 
 import type { BubbleProps } from './types.d.ts'
 import Typewriter from '../Typewriter/index.vue'

@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<ThinkingProps>(), {
   disabled: false,
   autoCollapse: false,
   buttonWidth: '160px',
-  duration: '0.2s',
+  duration: '0.25s',
   maxWidth: '500px',
   backgroundColor: '#fcfcfc',
   color: 'var(--el-color-info)',

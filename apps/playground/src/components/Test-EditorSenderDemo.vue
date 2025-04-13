@@ -1,4 +1,4 @@
-<!-- home 首页 - 使用 BubbleList 组件 -->
+<!-- 富文本发送框 测试中... -->
 <script setup lang="ts">
 // import type { TriggerEvent } from 'vue-element-plus-x/src/components/Sender/types.d.ts'
 import { CircleClose, Link } from '@element-plus/icons-vue'

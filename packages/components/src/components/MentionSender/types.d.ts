@@ -20,6 +20,12 @@ export interface SenderProps {
   submitType?: 'enter' | 'shiftEnter'
   headerAnimationTimer?: number
   inputWidth?: string
+  
+  // 变体属性
+  variant?: 'default' | 'updown'
+  showUpdown?: boolean
+
+  // 新增 el-input 样式透传
   inputStyle?: string | CSSProperties | CSSProperties[] | string[]
 
   // 提及选项列表

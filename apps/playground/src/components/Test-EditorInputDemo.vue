@@ -1,4 +1,4 @@
-<!-- 文本输入框 -->
+<!-- 富文本输入框 测试中... -->
 <script setup lang='ts'>
 import EditorInput from 'vue-element-plus-x/src/components/EditorInput/index.vue'
 

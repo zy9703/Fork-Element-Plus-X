@@ -17,6 +17,8 @@ export interface BubbleListProps<T extends BubbleListItemProps = BubbleListItemP
   backButtonThreshold?: number // 底部按钮出现的 滚动阈值
   showBackButton?: boolean // 是否显示 底部按钮
   backButtonPosition?: BackButtonPosition // 底部按钮位置
+  btnLoading?: boolean
+  btnColor?: string
   // v1.1.1+ 新增 --- end
 }
 

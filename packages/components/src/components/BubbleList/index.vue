@@ -5,6 +5,7 @@ import type { BubbleListProps } from './types.d.ts'
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import useScrollDetector from '../../utils/useScrollDetector.ts'
 import Bubble from '../Bubble/index.vue'
+import loadingBg from './loading.vue'
 
 const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   list: () => [] as T[],
@@ -16,6 +17,8 @@ const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   backButtonPosition: () => {
     return { bottom: '20px', left: 'calc(50% - 19px)' }
   },
+  btnLoading: true,
+  btnColor: '#409EFF',
 })
 
 const emits = defineEmits(['complete'])
@@ -235,6 +238,7 @@ defineExpose({
       :shape="item.shape"
       :variant="item.variant"
       :is-markdown="item.isMarkdown"
+      :is-fog="item.isFog"
       :typing="item.typing"
       :max-width="item.maxWidth"
       :avatar="item.avatar"
@@ -280,8 +284,12 @@ defineExpose({
       @click="scrollToBottom"
     >
       <slot name="backToBottom">
-        <el-icon class="el-bubble-list-back-to-bottom-icon">
+        <el-icon
+          class="el-bubble-list-back-to-bottom-icon"
+          :style="{ color: props.btnColor }"
+        >
           <ArrowDownBold />
+          <loadingBg v-if="props.btnLoading" class="back-to-bottom-loading-svg-bg" />
         </el-icon>
       </slot>
     </div>
@@ -378,15 +386,26 @@ defineExpose({
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-
-    .el-bubble-list-back-to-bottom-icon {
-      color: #40a0ffd1;
-    }
   }
 
   .el-bubble-list-back-to-bottom-icon {
-    font-size: 18px;
-    color: #409EFF;
+    font-size: 24px;
+    position: relative;
+
+    .back-to-bottom-loading-svg-bg {
+      position: absolute;
+      font-size: 50px;
+      animation: is-loading 1.3s infinite linear;
+    }
+
+    @keyframes is-loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   }
 }
 

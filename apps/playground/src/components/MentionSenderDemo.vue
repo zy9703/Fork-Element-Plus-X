@@ -1,8 +1,6 @@
-<!-- home 首页 - 使用 BubbleList 组件 -->
 <script setup lang="ts">
 // import type { TriggerEvent } from 'vue-element-plus-x/src/components/Sender/types.d.ts'
 import { CircleClose, Link } from '@element-plus/icons-vue'
-import MentionSender from 'vue-element-plus-x/src/components/MentionSender/index.vue'
 
 const senderRef = ref()
 const value = ref('')
@@ -75,6 +73,8 @@ const options = ref([
 <template>
   <div class="component-container">
     <div class="top-wrap">
+      <div>这个输入框是另一种 提及指令方式 的实现 使用 @ 或者 / 试试</div>
+      <br>
       <div class="btn-list">
         <el-button dark type="success" plain @click="focus('start')">
           文本最前方
@@ -114,13 +114,14 @@ const options = ref([
       <MentionSender
         ref="senderRef"
         v-model="value"
-        :trigger-strings="['@']"
+        :trigger-strings="['@', '/']"
         allow-speech
         clearable
         submit-type="shiftEnter"
-        placeholder="请输入"
+        placeholder="请输入 @ 或者 / 触发指令，可支持自定义多个指令"
         :options="options"
         :loading="loading"
+        variant="updown"
         @submit="submit"
       >
         <!-- 自定义头部 -->

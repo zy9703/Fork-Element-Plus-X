@@ -19,6 +19,9 @@ const props = withDefaults(defineProps<SenderProps>(), {
   inputWidth: '100%',
   modelValue: '', // 显式定义value的默认值
 
+  variant: 'default',
+  showUpdown: true,
+
   // el-input 属性透传
   inputStyle: '',
 
@@ -256,12 +259,10 @@ function focusToEnd() {
 
 /* 指令相关 开始 */
 function handleSearch(pattern: string, prefix: string) {
-  console.log('handleSearch', pattern, prefix)
   emits('search', pattern, prefix)
 }
 
 function handleSelect(option: MentionOption, prefix: string) {
-  console.log('handleSelect', option, prefix)
   emits('select', option, prefix)
 }
 /* 指令相关 开始 */
@@ -310,9 +311,13 @@ defineExpose({
         </div>
       </Transition>
       <!-- 内容容器 -->
-      <div class="el-sender-content" @mousedown="onContentMouseDown">
+      <div
+        class="el-sender-content"
+        :class="{ 'content-variant-updown': props.variant === 'updown' }"
+        @mousedown="onContentMouseDown"
+      >
         <!-- Prefix 前缀 -->
-        <div v-if="$slots.prefix" class="el-sender-prefix">
+        <div v-if="$slots.prefix && props.variant === 'default'" class="el-sender-prefix">
           <slot name="prefix" />
         </div>
         <!-- 输入框 -->
@@ -324,6 +329,7 @@ defineExpose({
             'resize': 'none',
             'max-height': '176px',
             'max-width': inputWidth,
+            ...props.inputStyle,
           }"
           :rows="1"
           :autosize="autoSize"
@@ -332,7 +338,6 @@ defineExpose({
           :placeholder="placeholder"
           :read-only="readOnly || disabled"
           :disabled="disabled"
-          :inpurt-style="props.inputStyle"
           :options="props.options"
           :filter-option="props.filterOption"
           :whole="props.whole"
@@ -365,7 +370,7 @@ defineExpose({
         </el-mention>
 
         <!-- 操作列表 -->
-        <div class="el-sender-action-list">
+        <div v-if="props.variant === 'default'" class="el-sender-action-list">
           <slot name="action-list">
             <div
               class="el-sender-action-list-presets"
@@ -388,7 +393,47 @@ defineExpose({
             </div>
           </slot>
         </div>
+
+        <!-- 变体样式 -->
+        <div v-if="props.variant === 'updown' && props.showUpdown" class="el-sender-updown-wrap">
+          <!-- 变体 updown： Prefix 前缀 -->
+          <div v-if="$slots.prefix" class="el-sender-prefix">
+            <slot name="prefix" />
+          </div>
+
+          <!-- 变体 updown：操作列表 -->
+          <div class="el-sender-action-list">
+            <slot name="action-list">
+              <div
+                class="el-sender-action-list-presets"
+              >
+                <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+
+                <LoadingButton v-if="loading" @cancel="cancel" />
+
+                <SpeechButton
+                  v-if="!speechLoading && allowSpeech"
+                  @click="startRecognition"
+                />
+
+                <SpeechLoadingButton
+                  v-if="speechLoading && allowSpeech"
+                  @click="stopRecognition"
+                />
+
+                <ClearButton v-if="clearable" @clear="clear" />
+              </div>
+            </slot>
+          </div>
+        </div>
       </div>
+
+      <!-- 底部容器 -->
+      <Transition name="slide">
+        <div v-if="$slots.footer" class="el-sender-footer">
+          <slot name="footer" />
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -522,6 +567,29 @@ defineExpose({
       gap: var(--el-padding-xs);
       flex-direction: row-reverse;
     }
+  }
+
+  // 变体样式 --variant
+  .content-variant-updown {
+    display: flex;
+    flex-direction: column;
+    align-items: initial;
+    .el-sender-updown-wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      // 前缀
+      .el-sender-prefix {
+        flex: initial;
+      }
+    }
+  }
+
+  // 底部容器
+  .el-sender-footer {
+    border-top-width: var(--el-border-width);
+    border-top-style: solid;
+    border-top-color: var(--el-border-color);
   }
 }
 
