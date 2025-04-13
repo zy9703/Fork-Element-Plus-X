@@ -13,6 +13,15 @@ export interface SenderProps {
   submitType?: 'enter' | 'shiftEnter'
   headerAnimationTimer?: number
   inputWidth?: string
+
+  // 变体属性
+  variant?: 'default' | 'updown'
+  showUpdown?: boolean
+
+  // 新增 el-input 样式透传
+  inputStyle?: string | CSSProperties | CSSProperties[] | string[]
+
+  // 新增 el-popover 样式透传
   triggerStrings?: string[]
   triggerPopoverVisible?: boolean // 指令提示框是否可见
   triggerPopoverWidth?: string

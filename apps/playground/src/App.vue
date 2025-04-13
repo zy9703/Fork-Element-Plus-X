@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import EditorInputDemo from './components/EditorInputDemo.vue'
+import EditorSenderDemo from './components/EditorSenderDemo.vue'
 import SenderDemo from './components/SenderDemo.vue'
 </script>
 
@@ -15,8 +17,14 @@ import SenderDemo from './components/SenderDemo.vue'
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
+      <el-tab-pane label="EditorInputDemo">
+        <EditorInputDemo />
+      </el-tab-pane>
       <el-tab-pane label="SenderDemo">
         <SenderDemo />
+      </el-tab-pane>
+      <el-tab-pane label="EditorSenderDemo">
+        <EditorSenderDemo />
       </el-tab-pane>
     </el-tabs>
   </div>

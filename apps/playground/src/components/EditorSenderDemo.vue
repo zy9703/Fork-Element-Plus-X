@@ -2,7 +2,7 @@
 <script setup lang="ts">
 // import type { TriggerEvent } from 'vue-element-plus-x/src/components/Sender/types.d.ts'
 import { CircleClose, Link } from '@element-plus/icons-vue'
-import Sender from 'vue-element-plus-x/src/components/Sender/index.vue'
+import EditorSender from 'vue-element-plus-x/src/components/EditorSender/index.vue'
 
 const senderRef = ref()
 const value = ref('')
@@ -94,7 +94,7 @@ const triggerPopoverVisible = ref(false)
     </div>
 
     <div class="component-1">
-      <Sender
+      <EditorSender
         ref="senderRef"
         v-model="value"
         v-model:trigger-popover-visible="triggerPopoverVisible"
@@ -172,7 +172,7 @@ const triggerPopoverVisible = ref(false)
             </div>
           </div>
         </template>
-      </Sender>
+      </EditorSender>
     </div>
   </div>
 </template>

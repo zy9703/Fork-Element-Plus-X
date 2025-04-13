@@ -20,6 +20,7 @@ export interface SenderProps {
   submitType?: 'enter' | 'shiftEnter'
   headerAnimationTimer?: number
   inputWidth?: string
+  inputStyle?: string | CSSProperties | CSSProperties[] | string[]
 
   // 提及选项列表
   options?: MentionOption[]

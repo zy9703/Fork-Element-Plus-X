@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
@@ -43,9 +43,7 @@ const md = new MarkdownIt({
       if (Prism.languages[language]) {
         return Prism.highlight(code, Prism.languages[language], language)
       }
-      else {
-        return code // 返回原始代码，避免抛出异常
-      }
+      return code // 返回原始代码，避免抛出异常
     }
     catch (error) {
       console.error('Error during code highlighting:', error)
@@ -61,10 +59,10 @@ const contentCache = ref('') // 添加缓存变量
 // 配置合并逻辑修改
 const mergedConfig: ComputedRef<TypingConfig> = computed(() => {
   const defaultConfig: TypingConfig = {
-    step: typeof props.typing == 'object' ? props.typing.step ? props.typing.step : 2 : 2,
-    interval: typeof props.typing == 'object' ? props.typing.interval ? props.typing.interval : 50 : 50,
+    step: typeof props.typing === 'object' ? props.typing.step ?? 2 : 2,
+    interval: typeof props.typing === 'object' ? props.typing.interval ?? 50 : 50,
     // 根据条件动态设置后缀
-    suffix: props.isMarkdown ? '' : typeof props.typing == 'object' ? props.typing.suffix ? props.typing.suffix : '|' : '|',
+    suffix: props.isMarkdown ? '' : typeof props.typing === 'object' ? props.typing.suffix ?? '|' : '|',
   }
 
   // 处理打字配置
@@ -79,7 +77,7 @@ const mergedConfig: ComputedRef<TypingConfig> = computed(() => {
       ...defaultConfig,
       ...props.typing,
       // 强制覆盖后缀设置
-      suffix: props.isMarkdown ? '' : props.typing.suffix,
+      suffix: props.isMarkdown ? '' : props.typing.suffix ?? '|',
     }
   }
 
@@ -212,50 +210,32 @@ function destroy() {
   isTyping.value = false
 }
 
-// 雾化颜色跟随背景色 丑陋的代码 💩💩💩，后面在找时间优化
-// 如果你是拉取源码修改的话，可以不用这个方法 
-// 因为组件逻辑支持用户自己设置 雾化背景
+// 辅助函数：获取元素背景色并检查是否透明
+function getBackgroundColor(element: HTMLElement | null) {
+  if (!element)
+    return null
+  const color = getComputedStyle(element).backgroundColor
+  const isTransparent = color === 'rgba(0, 0, 0, 0)' || color === 'transparent' || color === 'initial'
+  return isTransparent ? null : color
+}
+
+// 雾化颜色跟随背景色
 function updateFogColor() {
-  // 雾化背景跟随-方法 // 暂定-可能需要修改
-  // 如果用户不想特殊设置 雾化背景和宽度属性
-  // 则在此处，自动处理 雾化背景
-  // 在组件初始化时候，获取盒子的背景色，赋值给雾化背景
   if (markdownContentRef.value) {
-    const markdownContentRefColor = getComputedStyle(markdownContentRef.value).backgroundColor
-    const isTransparent = markdownContentRefColor === 'rgba(0, 0, 0, 0)' || markdownContentRefColor === 'transparent' || markdownContentRefColor === 'initial'
-    if (isTransparent) {
-      if (typeWriterRef.value) {
-        // 就找 typeWriterRef 的背景色
-        const typeWriterRefColor = getComputedStyle(typeWriterRef.value).backgroundColor
-        const isTypeWriterRefTransparent = typeWriterRefColor === 'rgba(0, 0, 0, 0)' || typeWriterRefColor === 'transparent' || typeWriterRefColor === 'initial'
-        if (isTypeWriterRefTransparent) {
-          // 找 .el-bubble-content 的背景色
-          const bubbleContent = document.querySelector('.el-bubble-content')
-          if (bubbleContent) {
-            const bubbleContentColor = getComputedStyle(bubbleContent).backgroundColor
-            const isBubbleContentTransparent = bubbleContentColor === 'rgba(0, 0, 0, 0)' || bubbleContentColor === 'transparent' || bubbleContentColor === 'initial'
-            if (isBubbleContentTransparent) {
-              // 找 .el-bubble 的背景色
-              const bubbleContent = document.querySelector('.el-bubble')
-              if (bubbleContent) {
-                const bubbleContentColor = window.getComputedStyle(bubbleContent).getPropertyValue('background-color')
-                const isBubbleContentTransparent = bubbleContentColor === 'rgba(0, 0, 0, 0)' || bubbleContentColor === 'transparent' || bubbleContentColor === 'initial'
-                if (!isBubbleContentTransparent) {
-                  // 这个没有就不往后找了，用默认的
-                  markdownContentRef.value.style.setProperty('--el-fill-color', bubbleContentColor)
-                }
-              }
-            } else {
-              markdownContentRef.value.style.setProperty('--el-fill-color', bubbleContentColor)
-            }
-          }
-        } else {
-          markdownContentRef.value.style.setProperty('--el-fill-color', typeWriterRefColor)
+    let bgColor = getBackgroundColor(markdownContentRef.value)
+    if (!bgColor) {
+      bgColor = getBackgroundColor(typeWriterRef.value)
+      if (!bgColor) {
+        const bubbleContent = document.querySelector('.el-bubble-content') as HTMLElement | null
+        bgColor = getBackgroundColor(bubbleContent)
+        if (!bgColor) {
+          const bubble = document.querySelector('.el-bubble') as HTMLElement | null
+          bgColor = getBackgroundColor(bubble)
         }
       }
     }
-    else {
-      markdownContentRef.value.style.setProperty('--el-fill-color', markdownContentRefColor)
+    if (bgColor) {
+      markdownContentRef.value.style.setProperty('--el-fill-color', bgColor)
     }
   }
 }
@@ -277,13 +257,14 @@ defineExpose(instance)
           'markdown-content': isMarkdown,
           'typing-cursor': typing && mergedConfig.suffix && isTyping,
           'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
+          'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
         },
         isMarkdown ? 'markdown-body' : '',
       ]"
       :style="{
         '--cursor-char': `'${mergedConfig.suffix}'`,
-        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ? props.isFog.bgColor : 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
-        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ? props.isFog.width : '80px' : '80px') : '',
+        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
+        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
       }"
       v-html="renderedContent"
     />
@@ -298,24 +279,26 @@ defineExpose(instance)
 }
 // 新增 md 雾化效果
 // 添加对 h1-h6, ol, ul 的特殊处理
-.markdown-content :deep() h1,
-.markdown-content :deep() h2,
-.markdown-content :deep() h3,
-.markdown-content :deep() h4,
-.markdown-content :deep() h5,
-.markdown-content :deep() h6,
-.markdown-content :deep() p,
-.markdown-content :deep() ol:last-child li,
-.markdown-content :deep() ul:last-child li {
-  position: relative;
-  overflow: hidden;
-  &:last-child:after {
-    content: '';
-    width: var(--cursor-fog-width);
-    height: 1.5em;
-    background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-    position: absolute;
-    margin-left: calc(-1 * var(--cursor-fog-width));
+.typing-markdown-cursor-foggy,.typing-cursor-foggy {
+  &.markdown-content :deep() h1,
+  &.markdown-content :deep() h2,
+  &.markdown-content :deep() h3,
+  &.markdown-content :deep() h4,
+  &.markdown-content :deep() h5,
+  &.markdown-content :deep() h6,
+  &.markdown-content :deep() p,
+  &.markdown-content :deep() ol:last-child li,
+  &.markdown-content :deep() ul:last-child li {
+    position: relative;
+    overflow: hidden;
+    &:last-child:after {
+      content: '';
+      width: var(--cursor-fog-width);
+      height: 1.5em;
+      background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
+      position: absolute;
+      margin-left: calc(-1 * var(--cursor-fog-width));
+    }
   }
 }
 

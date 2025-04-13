@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { MentionOption, SenderProps } from './types.d.ts'
+import type { SenderProps } from './types.d.ts'
+import EditorInput from '../EditorInput/index.vue'
 import {
   ClearButton,
   LoadingButton,
@@ -19,25 +20,43 @@ const props = withDefaults(defineProps<SenderProps>(), {
   inputWidth: '100%',
   modelValue: '', // 显式定义value的默认值
 
-  // el-input 属性透传
-  inputStyle: '',
+  variant: 'default',
+  showUpdown: true,
 
-  // el-mention 属性透传
-  options: () => [],
-  filterOption: () => true,
-  whole: false,
-  checkIsWhole: () => false,
-  triggerLoading: false,
-  triggerStrings: () => [],
-  triggerPopoverPlacement: 'top',
-  triggerPopoverOffset: 20,
-  triggerPopoverClass: '',
+  // el-input 属性透传
+  inputStyle: () => {},
+
+  triggerStrings: () => [], // 指令字符数组，默认空数组
+  triggerPopoverVisible: false,
+  triggerPopoverWidth: 'fit-content',
+  triggerPopoverLeft: '0px',
+  triggerPopoverOffset: 8,
+  triggerPopoverPlacement: 'top-start',
 })
 
-const emits = defineEmits(['update:modelValue', 'submit', 'cancel', 'recordingChange', 'search', 'select'])
+const emits = defineEmits([
+  'update:modelValue',
+
+  'update:triggerPopoverVisible',
+
+  'submit',
+  'cancel',
+  'recordingChange',
+
+  'trigger',
+])
 
 const slots = defineSlots()
 
+// 获取当前组件实例
+const instance = getCurrentInstance()
+// 判断是否存在 submit 监听器
+const hasOnRecordingChangeListener = computed(() => {
+  return !!instance?.vnode.props?.onRecordingChange
+})
+const senderRef = ref()
+const inputRef = ref()
+const contentRef = ref()
 const internalValue = computed({
   get() {
     return props.modelValue
@@ -49,14 +68,91 @@ const internalValue = computed({
   },
 })
 
-// 获取当前组件实例
-const instance = getCurrentInstance()
-// 判断是否存在 submit 监听器
-const hasOnRecordingChangeListener = computed(() => {
-  return !!instance?.vnode.props?.onRecordingChange
+// 处理输入法组合状态
+const isComposing = ref(false)
+const popoverRef = ref()
+// 判断是否存在 trigger 监听器
+const hasOnTriggerListener = computed(() => {
+  return !!instance?.vnode.props?.onTrigger
 })
-const senderRef = ref()
-const inputRef = ref()
+
+const popoverVisible = computed({
+  get() {
+    return props.triggerPopoverVisible
+  },
+  set(value) {
+    if (props.readOnly || props.disabled)
+      return
+    emits('update:triggerPopoverVisible', value)
+  },
+})
+
+// 当前触发 指令的 字符
+const triggerString = ref('')
+
+// 监听输入值变化
+watch(
+  () => internalValue.value,
+  (newVal, oldVal) => {
+    if (isComposing.value)
+      return
+    // 触发逻辑：当输入值等于数组中的任意一个指令字符时触发
+    // 确保 oldVal 是字符串类型
+    const triggerStrings = props.triggerStrings || [] // 如果为 undefined，就使用空数组
+    const validOldVal = typeof oldVal === 'string' ? oldVal : ''
+    const wasOldValTrigger = triggerStrings.includes(validOldVal)
+    const isNewValTrigger = triggerStrings.includes(newVal)
+
+    // 触发显示：从空变为触发字符
+    if (oldVal === '' && isNewValTrigger) {
+      triggerString.value = newVal
+      if (hasOnTriggerListener.value) {
+        emits('trigger', {
+          oldValue: oldVal, // 关闭时返回之前触发的字符
+          newValue: newVal,
+          triggerString: newVal,
+          isOpen: true,
+        })
+        popoverVisible.value = true
+      }
+      else {
+        popoverVisible.value = true
+      }
+    }
+    // 关闭：从触发字符变为非触发字符
+    else if (!isNewValTrigger && wasOldValTrigger) {
+      if (hasOnTriggerListener.value) {
+        emits('trigger', {
+          oldValue: oldVal, // 关闭时返回之前触发的字符
+          newValue: newVal,
+          triggerString: undefined,
+          isOpen: false,
+        })
+        popoverVisible.value = false
+      }
+      else {
+        popoverVisible.value = false
+      }
+    }
+    // 触发显示：从非空且非触发字符变为触发字符
+    else if (oldVal !== '' && isNewValTrigger && !wasOldValTrigger) {
+      triggerString.value = newVal
+      if (hasOnTriggerListener.value) {
+        emits('trigger', {
+          oldValue: oldVal, // 关闭时返回之前触发的字符
+          newValue: newVal,
+          triggerString: newVal,
+          isOpen: true,
+        })
+        popoverVisible.value = true
+      }
+      else {
+        popoverVisible.value = true
+      }
+    }
+  },
+  { deep: true, immediate: true },
+)
 
 /* 内容容器聚焦 开始 */
 function onContentMouseDown(e: MouseEvent) {
@@ -64,7 +160,7 @@ function onContentMouseDown(e: MouseEvent) {
   if (e.target !== senderRef.value.querySelector(`.el-textarea__inner`)) {
     e.preventDefault()
   }
-  inputRef.value.input.focus()
+  inputRef.value.focus()
 }
 /* 内容容器聚焦 结束 */
 
@@ -147,7 +243,7 @@ function stopRecognition() {
 
 /* 输入框事件 开始 */
 function submit() {
-  if (props.readOnly || props.loading || props.disabled)
+  if (props.readOnly || props.loading || props.disabled || !internalValue.value)
     return
   emits('submit', internalValue.value)
 }
@@ -161,7 +257,7 @@ function cancel() {
 function clear() {
   if (props.readOnly)
     return // 直接返回，不执行后续逻辑
-  inputRef.value.input.clear()
+  inputRef.value.clear()
   internalValue.value = ''
 }
 
@@ -173,11 +269,12 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
     // 判断是否按下了 Shift + 回车键
     if (e.shiftKey && e.keyCode === 13) {
       e.preventDefault()
-      const cursorPosition = e.target.selectionStart // 获取光标位置
-      const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
-      const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
-      internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      // const cursorPosition = e.target.selectionStart // 获取光标位置
+      // const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
+      // const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
+      // internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
+      // e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      inputRef.value.insertNewLine()
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
       // 阻止掉 Enter 的默认换行行为
@@ -196,11 +293,12 @@ function handleKeyDown(e: { target: HTMLTextAreaElement } & KeyboardEvent) {
     }
     else if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault()
-      const cursorPosition = e.target.selectionStart // 获取光标位置
-      const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
-      const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
-      internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
-      e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      // const cursorPosition = e.target.selectionStart // 获取光标位置
+      // const textBeforeCursor = internalValue.value.slice(0, cursorPosition) // 光标前的文本
+      // const textAfterCursor = internalValue.value.slice(cursorPosition) // 光标后的文本
+      // internalValue.value = `${textBeforeCursor}\n${textAfterCursor}` // 插入换行符
+      // e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1) // 更新光标位置
+      inputRef.value.insertNewLine()
     }
   }
 }
@@ -211,7 +309,7 @@ function blur() {
   if (props.readOnly) {
     return false
   }
-  inputRef.value.input.blur()
+  inputRef.value.blur()
 }
 
 function focus(type = 'all') {
@@ -219,52 +317,25 @@ function focus(type = 'all') {
     return false
   }
   if (type === 'all') {
-    inputRef.value.input.select()
+    inputRef.value.select()
   }
   else if (type === 'start') {
-    focusToStart()
+    inputRef.value.moveToStart()
   }
   else if (type === 'end') {
-    focusToEnd()
-  }
-}
-
-// 聚焦到文本最前方
-function focusToStart() {
-  if (inputRef.value) {
-    // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.input.$el.querySelector('textarea')
-    if (textarea) {
-      textarea.focus() // 聚焦到输入框
-      textarea.setSelectionRange(0, 0) // 设置光标到最前方
-    }
-  }
-}
-
-// 聚焦到文本最后方
-function focusToEnd() {
-  if (inputRef.value) {
-    // 获取底层的 textarea DOM 元素
-    const textarea = inputRef.value.input.$el.querySelector('textarea')
-    if (textarea) {
-      textarea.focus() // 聚焦到输入框
-      textarea.setSelectionRange(internalValue.value.length, internalValue.value.length) // 设置光标到最后方
-    }
+    inputRef.value.moveToEnd()
   }
 }
 /* 焦点 事件 结束 */
 
-/* 指令相关 开始 */
-function handleSearch(pattern: string, prefix: string) {
-  console.log('handleSearch', pattern, prefix)
-  emits('search', pattern, prefix)
+// 处理输入法开始/结束 (此方法是拼音输入法的时候用)
+function handleCompositionStart() {
+  isComposing.value = true
 }
 
-function handleSelect(option: MentionOption, prefix: string) {
-  console.log('handleSelect', option, prefix)
-  emits('select', option, prefix)
+function handleCompositionEnd() {
+  isComposing.value = false
 }
-/* 指令相关 开始 */
 
 defineExpose({
   openHeader, // 打开头部
@@ -283,7 +354,11 @@ defineExpose({
 <template>
   <div
     class="el-sender-wrap"
-    :style="{ cursor: disabled ? 'not-allowed' : 'default' }"
+    :style="{
+      'cursor': disabled ? 'not-allowed' : 'default',
+      '--el-sender-trigger-popover-width': props.triggerPopoverWidth,
+      '--el-sender-trigger-popover-left': props.triggerPopoverLeft,
+    }"
   >
     <div
       ref="senderRef"
@@ -309,14 +384,18 @@ defineExpose({
           </div>
         </div>
       </Transition>
-      <!-- 内容容器 -->
-      <div class="el-sender-content" @mousedown="onContentMouseDown">
+      <!-- 内容容器 内置变体逻辑 -->
+      <div
+        ref="contentRef"
+        class="el-sender-content"
+        :class="{ 'content-variant-updown': props.variant === 'updown' }" @mousedown="onContentMouseDown"
+      >
         <!-- Prefix 前缀 -->
-        <div v-if="$slots.prefix" class="el-sender-prefix">
+        <div v-if="$slots.prefix && props.variant === 'default'" class="el-sender-prefix">
           <slot name="prefix" />
         </div>
         <!-- 输入框 -->
-        <el-mention
+        <EditorInput
           ref="inputRef"
           v-model="internalValue"
           class="el-sender-input"
@@ -333,44 +412,17 @@ defineExpose({
           :read-only="readOnly || disabled"
           :disabled="disabled"
           :inpurt-style="props.inputStyle"
-          :options="props.options"
-          :filter-option="props.filterOption"
-          :whole="props.whole"
-          :check-is-whole="props.checkIsWhole"
-          :loading="props.triggerLoading"
-          :prefix="props.triggerStrings"
-          :placement="props.triggerPopoverPlacement"
-          :offset="props.triggerPopoverOffset"
-          :popper-class="props.triggerPopoverClass"
           @keydown.stop="handleKeyDown"
-          @search="handleSearch"
-          @select="handleSelect"
-        >
-          <!-- 自定义标签内容 -->
-          <template v-if="$slots['trigger-label']" #label="{ item, index }">
-            <slot name="trigger-label" :item="item" :index="index" />
-          </template>
-          <!-- 自定义加载中内容 -->
-          <template v-if="$slots['trigger-loading']" #loading>
-            <slot name="trigger-loading" />
-          </template>
-          <!-- 自定义下拉列表头部 -->
-          <template v-if="$slots['trigger-header']" #header>
-            <slot name="trigger-header" />
-          </template>
-          <!-- 自定义下拉列表底部 -->
-          <template v-if="$slots['trigger-footer']" #footer>
-            <slot name="trigger-footer" />
-          </template>
-        </el-mention>
-
+          @compositionstart="handleCompositionStart"
+          @compositionend="handleCompositionEnd"
+        />
         <!-- 操作列表 -->
-        <div class="el-sender-action-list">
+        <div v-if="props.variant === 'default'" class="el-sender-action-list">
           <slot name="action-list">
             <div
               class="el-sender-action-list-presets"
             >
-              <SendButton v-if="!loading" @submit="submit" />
+              <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
 
               <LoadingButton v-if="loading" @cancel="cancel" />
 
@@ -388,8 +440,66 @@ defineExpose({
             </div>
           </slot>
         </div>
+
+        <!-- 变体样式 -->
+        <div v-if="props.variant === 'updown' && props.showUpdown" class="el-sender-updown-wrap">
+          <!-- 变体 updown： Prefix 前缀 -->
+          <div v-if="$slots.prefix" class="el-sender-prefix">
+            <slot name="prefix" />
+          </div>
+
+          <!-- 变体 updown：操作列表 -->
+          <div class="el-sender-action-list">
+            <slot name="action-list">
+              <div
+                class="el-sender-action-list-presets"
+              >
+                <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+
+                <LoadingButton v-if="loading" @cancel="cancel" />
+
+                <SpeechButton
+                  v-if="!speechLoading && allowSpeech"
+                  @click="startRecognition"
+                />
+
+                <SpeechLoadingButton
+                  v-if="speechLoading && allowSpeech"
+                  @click="stopRecognition"
+                />
+
+                <ClearButton v-if="clearable" @clear="clear" />
+              </div>
+            </slot>
+          </div>
+        </div>
       </div>
+
+      <!-- 底部容器 -->
+      <Transition name="slide">
+        <div v-if="$slots.footer" class="el-sender-footer">
+          <slot name="footer" />
+        </div>
+      </Transition>
     </div>
+
+    <!-- 虚拟触发 popover -->
+    <el-popover
+      ref="popoverRef"
+      :virtual-ref="senderRef"
+      virtual-triggering
+      :visible="popoverVisible"
+      :disabled="props.disabled"
+      :show-arrow="false"
+      :placement="props.triggerPopoverPlacement"
+      :offset="props.triggerPopoverOffset"
+      popper-class="el-sender-trigger-popover"
+      :teleported="false"
+    >
+      <slot name="trigger-popover" :trigger-string="triggerString" :readonly="props.readOnly">
+        当前触发的字符为：{{ `${triggerString}` }} 在这里定义的内容，但注意这里的回车事件将会被 输入框 覆盖
+      </slot>
+    </el-popover>
   </div>
 </template>
 
@@ -453,7 +563,7 @@ defineExpose({
   .slide-enter-from,
   .slide-leave-to {
     height: 0;
-    opacity: 0;
+    opacity: 0 !important;
   }
 
   .el-sender-header {
@@ -481,40 +591,34 @@ defineExpose({
       display: flex;
       align-items: center;
       align-self: center;
-    }
-    // el-mention
-    .el-mention {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      align-self: center;
-    }
-    :deep(.el-textarea__inner) {
-      padding: 0;
-      margin: 0;
-      color: var(--el-text-color-primary);
-      font-size: var(--el-sender-input-input-font-size);
-      line-height: var(--el-font-line-height-primary);
-      list-style: none;
-      position: relative;
-      display: inline-block;
-      box-sizing: border-box;
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      height: auto;
-      min-height: auto !important;
-      border-radius: 0;
-      border: none;
-      flex: auto;
-      align-self: center;
-      vertical-align: bottom;
-      resize: none;
-      background-color: transparent;
-      transition:
-        all var(--el-transition-duration),
-        height 0s;
-      box-shadow: none !important;
+
+      :deep(.el-textarea__inner) {
+        padding: 0;
+        margin: 0;
+        color: var(--el-text-color-primary);
+        font-size: var(--el-sender-input-input-font-size);
+        line-height: var(--el-font-line-height-primary);
+        list-style: none;
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        height: auto;
+        min-height: auto !important;
+        border-radius: 0;
+        border: none;
+        flex: auto;
+        align-self: center;
+        vertical-align: bottom;
+        resize: none;
+        background-color: transparent;
+        transition:
+          all var(--el-transition-duration),
+          height 0s;
+        box-shadow: none !important;
+      }
     }
     // 操作列表
     .el-sender-action-list-presets {
@@ -523,10 +627,39 @@ defineExpose({
       flex-direction: row-reverse;
     }
   }
+
+  // 变体样式 --variant
+  .content-variant-updown {
+    display: flex;
+    flex-direction: column;
+    align-items: initial;
+    .el-sender-updown-wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      // 前缀
+      .el-sender-prefix {
+        flex: initial;
+      }
+    }
+  }
+
+  // 底部容器
+  .el-sender-footer {
+    border-top-width: var(--el-border-width);
+    border-top-style: solid;
+    border-top-color: var(--el-border-color);
+  }
 }
 
 .el-sender-disabled {
   background-color: var(--el-fill-color);
   pointer-events: none;
+}
+
+:deep(.el-sender-trigger-popover) {
+  width: var(--el-sender-trigger-popover-width) !important;
+  max-width: calc(100% - 54px) !important;
+  margin-left: var(--el-sender-trigger-popover-left) !important;
 }
 </style>
