@@ -329,6 +329,7 @@ defineExpose(instance)
   }
 
   .el-bubble-content-loading {
+    width: fit-content;
     .el-bubble-loading-wrap {
       display: flex;
       justify-content: center;

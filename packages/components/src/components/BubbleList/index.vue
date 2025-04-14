@@ -394,8 +394,8 @@ defineExpose({
 
     .back-to-bottom-loading-svg-bg {
       position: absolute;
-      font-size: 50px;
-      animation: is-loading 1.3s infinite linear;
+      font-size: 48px;
+      animation: is-loading 1s infinite linear;
     }
 
     @keyframes is-loading {
