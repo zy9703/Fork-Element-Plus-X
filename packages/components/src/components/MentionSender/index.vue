@@ -430,7 +430,7 @@ defineExpose({
 
       <!-- 底部容器 -->
       <Transition name="slide">
-        <div v-if="$slots.footer" class="el-sender-footer">
+        <div v-if="$slots.footer" class="el-sender-footer" @mousedown="onContentMouseDown">
           <slot name="footer" />
         </div>
       </Transition>
@@ -581,6 +581,10 @@ defineExpose({
       // 前缀
       .el-sender-prefix {
         flex: initial;
+      }
+
+      .el-sender-action-list {
+        margin-left: auto;
       }
     }
   }

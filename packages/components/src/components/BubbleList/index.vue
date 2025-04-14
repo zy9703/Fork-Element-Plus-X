@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   },
   btnLoading: true,
   btnColor: '#409EFF',
+  btnIconSize: 24,
 })
 
 const emits = defineEmits(['complete'])
@@ -226,6 +227,7 @@ defineExpose({
     :class="{ 'always-scrollbar': props.alwaysShowScrollbar }"
     :style="{
       '--el-bubble-list-max-height': `${maxHeight}`,
+      '--el-bubble-list-btn-size': `${props.btnIconSize}px`,
     }"
     @scroll="handleScroll"
   >
@@ -389,12 +391,12 @@ defineExpose({
   }
 
   .el-bubble-list-back-to-bottom-icon {
-    font-size: 24px;
+    font-size: var(--el-bubble-list-btn-size);
     position: relative;
 
     .back-to-bottom-loading-svg-bg {
       position: absolute;
-      font-size: 48px;
+      font-size: calc(var(--el-bubble-list-btn-size) + 26px);
       animation: is-loading 1s infinite linear;
     }
 
