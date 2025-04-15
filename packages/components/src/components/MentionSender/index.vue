@@ -150,7 +150,7 @@ function stopRecognition() {
 
 /* 输入框事件 开始 */
 function submit() {
-  if (props.readOnly || props.loading || props.disabled)
+  if (props.readOnly || props.loading || props.disabled || !internalValue.value)
     return
   emits('submit', internalValue.value)
 }
@@ -374,7 +374,7 @@ defineExpose({
             <div
               class="el-sender-action-list-presets"
             >
-              <SendButton v-if="!loading" @submit="submit" />
+              <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
 
               <LoadingButton v-if="loading" @cancel="cancel" />
 
