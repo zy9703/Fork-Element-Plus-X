@@ -395,9 +395,6 @@ defineExpose({
       ref="senderRef"
       class="el-sender"
       :style="{
-        '--el-padding-xs': '8px',
-        '--el-padding-sm': '12px',
-        '--el-padding': '16px',
         '--el-box-shadow-tertiary':
           '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
         '--el-sender-input-input-font-size': '14px',
@@ -571,7 +568,7 @@ defineExpose({
   .el-sender-header-wrap {
     display: flex;
     flex-direction: column;
-    gap: var(--el-padding-xs);
+    gap: var(--el-padding-xs, 8px);
     width: 100%;
     margin: 0;
     padding: 0;
@@ -604,11 +601,11 @@ defineExpose({
 
   .el-sender-content {
     display: flex;
-    gap: var(--el-padding-xs);
+    gap: var(--el-padding-xs, 8px);
     width: 100%;
-    padding-block: var(--el-padding-sm);
-    padding-inline-start: var(--el-padding);
-    padding-inline-end: var(--el-padding-sm);
+    padding-block: var(--el-padding-sm, 12px);
+    padding-inline-start: var(--el-padding, 16px);
+    padding-inline-end: var(--el-padding-sm, 12px);
     box-sizing: border-box;
     align-items: flex-end;
     // 前缀
@@ -653,7 +650,7 @@ defineExpose({
     // 操作列表
     .el-sender-action-list-presets {
       display: flex;
-      gap: var(--el-padding-xs);
+      gap: var(--el-padding-xs, 8px);
       flex-direction: row-reverse;
     }
   }

@@ -5,7 +5,7 @@ import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
 // 在组件中初始化时
 import Prism from 'prismjs'
-import 'github-markdown-css'
+// import 'github-markdown-css'
 // import 'prismjs/themes/prism.css' // 样式影响其他组件库 暂时注释处理
 
 const props = withDefaults(defineProps<TypewriterProps>(), {

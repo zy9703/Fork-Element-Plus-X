@@ -60,7 +60,6 @@ watch(() => props.status, (newVal) => {
       '--el-thinking-content-wrapper-width': props.maxWidth,
       '--el-thinking-content-wrapper-background-color': props.backgroundColor,
       '--el-thinking-content-wrapper-color': props.color,
-      '--el-padding-sm': '12px',
     }"
   >
     <!-- 触发按钮 -->
@@ -151,7 +150,7 @@ watch(() => props.status, (newVal) => {
   height: 100%;
   width: var(--el-thinking-button-width);
   gap: 8px;
-  padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
+  padding: var(--el-padding-sm, 12px) calc(var(--el-padding-sm, 12px) + 4px);
   border: 1px solid #e4e4e4;
   border-radius: 8px;
   background: white;
@@ -237,7 +236,7 @@ watch(() => props.status, (newVal) => {
 .content pre {
   border: 1px solid #eee;
   background: var(--el-thinking-content-wrapper-background-color);
-  padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
+  padding: var(--el-padding-sm, 12px) calc(var(--el-padding-sm, 12px) + 4px);
   border-radius: calc(var(--el-border-radius-base) + 4px);
   max-width: var(--el-thinking-content-wrapper-width);
   font-size: 14px;
