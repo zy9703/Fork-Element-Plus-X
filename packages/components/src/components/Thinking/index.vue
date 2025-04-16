@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<ThinkingProps>(), {
   disabled: false,
   autoCollapse: false,
   buttonWidth: '160px',
-  duration: '0.25s',
+  duration: '0.2s',
   maxWidth: '500px',
   backgroundColor: '#fcfcfc',
   color: 'var(--el-color-info)',
@@ -140,7 +140,7 @@ watch(() => props.status, (newVal) => {
 </template>
 
 <style scoped lang="scss">
-.el-thought-chain {
+.el-thinking {
   font-family: system-ui, sans-serif;
   margin: 0 auto;
 }
@@ -149,14 +149,13 @@ watch(() => props.status, (newVal) => {
   display: flex;
   align-items: center;
   height: 100%;
-  width: var(--el-thought-chaian-button-width);
+  width: var(--el-thinking-button-width);
   gap: 8px;
   padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
   border: 1px solid #e4e4e4;
   border-radius: 8px;
   background: white;
   cursor: pointer;
-  transition: all 0.2s;
   margin-bottom: 8px;
 
   /* 居中 */
@@ -206,7 +205,7 @@ watch(() => props.status, (newVal) => {
 
 .arrow {
   margin-left: auto;
-  transition: transform var(--el-thought-chaian-animation-duration);
+  transition: transform var(--el-thinking-animation-duration);
 }
 
 .arrow.expanded {
@@ -218,8 +217,8 @@ watch(() => props.status, (newVal) => {
 .slide-leave-active {
   height: calc-size(max-content, size);
   transition:
-    height var(--el-thought-chaian-animation-duration) ease-in-out,
-    opacity var(--el-thought-chaian-animation-duration) ease-in-out;
+    height var(--el-thinking-animation-duration) ease-in-out,
+    opacity var(--el-thinking-animation-duration) ease-in-out;
   overflow: hidden;
 }
 
@@ -236,13 +235,13 @@ watch(() => props.status, (newVal) => {
 }
 
 .content pre {
-  max-width: var(--el-thought-chaian-content-wrapper-width);
-  background: var(--el-thought-chaian-content-wrapper-background-color);
   border: 1px solid #eee;
-  border-radius: calc(var(--el-border-radius-base) + 4px);
+  background: var(--el-thinking-content-wrapper-background-color);
   padding: var(--el-padding-sm) calc(var(--el-padding-sm) + 4px);
+  border-radius: calc(var(--el-border-radius-base) + 4px);
+  max-width: var(--el-thinking-content-wrapper-width);
   font-size: 14px;
-  color: var(--el-thought-chaian-content-wrapper-color);
+  color: var(--el-thinking-content-wrapper-color);
   white-space: pre-wrap;
   font-family: DeepSeek-CJK-patch,Inter,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Cantarell,Helvetica Neue,Oxygen,Open Sans,sans-serif;
   margin: 0;
@@ -255,8 +254,6 @@ watch(() => props.status, (newVal) => {
 }
 
 .error-message {
-  border: 1px solid #e76875;
-  border-radius: calc(var(--el-border-radius-base) + 4px);
   color: #dc3545;
   height: fit-content;
   padding: 8px;

@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<MentionSenderProps>(), {
 
   variant: 'default',
   showUpdown: true,
+  submitBtnDisabled: undefined,
 
   // el-input 属性透传
   inputStyle: '',
@@ -29,12 +30,12 @@ const props = withDefaults(defineProps<MentionSenderProps>(), {
   options: () => [],
   filterOption: () => true,
   whole: false,
-  checkIsWhole: () => false,
+  checkIsWhole: () => true,
   triggerLoading: false,
   triggerStrings: () => [],
+  triggerSplit: ' ',
   triggerPopoverPlacement: 'top',
   triggerPopoverOffset: 20,
-  triggerPopoverClass: '',
 })
 
 const emits = defineEmits(['update:modelValue', 'submit', 'cancel', 'recordingChange', 'search', 'select'])
@@ -60,6 +61,16 @@ const hasOnRecordingChangeListener = computed(() => {
 })
 const senderRef = ref()
 const inputRef = ref()
+
+// 计算提交按钮禁用状态
+const isSubmitDisabled = computed(() => {
+  // 用户显式设置了 submitBtnDisabled 时优先使用
+  if (typeof props.submitBtnDisabled === 'boolean') {
+    return props.submitBtnDisabled
+  }
+  // 否则保持默认逻辑：无内容时禁用
+  return !internalValue.value
+})
 
 /* 内容容器聚焦 开始 */
 function onContentMouseDown(e: MouseEvent) {
@@ -150,7 +161,7 @@ function stopRecognition() {
 
 /* 输入框事件 开始 */
 function submit() {
-  if (props.readOnly || props.loading || props.disabled || !internalValue.value)
+  if (props.readOnly || props.loading || props.disabled || isSubmitDisabled.value)
     return
   emits('submit', internalValue.value)
 }
@@ -343,9 +354,9 @@ defineExpose({
           :check-is-whole="props.checkIsWhole"
           :loading="props.triggerLoading"
           :prefix="props.triggerStrings"
+          :split="props.triggerSplit"
           :placement="props.triggerPopoverPlacement"
           :offset="props.triggerPopoverOffset"
-          :popper-class="props.triggerPopoverClass"
           @keydown.stop="handleKeyDown"
           @search="handleSearch"
           @select="handleSelect"
@@ -374,7 +385,7 @@ defineExpose({
             <div
               class="el-sender-action-list-presets"
             >
-              <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+              <SendButton v-if="!loading" :disabled="isSubmitDisabled" @submit="submit" />
 
               <LoadingButton v-if="loading" @cancel="cancel" />
 
@@ -406,7 +417,7 @@ defineExpose({
               <div
                 class="el-sender-action-list-presets"
               >
-                <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+                <SendButton v-if="!loading" :disabled="isSubmitDisabled" @submit="submit" />
 
                 <LoadingButton v-if="loading" @cancel="cancel" />
 

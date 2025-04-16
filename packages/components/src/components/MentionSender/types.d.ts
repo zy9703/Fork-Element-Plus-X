@@ -24,6 +24,7 @@ export interface MentionSenderProps {
   // 变体属性
   variant?: 'default' | 'updown'
   showUpdown?: boolean
+  submitBtnDisabled?: boolean
 
   // 新增 el-input 样式透传
   inputStyle?: string | CSSProperties | CSSProperties[] | string[]
@@ -40,8 +41,10 @@ export interface MentionSenderProps {
   triggerLoading?: boolean
   // 触发字段的前缀。 字符串长度必须且只能为 1
   triggerStrings?: string[]
+  // 触发字段的分隔符， 默认为空字符串。字符串长度必须且只能为 1
+  triggerSplit?: string
+  // 触发字段的下拉面板的弹出位置
   triggerPopoverPlacement?: 'bottom' | 'top'
+  // 触发字段的下拉面板的弹出位置偏移量
   triggerPopoverOffset?: number
-  // 自定义浮层类名
-  triggerPopoverClass?: string
 }

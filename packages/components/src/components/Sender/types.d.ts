@@ -17,6 +17,7 @@ export interface SenderProps {
   // 变体属性
   variant?: 'default' | 'updown'
   showUpdown?: boolean
+  submitBtnDisabled?: boolean
 
   // 新增 el-input 样式透传
   inputStyle?: string | CSSProperties | CSSProperties[] | string[]
