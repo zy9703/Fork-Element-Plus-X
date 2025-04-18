@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<SenderProps>(), {
 
   variant: 'default',
   showUpdown: true,
+  submitBtnDisabled: undefined,
 
   // el-input 属性透传
   inputStyle: () => {},
@@ -72,6 +73,16 @@ const popoverRef = ref()
 // 判断是否存在 trigger 监听器
 const hasOnTriggerListener = computed(() => {
   return !!instance?.vnode.props?.onTrigger
+})
+
+// 计算提交按钮禁用状态
+const isSubmitDisabled = computed(() => {
+  // 用户显式设置了 submitBtnDisabled 时优先使用
+  if (typeof props.submitBtnDisabled === 'boolean') {
+    return props.submitBtnDisabled
+  }
+  // 否则保持默认逻辑：无内容时禁用
+  return !internalValue.value
 })
 
 const popoverVisible = computed({
@@ -241,7 +252,7 @@ function stopRecognition() {
 
 /* 输入框事件 开始 */
 function submit() {
-  if (props.readOnly || props.loading || props.disabled || !internalValue.value)
+  if (props.readOnly || props.loading || props.disabled || isSubmitDisabled.value)
     return
   emits('submit', internalValue.value)
 }
@@ -384,9 +395,6 @@ defineExpose({
       ref="senderRef"
       class="el-sender"
       :style="{
-        '--el-padding-xs': '8px',
-        '--el-padding-sm': '12px',
-        '--el-padding': '16px',
         '--el-box-shadow-tertiary':
           '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
         '--el-sender-input-input-font-size': '14px',
@@ -441,7 +449,7 @@ defineExpose({
             <div
               class="el-sender-action-list-presets"
             >
-              <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+              <SendButton v-if="!loading" :disabled="isSubmitDisabled" @submit="submit" />
 
               <LoadingButton v-if="loading" @cancel="cancel" />
 
@@ -473,7 +481,7 @@ defineExpose({
               <div
                 class="el-sender-action-list-presets"
               >
-                <SendButton v-if="!loading" :disabled="!internalValue" @submit="submit" />
+                <SendButton v-if="!loading" :disabled="isSubmitDisabled" @submit="submit" />
 
                 <LoadingButton v-if="loading" @cancel="cancel" />
 
@@ -560,7 +568,7 @@ defineExpose({
   .el-sender-header-wrap {
     display: flex;
     flex-direction: column;
-    gap: var(--el-padding-xs);
+    gap: var(--el-padding-xs, 8px);
     width: 100%;
     margin: 0;
     padding: 0;
@@ -593,11 +601,11 @@ defineExpose({
 
   .el-sender-content {
     display: flex;
-    gap: var(--el-padding-xs);
+    gap: var(--el-padding-xs, 8px);
     width: 100%;
-    padding-block: var(--el-padding-sm);
-    padding-inline-start: var(--el-padding);
-    padding-inline-end: var(--el-padding-sm);
+    padding-block: var(--el-padding-sm, 12px);
+    padding-inline-start: var(--el-padding, 16px);
+    padding-inline-end: var(--el-padding-sm, 12px);
     box-sizing: border-box;
     align-items: flex-end;
     // 前缀
@@ -642,7 +650,7 @@ defineExpose({
     // 操作列表
     .el-sender-action-list-presets {
       display: flex;
-      gap: var(--el-padding-xs);
+      gap: var(--el-padding-xs, 8px);
       flex-direction: row-reverse;
     }
   }
