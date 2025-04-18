@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ElScrollbar } from 'element-plus'
-import type { Conversation, ConversationItem } from './types'
+import type { Conversation, ConversationItem, GroupableOptions, TimeRange } from './types'
 import { Search, Top } from '@element-plus/icons-vue'
+import { isVNode } from 'vue'
 import Item from './components/item.vue'
 
 const props = withDefaults(defineProps<Conversation>(), {
@@ -9,10 +10,9 @@ const props = withDefaults(defineProps<Conversation>(), {
   style: () => ({}),
   showTooltip: () => false,
   groupable: () => false,
-  labelMaxWidth: () => 110,
+  labelMaxWidth: undefined,
   menu: () => [],
-  renderLabel: undefined,
-  renderMenu: undefined,
+  ungroupedTitle: '未分组',
 })
 
 // 定义搜索值模型
@@ -40,7 +40,7 @@ const shouldShowSearch = computed(() => {
 // 将传入的样式与默认样式合并
 const mergedStyle = computed(() => {
   const defaultStyle = {
-    padding: '10px',
+    padding: '10px 0 10px 10px',
     backgroundColor: '#fff',
     borderRadius: '8px',
     width: '280px',
@@ -56,16 +56,10 @@ const firstAvailableKey = computed(() => {
   return props.items.find(item => !item.disabled)?.key || ''
 })
 
-// 如果defaultActiveKey对应的项不是disabled，则使用defaultActiveKey，否则使用第一个可用的key
-const initialKey = computed(() => {
-  const defaultItem = props.items.find(item => item.key === props.defaultActiveKey)
-  return (!defaultItem?.disabled && props.defaultActiveKey) || firstAvailableKey.value
-})
-
 // 如果没有绑定activeKey或绑定的是disabled项，则使用initialKey
 watchEffect(() => {
   if (!activeKey.value || props.items.find(item => item.key === activeKey.value)?.disabled) {
-    activeKey.value = initialKey.value
+    activeKey.value = firstAvailableKey.value
   }
 })
 
@@ -77,42 +71,55 @@ function handleClick(key: string) {
   activeKey.value = key
 }
 
-// 获取相对时间描述的函数
-function getTimeDescription(timestamp: number): string {
-  const now = new Date()
-  const date = new Date(timestamp)
+// 判断是否需要使用分组
+const shouldUseGrouping = computed(() => {
+  // 有shortcuts时自动启用分组，或者groupable为true/对象/空字符串时启用分组
+  return !!props.shortcuts || props.groupable === '' || !!props.groupable
+})
 
-  // 获取今天的开始时间点
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+// 基于时间快捷方式判断时间戳属于哪个组
+function getShortcutGroup(timestamp: number): string | null {
+  if (!props.shortcuts || !timestamp)
+    return null
 
-  // 获取昨天的开始时间点
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
+  for (const [name, value] of Object.entries(props.shortcuts)) {
+    // 处理TimeRange类型
+    if (typeof value === 'object' && 'start' in value && 'end' in value) {
+      const range = value as TimeRange
+      if (timestamp >= range.start && timestamp <= range.end) {
+        return name
+      }
+    }
+    // 处理具体时间戳值
+    else if (typeof value === 'number') {
+      // 当timestamp与时间戳值在同一天时，将其归为一组
+      const itemDate = new Date(timestamp)
+      const shortcutDate = new Date(value)
+      if (
+        itemDate.getFullYear() === shortcutDate.getFullYear()
+        && itemDate.getMonth() === shortcutDate.getMonth()
+        && itemDate.getDate() === shortcutDate.getDate()
+      ) {
+        return name
+      }
+    }
+    // 处理时间戳函数
+    else if (typeof value === 'function') {
+      const dynamicValue = value()
+      // 同样检查是否在同一天
+      const itemDate = new Date(timestamp)
+      const shortcutDate = new Date(dynamicValue)
+      if (
+        itemDate.getFullYear() === shortcutDate.getFullYear()
+        && itemDate.getMonth() === shortcutDate.getMonth()
+        && itemDate.getDate() === shortcutDate.getDate()
+      ) {
+        return name
+      }
+    }
+  }
 
-  // 获取一周前的开始时间点
-  const oneWeekAgo = new Date(today)
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-
-  // 获取一个月前的开始时间点
-  const oneMonthAgo = new Date(today)
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
-
-  // 判断时间属于哪个区间
-  if (date >= today) {
-    return '今天'
-  }
-  else if (date >= yesterday) {
-    return '昨天'
-  }
-  else if (date >= oneWeekAgo) {
-    return '近七天'
-  }
-  else if (date >= oneMonthAgo) {
-    return '近一个月'
-  }
-  else {
-    return '更久以前'
-  }
+  return null
 }
 
 // 根据搜索值过滤项目
@@ -120,9 +127,12 @@ const filteredItems = computed(() => {
   if (!actualSearchValue.value)
     return props.items
 
-  // 当两者都存在时，优先使用searchMethod
+  // 当searchMethod存在时，调用它并传递搜索值
   if (props.searchMethod !== undefined) {
-    return props.searchMethod(props.items, actualSearchValue.value)
+    // 调用searchMethod，只传递搜索值
+    props.searchMethod(actualSearchValue.value)
+    // 返回原始items，由外部逻辑更新items
+    return props.items
   }
 
   // 默认的搜索方法
@@ -131,70 +141,148 @@ const filteredItems = computed(() => {
   )
 })
 
-// 根据时间戳进行分组
+// 根据分组方式进行分组
 const groups = computed(() => {
   // 如果不需要分组，则返回空数组
-  if (!props.groupable)
+  if (!shouldUseGrouping.value)
     return []
 
-  // 用于存储每个时间组的项目
-  const groupMap: Record<string, {
-    title: string
-    timestamp: number // 保留原始时间戳用于排序
-    key: string
-    children: ConversationItem[]
-  }> = {}
-  
   // 检查filteredItems是否有值
   if (!filteredItems.value || filteredItems.value.length === 0) {
     return []
   }
 
+  // 用于存储每个组的项目
+  const groupMap: Record<string, {
+    title: string
+    key: string
+    children: ConversationItem[]
+    timestamp?: number // 用于基于时间戳排序
+    isUngrouped?: boolean // 标记是否为未分组
+  }> = {}
+
   // 使用过滤后的项目进行分组
   filteredItems.value.forEach((item) => {
-    if (item.timestamp) {
-      // 获取时间描述
-      const timeDescription = getTimeDescription(item.timestamp)
+    let groupName: string | null = null
 
-      // 若该时间描述的组尚未创建，则创建一个新组
-      if (!groupMap[timeDescription]) {
-        groupMap[timeDescription] = {
-          title: timeDescription,
-          timestamp: item.timestamp, // 记录组内最新的时间戳，用于排序
-          key: timeDescription,
-          children: [],
+    // 优先使用item中的group字段
+    if (item.group) {
+      groupName = item.group
+    }
+    // 其次，如果有时间戳和快捷方式，则使用快捷方式分组
+    else if (item.timestamp && props.shortcuts) {
+      groupName = getShortcutGroup(item.timestamp)
+    }
+
+    // 如果没有找到分组，使用未分组
+    const finalGroupName = groupName || props.ungroupedTitle
+
+    // 若该组尚未创建，则创建一个新组
+    if (!groupMap[finalGroupName]) {
+      groupMap[finalGroupName] = {
+        title: finalGroupName,
+        key: finalGroupName,
+        children: [],
+        isUngrouped: !groupName, // 如果没有找到组名，则标记为未分组
+      }
+    }
+
+    // 记录组的代表性时间戳
+    if (!groupMap[finalGroupName].isUngrouped) {
+      // 处理具体的shortcuts时间戳
+      if (props.shortcuts && props.shortcuts[finalGroupName]) {
+        const shortcut = props.shortcuts[finalGroupName]
+        if (typeof shortcut === 'number') {
+          groupMap[finalGroupName].timestamp = shortcut
+        }
+        else if (typeof shortcut === 'function') {
+          groupMap[finalGroupName].timestamp = shortcut()
+        }
+        else if (typeof shortcut === 'object' && 'end' in shortcut) {
+          // 使用范围的结束时间作为代表时间戳
+          groupMap[finalGroupName].timestamp = shortcut.end
         }
       }
-      else {
-        // 更新组的时间戳为最新的时间戳，确保排序正确
-        groupMap[timeDescription].timestamp = Math.max(
-          groupMap[timeDescription].timestamp,
-          item.timestamp,
-        )
+      // 如果没有直接的timestamp，则放入未分组
+      else if (item.timestamp) {
+        if (!groupMap[finalGroupName].timestamp) {
+          groupMap[finalGroupName].timestamp = item.timestamp
+        }
+        else {
+          groupMap[finalGroupName].timestamp = Math.max(
+            groupMap[finalGroupName].timestamp!,
+            item.timestamp,
+          )
+        }
       }
-
-      // 将项目添加到相应的组中
-      groupMap[timeDescription].children.push(item)
     }
+
+    // 将项目添加到相应的组中
+    groupMap[finalGroupName].children.push(item)
   })
 
-  // 对每个组内的项目进行排序（按时间戳降序）
-  Object.values(groupMap).forEach(group => {
+  // 对每个组内的项目进行排序
+  Object.values(groupMap).forEach((group) => {
+    // 按时间戳降序排序（如果有的话）
     group.children.sort((a, b) => {
-      // 确保存在时间戳
       const timestampA = a.timestamp || 0
       const timestampB = b.timestamp || 0
       return timestampB - timestampA
     })
   })
 
-  // 将分组转换为数组并按时间戳降序排列
-  return Object.values(groupMap).sort((a, b) => b.timestamp - a.timestamp)
+  // 将分组转换为数组
+  const groupArray = Object.values(groupMap)
+
+  // 如果有自定义排序函数，使用它排序
+  if (typeof props.groupable === 'object' && props.groupable.sort) {
+    return groupArray.sort((a, b) => {
+      // 确保未分组总是在最后
+      if (a.isUngrouped)
+        return 1
+      if (b.isUngrouped)
+        return -1
+
+      const sortFn = (props.groupable as GroupableOptions).sort
+      return sortFn ? sortFn(a.key, b.key) : 0
+    })
+  }
+
+  // 否则按时间戳降序排序，未分组总是在最后
+  return groupArray.sort((a, b) => {
+    // 确保未分组总是在最后
+    if (a.isUngrouped)
+      return 1
+    if (b.isUngrouped)
+      return -1
+
+    // 按时间戳降序排序
+    return (b.timestamp || 0) - (a.timestamp || 0)
+  })
 })
+
+// 渲染分组标题
+function renderGroupTitle(groupName: string) {
+  if (typeof props.groupable === 'object' && props.groupable.title) {
+    const titleProp = (props.groupable as GroupableOptions).title
+    if (isVNode(titleProp)) {
+      return titleProp
+    }
+    else if (typeof titleProp === 'function') {
+      return titleProp(groupName)
+    }
+  }
+
+  return groupName
+}
 
 // 添加滚动相关的状态
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
 const showScrollTop = ref(false)
+const groupRefs = ref<Record<string, HTMLDivElement>>({})
+
+// 记录吸顶状态的组
+const stickyGroupKeys = ref<Set<string>>(new Set())
 
 // 监听滚动事件
 function handleScroll(e: any) {
@@ -224,6 +312,44 @@ function handleScroll(e: any) {
   if (isNearBottom) {
     loadMoreData()
   }
+
+  // 更新吸顶状态
+  updateStickyStatus(e)
+}
+
+// 更新标题吸顶状态
+function updateStickyStatus(_e: any) {
+  if (!shouldUseGrouping.value || groups.value.length === 0)
+    return
+
+  // 先清空当前的吸顶组
+  stickyGroupKeys.value.clear()
+
+  // 获取滚动容器的顶部位置
+  const scrollContainer = scrollbarRef.value?.wrapRef
+  if (!scrollContainer)
+    return
+
+  const scrollContainerTop = scrollContainer.getBoundingClientRect().top
+
+  // 遍历所有组，检查哪个组处于吸顶状态
+  for (const group of groups.value) {
+    const groupElement = groupRefs.value[group.key]
+    if (groupElement) {
+      const groupRect = groupElement.getBoundingClientRect()
+      const titleElement = groupElement.querySelector('.conversation-group-title') as HTMLElement
+
+      if (titleElement) {
+        const titleHeight = titleElement.offsetHeight
+        const relativeTop = groupRect.top - scrollContainerTop
+
+        // 当组的顶部位置接近或小于0，且底部还未完全滚出可视区时，标记为吸顶
+        if (relativeTop <= 0 && relativeTop + groupRect.height > titleHeight) {
+          stickyGroupKeys.value.add(group.key)
+        }
+      }
+    }
+  }
 }
 
 // 加载更多数据
@@ -237,6 +363,15 @@ function loadMoreData() {
 function scrollToTop() {
   scrollbarRef.value?.setScrollTop(0)
 }
+
+// 组件挂载后初始化第一个标题为吸顶状态
+onMounted(() => {
+  // 如果有分组，默认将第一个分组设置为吸顶状态
+  if (shouldUseGrouping.value && groups.value.length > 0) {
+    // 添加第一个组的key到吸顶状态集合中
+    stickyGroupKeys.value.add(groups.value[0].key)
+  }
+})
 </script>
 
 <template>
@@ -247,7 +382,7 @@ function scrollToTop() {
         v-if="shouldShowSearch"
         class="conversations-search"
         :style="{
-          width: mergedStyle.width,
+          width: `calc(${mergedStyle.width} - 20px)`,
           backgroundColor: mergedStyle.backgroundColor || '#fff',
         }"
       >
@@ -268,14 +403,28 @@ function scrollToTop() {
         <el-scrollbar
           ref="scrollbarRef"
           height="100%"
+          class="custom-scrollbar"
+          always
           @scroll="handleScroll"
         >
           <div class="scroll-content">
-            <template v-if="groupable">
+            <template v-if="shouldUseGrouping">
               <!-- 分组显示 -->
-              <div v-for="group in groups" :key="group.key" class="conversation-group">
-                <div class="conversation-group-title">
-                  {{ group.title }}
+              <div
+                v-for="group in groups"
+                :key="group.key"
+                :ref="el => { if (el) groupRefs[group.key] = el as HTMLDivElement }"
+                class="conversation-group"
+              >
+                <div
+                  class="conversation-group-title sticky-title"
+                  :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }"
+                  :style="{ backgroundColor: mergedStyle.backgroundColor || '#fff' }"
+                >
+                  <component :is="renderGroupTitle(group.title)" v-if="isVNode(renderGroupTitle(group.title))" />
+                  <template v-else>
+                    {{ group.title }}
+                  </template>
                 </div>
                 <Item
                   v-for="item in group.children"
@@ -287,17 +436,15 @@ function scrollToTop() {
                   :active-key="activeKey || ''"
                   :label-max-width="labelMaxWidth"
                   :menu="menu"
-                  :render-label="renderLabel"
-                  :render-menu="renderMenu"
                   @click="handleClick"
                 >
                   <!-- 传递插槽 -->
-                  <template v-if="$slots.label" #label="slotProps">
-                    <slot name="label" v-bind="slotProps" />
+                  <template v-if="$slots.label" #label>
+                    <slot name="label" v-bind="{ item }" />
                   </template>
 
-                  <template v-if="$slots.menu" #menu="slotProps">
-                    <slot name="menu" v-bind="slotProps" />
+                  <template v-if="$slots.menu" #menu>
+                    <slot name="menu" v-bind="{ item }" />
                   </template>
                 </Item>
               </div>
@@ -314,17 +461,15 @@ function scrollToTop() {
                 :active-key="activeKey || ''"
                 :label-max-width="labelMaxWidth"
                 :menu="menu"
-                :render-label="renderLabel"
-                :render-menu="renderMenu"
                 @click="handleClick"
               >
                 <!-- 传递插槽 -->
-                <template v-if="$slots.label" #label="slotProps">
-                  <slot name="label" v-bind="slotProps" />
+                <template v-if="$slots.label" #label>
+                  <slot name="label" v-bind="{ item }" />
                 </template>
 
-                <template v-if="$slots.menu" #menu="slotProps">
-                  <slot name="menu" v-bind="slotProps" />
+                <template v-if="$slots.menu" #menu>
+                  <slot name="menu" v-bind="{ item }" />
                 </template>
               </Item>
             </template>
@@ -361,17 +506,32 @@ function scrollToTop() {
   flex: 1;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .conversations-search {
   z-index: 10;
   background-color: inherit;
   border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 10px;
 }
 
 .conversations-scroll-wrapper {
   flex: 1;
   overflow: hidden;
+  position: relative;
+
+  /* 在右侧添加留白区域 */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px; /* 右侧留白宽度 */
+    height: 100%;
+    background-color: transparent;
+    pointer-events: none; /* 确保不影响交互 */
+  }
 }
 
 .scroll-content {
@@ -400,12 +560,24 @@ function scrollToTop() {
     font-weight: 500;
     margin-bottom: 4px;
     border-radius: 4px;
+    width: 100%;
+    margin-right: -10px; /* 负边距让元素向右延伸 */
+  }
+
+  .sticky-title {
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .active-sticky {
+    z-index: 10;
   }
 }
 
 .scroll-to-top-btn {
   position: absolute;
-  right: 16px;
+  right: 24px;
   bottom: 16px;
   z-index: 99;
   opacity: 0.8;
@@ -413,6 +585,25 @@ function scrollToTop() {
 
   &:hover {
     opacity: 1;
+  }
+}
+
+/* 自定义滚动条样式 */
+.custom-scrollbar {
+  /* 调整滚动条样式 */
+  :deep(.el-scrollbar__bar.is-vertical) {
+    right: 0px !important; /* 滚动条位置 */
+    width: 6px !important; /* 调整滚动条宽度 */
+  }
+
+  :deep(.el-scrollbar__thumb) {
+    background-color: rgba(144, 147, 153, 0.5) !important; /* 设置滚动条颜色为半透明灰色 */
+  }
+
+  /* 移除原始滚动条的轨道 */
+  :deep(.el-scrollbar__wrap) {
+    margin-right: -10px !important; /* 调整这个值控制滚动条位置 */
+    padding-right: 26px !important; /* 为内容添加右侧填充，从20px增加到30px，为title提供更多空间 */
   }
 }
 </style>

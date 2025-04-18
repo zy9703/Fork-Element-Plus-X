@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ConversationItem, ConversationMenu } from '../types'
 import type { VNode as ComponentVNode } from 'vue'
+import type { ConversationItem, ConversationMenu } from '../types'
 // import { MoreFilled } from '@element-plus/icons-vue'
 
-const { item, activeKey, prefixIcon, suffixIcon, showTooltip, labelMaxWidth, renderLabel, renderMenu } = defineProps<{
+const { item, activeKey, prefixIcon, suffixIcon, showTooltip, labelMaxWidth, menu } = defineProps<{
   item: ConversationItem<boolean>
   activeKey: string
   prefixIcon?: ComponentVNode | null
@@ -11,13 +11,22 @@ const { item, activeKey, prefixIcon, suffixIcon, showTooltip, labelMaxWidth, ren
   showTooltip?: boolean
   labelMaxWidth?: number
   menu?: ConversationMenu[]
-  renderLabel?: () => ComponentVNode // 添加renderLabel属性，用于自定义label渲染
-  renderMenu?: () => ComponentVNode // 添加renderMenu属性，用于自定义menu渲染
 }>()
 
 const emit = defineEmits<{
   (e: 'click', key: string): void
 }>()
+
+// 添加hover状态跟踪
+const isHovered = ref(false)
+
+function handleMouseEnter() {
+  isHovered.value = true
+}
+
+function handleMouseLeave() {
+  isHovered.value = false
+}
 
 function handleClick(key: string) {
   emit('click', key)
@@ -25,7 +34,7 @@ function handleClick(key: string) {
 
 const isTextOverflow = computed(() => {
   return (label: string) => {
-    // 判断文本是否溢出
+    // 如果没有设置labelMaxWidth，直接返回false
     if (!labelMaxWidth)
       return false
 
@@ -45,6 +54,65 @@ const isTextOverflow = computed(() => {
     return textWidth > labelMaxWidth
   }
 })
+
+// 计算标签样式
+const labelStyle = computed(() => {
+  // 如果有labelMaxWidth，设置最大宽度并使用截断样式
+  if (labelMaxWidth) {
+    return {
+      maxWidth: `${labelMaxWidth}px`,
+      overflow: 'hidden',
+      // 不再使用 textOverflow: 'ellipsis' 和 whiteSpace: 'nowrap'
+      // 在CSS中使用渐变遮罩实现文本渐变消失效果
+    }
+  }
+  // 否则返回空对象
+  return {}
+})
+
+// 判断是否显示菜单
+const shouldShowMenu = computed(() => {
+  return isHovered.value || item.key === activeKey
+})
+
+// 格式化时间显示
+const formattedTime = computed(() => {
+  // 如果timestamp是数字，格式化它
+  if (typeof item.timestamp === 'number') {
+    const date = new Date(item.timestamp)
+    const now = new Date()
+
+    // 今天的日期，显示时间
+    if (date.getDate() === now.getDate()
+      && date.getMonth() === now.getMonth()
+      && date.getFullYear() === now.getFullYear()) {
+      return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+    }
+
+    // 昨天
+    const yesterday = new Date(now)
+    yesterday.setDate(now.getDate() - 1)
+    if (date.getDate() === yesterday.getDate()
+      && date.getMonth() === yesterday.getMonth()
+      && date.getFullYear() === yesterday.getFullYear()) {
+      return '昨天'
+    }
+
+    // 一周内
+    const oneWeekAgo = new Date(now)
+    oneWeekAgo.setDate(now.getDate() - 7)
+    if (date > oneWeekAgo) {
+      const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+      return days[date.getDay()]
+    }
+
+    // 其他日期显示年月日
+    return date.toLocaleDateString()
+  }
+
+  // 字符串timestamp直接显示
+  return item.timestamp
+})
 </script>
 
 <template>
@@ -54,48 +122,46 @@ const isTextOverflow = computed(() => {
     :class="{
       disabled: item.disabled,
       active: item.key === activeKey,
+      hovered: isHovered,
     }"
     @click="handleClick(item.key)"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
     <div class="conversation-content">
-      <!-- label区域，支持自定义渲染或默认渲染 -->
+      <!-- 标签区域 - 通过插槽自定义 -->
       <div class="conversation-content-main">
-        <!-- 使用renderLabel属性或label插槽进行自定义渲染 -->
-        <template v-if="renderLabel">
-          <component :is="renderLabel()" />
-        </template>
-        <template v-else>
-          <!-- 默认label渲染 -->
-          <slot name="label">
-            <!-- 前缀图标 -->
-            <span v-if="prefixIcon" class="conversation-prefix-icon">
-              <ElIcon>
-                <component :is="prefixIcon" />
-              </ElIcon>
-            </span>
+        <slot name="label">
+          <!-- 前缀图标 -->
+          <span v-if="prefixIcon" class="conversation-prefix-icon">
+            <ElIcon>
+              <component :is="prefixIcon" />
+            </ElIcon>
+          </span>
 
-            <!-- 标签和时间戳 -->
-            <div class="conversation-label-container">
-              <ElTooltip
-                v-if="showTooltip && isTextOverflow(item.label)"
-                :content="item.label"
-                placement="top"
-                effect="dark"
-              >
-                <span
-                  class="conversation-label"
-                  :style="{ maxWidth: `${labelMaxWidth}px` }"
-                >{{ item.label }}</span>
-              </ElTooltip>
+          <!-- 标签和时间戳 -->
+          <div class="conversation-label-container">
+            <ElTooltip
+              v-if="showTooltip && isTextOverflow(item.label)"
+              :content="item.label"
+              placement="top"
+              effect="dark"
+            >
               <span
-                v-else
                 class="conversation-label"
-                :style="{ maxWidth: `${labelMaxWidth}px` }"
+                :class="{ 'text-gradient': isTextOverflow(item.label) }"
+                :style="labelStyle"
               >{{ item.label }}</span>
-              <span v-if="item.timestamp" class="conversation-timestamp">{{ item.timestamp }}</span>
-            </div>
-          </slot>
-        </template>
+            </ElTooltip>
+            <span
+              v-else
+              class="conversation-label"
+              :class="{ 'text-gradient': isTextOverflow(item.label) }"
+              :style="labelStyle"
+            >{{ item.label }}</span>
+            <span v-if="formattedTime" class="conversation-timestamp">{{ formattedTime }}</span>
+          </div>
+        </slot>
       </div>
 
       <!-- 后缀图标 -->
@@ -105,21 +171,16 @@ const isTextOverflow = computed(() => {
         </ElIcon>
       </span>
 
-      <!-- 菜单区域，支持自定义插槽或renderMenu -->
-      <template v-if="renderMenu">
-        <component :is="renderMenu()" />
-      </template>
-      <template v-else>
-        <slot name="menu">
-          <span v-if="menu?.length" class="conversation-menu">
-            <!-- <ElDropdown>
-              <span>
-                打开
-              </span>
-            </ElDropdown> -->
-          </span>
-        </slot>
-      </template>
+      <!-- 菜单区域 - 只在hover或active状态下显示 -->
+      <slot v-if="shouldShowMenu" name="menu">
+        <span v-if="menu?.length" class="conversation-menu">
+          <!-- <ElDropdown>
+            <span>
+              打开
+            </span>
+          </ElDropdown> -->
+        </span>
+      </slot>
     </div>
   </li>
 </template>
@@ -145,7 +206,7 @@ const isTextOverflow = computed(() => {
     background-color: #f0f0f0;
   }
 
-  &:hover {
+  &.hovered, &:hover {
     background-color: #f0f0f0;
   }
 }
@@ -178,11 +239,15 @@ const isTextOverflow = computed(() => {
   }
 
   .conversation-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: 14px;
     color: #303133;
+    position: relative;
+    white-space: nowrap;
+
+    &.text-gradient {
+      mask-image: linear-gradient(to right, black 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
+    }
   }
 
   .conversation-timestamp {
@@ -200,6 +265,14 @@ const isTextOverflow = computed(() => {
 
   .conversation-menu {
     margin-left: 8px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    .hovered &, .active & {
+      opacity: 1;
+    }
   }
 }
 </style>
