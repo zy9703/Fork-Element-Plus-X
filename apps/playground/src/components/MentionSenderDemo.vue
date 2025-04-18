@@ -1,5 +1,5 @@
-<!-- home 首页 - 使用 BubbleList 组件 -->
 <script setup lang="ts">
+// import type { TriggerEvent } from 'vue-element-plus-x/src/components/Sender/types.d.ts'
 import { CircleClose, Link } from '@element-plus/icons-vue'
 
 const senderRef = ref()
@@ -49,11 +49,32 @@ function blur() {
 function focus(type = 'all') {
   senderRef.value.focus(type)
 }
+
+const options = ref([
+  {
+    label: 'Fuphoenixes',
+    value: 'Fuphoenixes',
+  },
+  {
+    label: 'kooriookami',
+    value: 'kooriookami',
+  },
+  {
+    label: 'Jeremy',
+    value: 'Jeremy',
+  },
+  {
+    label: 'btea',
+    value: 'btea',
+  },
+])
 </script>
 
 <template>
   <div class="component-container">
     <div class="top-wrap">
+      <div>这个输入框是另一种 提及指令方式 的实现 使用 @ 或者 / 试试</div>
+      <br>
       <div class="btn-list">
         <el-button dark type="success" plain @click="focus('start')">
           文本最前方
@@ -90,14 +111,17 @@ function focus(type = 'all') {
     </div>
 
     <div class="component-1">
-      <Sender
+      <MentionSender
         ref="senderRef"
-        v-model:value="value"
+        v-model="value"
+        :trigger-strings="['@', '/']"
         allow-speech
         clearable
         submit-type="shiftEnter"
-        placeholder="自定义 placeholder"
+        placeholder="请输入 @ 或者 / 触发指令，可支持自定义多个指令"
+        :options="options"
         :loading="loading"
+        variant="updown"
         @submit="submit"
       >
         <!-- 自定义头部 -->
@@ -130,6 +154,11 @@ function focus(type = 'all') {
           </div>
         </template>
 
+        <!-- 自定义 指令触发的 popover -->
+        <!-- <template #trigger-popover="{ triggerString }">
+          {{ triggerString }}
+        </template> -->
+
         <!-- 自定义操作列表 -->
         <!-- <template #action-list>
           <div class="action-list-self-wrap">
@@ -148,7 +177,7 @@ function focus(type = 'all') {
             >
           </div>
         </template> -->
-      </Sender>
+      </MentionSender>
     </div>
   </div>
 </template>

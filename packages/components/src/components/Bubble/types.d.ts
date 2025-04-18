@@ -1,5 +1,6 @@
 export interface BubbleProps {
   content?: string
+  reasoning_content?: string
   placement?: 'start' | 'end'
   avatar?: string
   loading?: boolean
@@ -7,6 +8,7 @@ export interface BubbleProps {
   variant?: 'filled' | 'borderless' | 'outlined' | 'shadow'
   isMarkdown?: boolean
   typing?: boolean | { step?: number, suffix?: string, interval?: number }
+  isFog?: boolean | { bgColor?: string, width?: string }
   maxWidth?: string
   avatarSize?: string
   avatarGap?: string

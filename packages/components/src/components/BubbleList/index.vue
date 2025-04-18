@@ -2,100 +2,96 @@
 import type { BubbleProps } from '../Bubble/types'
 import type { TypewriterInstance } from '../Typewriter/types.d.ts'
 import type { BubbleListProps } from './types.d.ts'
-
+import { ArrowDownBold } from '@element-plus/icons-vue'
+import useScrollDetector from '../../utils/useScrollDetector.ts'
 import Bubble from '../Bubble/index.vue'
+import loadingBg from './loading.vue'
 
 const props = withDefaults(defineProps<BubbleListProps<T>>(), {
   list: () => [] as T[],
   maxHeight: '500px',
   triggerIndices: 'only-last',
+  alwaysShowScrollbar: false,
+  backButtonThreshold: 80,
+  showBackButton: true,
+  backButtonPosition: () => {
+    return { bottom: '20px', left: 'calc(50% - 19px)' }
+  },
+  btnLoading: true,
+  btnColor: '#409EFF',
+  btnIconSize: 24,
 })
 
 const emits = defineEmits(['complete'])
 
 /* 在底部时候自动滚动 开始 */
 // 滚动容器的引用
-const scrollContainer = ref<HTMLDivElement | null>(null)
-// 回复是否结束，只有回复结束，才会停止向底部滚动
-const wasOver = ref(false)
+const scrollContainer = ref<HTMLElement | null>(null)
+const { hasVertical } = useScrollDetector(scrollContainer)
+// 是否停止自动滚动
+const stopAutoScrollToBottom = ref(false)
 // 上次滚动位置
 const lastScrollTop = ref(0)
 // 累积向上滚动距离
 const accumulatedScrollUpDistance = ref(0)
 // 阈值（像素）
-const threshold = 15
+const threshold = 20
+const resizeObserver = ref<ResizeObserver | null>(null)
+const showBackToBottom = ref(false) // 控制按钮显示
 
 /* 计算有效的触发索引数组 */
 const effectiveTriggerIndices = computed(() => {
   if (props.triggerIndices === 'only-last') {
-    // 定义一个 空数组，存储打字机属性的索引
-    const triggerIndices: number[] = []
-    if (props.list && props.list.length > 0) {
-      for (let i = 0; i < props.list.length; i++) {
-        const item = props.list[i]
-        if (item.typing) {
-          triggerIndices.push(i)
-        }
-      }
-      return [triggerIndices[triggerIndices.length - 1]]
-    }
-    return []
+    const triggerIndices = props.list.filter(item => item.typing).map((_, index) => index)
+    return triggerIndices.length > 0 ? [triggerIndices[triggerIndices.length - 1]] : []
   }
   else if (props.triggerIndices === 'all') {
     return props.list.map((_, index) => index)
   }
   else if (Array.isArray(props.triggerIndices)) {
-    // 判断数组中的 index 是否在有效范围内
-    const triggerIndices: number[] = []
-    // 记录无效的索引
-    const invalidIndices: number[] = []
-    for (let i = 0; i < props.triggerIndices.length; i++) {
-      const index = props.triggerIndices[i]
-      if (index < 0 || index >= props.list.length) {
-        invalidIndices.push(index)
-      }
-      // 判断索引是否在列表中开启了打字机效果
-      if (!props.list[index].typing) {
-        invalidIndices.push(index)
-      }
-      // 保存有效的索引
-      if (index >= 0 && index < props.list.length && props.list[index].typing) {
-        triggerIndices.push(index)
-      }
-    }
-    if (invalidIndices && invalidIndices.length > 0) {
-      console.warn(`无效索引 ${invalidIndices}`)
-    }
-    // 返回有效的索引
-    if (triggerIndices && triggerIndices.length > 0) {
-      return [triggerIndices[triggerIndices.length - 1]]
-    }
-    return []
+    const validIndices = getValidIndices(props.list, props.triggerIndices)
+    return validIndices.length > 0 ? [validIndices[validIndices.length - 1]] : []
   }
   return []
 })
 
+// 提取有效索引判断逻辑到独立函数
+function getValidIndices(list: T[], indices: number[]) {
+  const validIndices: number[] = []
+  const invalidIndices: number[] = []
+  for (let i = 0; i < indices.length; i++) {
+    const index = indices[i]
+    if (index < 0 || index >= list.length || !list[index].typing) {
+      invalidIndices.push(index)
+    }
+    else {
+      validIndices.push(index)
+    }
+  }
+  if (invalidIndices.length > 0) {
+    console.warn(`无效索引 ${invalidIndices}`)
+  }
+  return validIndices
+}
+
 // 监听数组长度变化，如果改变，则判断是否在最底部，如果在，就自动滚动到底部
 watch(
-  () => props.list,
+  () => props.list.length,
   () => {
     if (props.list && props.list.length > 0) {
-      const node = props.list[props.list.length - 1]
-      if (node.typing) {
-        scrollToBottomByTyping()
-      }
-      else {
-        scrollToBottom()
-      }
+      nextTick(() => {
+        // 每次添加新的气泡，等页面渲染后，在执行自动滚动
+        autoScroll()
+      })
     }
   },
-  { deep: true, immediate: true },
+  { immediate: true },
 )
 
 // 父组件的触发方法，直接让滚动容器滚动到顶部
 function scrollToTop() {
   // 处理在滚动时候，无法回到顶部的问题
-  wasOver.value = true
+  stopAutoScrollToBottom.value = true
   nextTick(() => {
     // 自动滚动到最顶部
     scrollContainer.value!.scrollTop = 0
@@ -103,9 +99,16 @@ function scrollToTop() {
 }
 // 父组件的触发方法，不跟随打字器滚动，滚动底部
 function scrollToBottom() {
-  nextTick(() => {
-    scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
-  })
+  try {
+    if (scrollContainer.value && scrollContainer.value.scrollHeight) {
+      nextTick(() => {
+        scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
+      })
+    }
+  }
+  catch (error) {
+    console.warn('[BubbleList error]: ', error)
+  }
 }
 // 父组件触发滚动到指定气泡框
 function scrollToBubble(index: number) {
@@ -117,7 +120,7 @@ function scrollToBubble(index: number) {
   if (index >= bubbles.length)
     return
 
-  wasOver.value = true
+  stopAutoScrollToBottom.value = true
   const targetBubble = bubbles[index] as HTMLElement
 
   // 计算相对位置
@@ -133,58 +136,30 @@ function scrollToBubble(index: number) {
     behavior: 'smooth',
   })
 }
-// 父组件的触发方法，跟随打字器滚动，滚动底部
-function scrollToBottomByTyping() {
-  scrollToBottom()
-  wasOver.value = false
-  const scrollTimer = setInterval(() => {
-    // 如果最后气泡不开启打字机效果，直接关闭定时器
-    const item = props.list[props.list.length - 1]
-    if (!item.typing) {
-      clearInterval(scrollTimer)
-      wasOver.value = true
-      nextTick(() => {
-        scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
+// 组件内部触发方法，跟随打字器滚动，滚动底部
+function autoScroll() {
+  if (scrollContainer.value) {
+    const listBubbles = scrollContainer.value!.querySelectorAll('.el-bubble-content-wrapper')
+    // 如果页面上有监听节点，先移除
+    if (resizeObserver.value) {
+      resizeObserver.value.disconnect()
+    }
+    const lastItem = listBubbles[listBubbles.length - 1]
+    if (lastItem) {
+      resizeObserver.value = new ResizeObserver(() => {
+        if (!stopAutoScrollToBottom.value) {
+          scrollToBottom()
+        }
       })
-      return false
+      resizeObserver.value.observe(lastItem)
     }
-    // 获取最后一个开启打字机效果的气泡的 dom
-    const doms = document.querySelectorAll('.el-bubble')
-    if (doms && doms.length > 0) {
-      const endDom = doms[doms.length - 1]
-      // 如果最后一个气泡包含 el-bubble-is-typing 类名，就说明还在打字中，如果不包括，则打字结束
-      if (!endDom.classList.contains('el-bubble-is-typing')) {
-        clearInterval(scrollTimer)
-        wasOver.value = true
-        return false
-      }
-    }
-    else {
-      // 没有打字机节点，但是还是传入了打字机属性
-      clearInterval(scrollTimer)
-      wasOver.value = true
-      nextTick(() => {
-        scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
-      })
-      return false
-    }
-
-    if (wasOver.value) {
-      clearInterval(scrollTimer)
-      return false
-    }
-    nextTick(() => {
-      scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
-    })
-  }, 30)
+  }
 }
-// 打字机播放完成回调（终止自动向下滚动）
+
+// 打字机播放完成回调
 function handleBubbleComplete(index: number, instance: TypewriterInstance) {
   if (effectiveTriggerIndices.value.includes(index)) {
     emits('complete', instance, index)
-  }
-  if (index === props.list.length - 1) {
-    wasOver.value = true
   }
 }
 
@@ -192,6 +167,11 @@ function handleBubbleComplete(index: number, instance: TypewriterInstance) {
 function handleScroll() {
   if (scrollContainer.value) {
     const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value
+
+    // 计算是否超过安全距离
+    const distanceToBottom = scrollHeight - (scrollTop + clientHeight)
+    showBackToBottom.value = props.showBackButton && distanceToBottom > props.backButtonThreshold
+
     // 判断是否距离底部小于阈值 (这里吸附值大一些会体验更好)
     const isCloseToBottom = scrollTop + clientHeight >= scrollHeight - 30
     // 判断用户是否向上滚动
@@ -208,11 +188,10 @@ function handleScroll() {
       accumulatedScrollUpDistance.value += scrollDelta
       // 如果累积距离超过阈值，触发逻辑并重置累积距离
       if (accumulatedScrollUpDistance.value >= threshold) {
-        // console.log(`用户向上滚动超过 ${threshold} 像素（累积）`)
+        // console.log(`用户向上滚动超过 ${threshold} 像素（累积）${stopAutoScrollToBottom.value}`)
         // 在这里执行你的操作
-        // 如果打字器状态为 true，则停止滚动条的滚动，由用户控制
-        if (!wasOver.value) {
-          wasOver.value = true
+        if (!stopAutoScrollToBottom.value) {
+          stopAutoScrollToBottom.value = true
         }
         // 重置累积距离
         accumulatedScrollUpDistance.value = 0
@@ -226,9 +205,8 @@ function handleScroll() {
     if (isScrollingDown && isCloseToBottom) {
       // console.log(`用户向下滚动且距离底部小于 ${threshold} 像素`)
       // 在这里执行你的操作
-      if (wasOver.value) {
-        // 如果已经终止自动滚动，并且打字机是否正在打字中，如果是则开启自动滚动
-        scrollToBottomByTyping()
+      if (stopAutoScrollToBottom.value) {
+        stopAutoScrollToBottom.value = false
       }
     }
   }
@@ -239,16 +217,17 @@ defineExpose({
   scrollToTop,
   scrollToBottom,
   scrollToBubble,
-  // scrollToBottomByTyping,
 })
 </script>
 
 <template>
   <div
     ref="scrollContainer"
-    class="el-bubble-list scroll-container"
+    class="el-bubble-list"
+    :class="{ 'always-scrollbar': props.alwaysShowScrollbar }"
     :style="{
       '--el-bubble-list-max-height': `${maxHeight}`,
+      '--el-bubble-list-btn-size': `${props.btnIconSize}px`,
     }"
     @scroll="handleScroll"
   >
@@ -261,7 +240,9 @@ defineExpose({
       :shape="item.shape"
       :variant="item.variant"
       :is-markdown="item.isMarkdown"
+      :is-fog="item.isFog"
       :typing="item.typing"
+      :max-width="item.maxWidth"
       :avatar="item.avatar"
       :avatar-size="item.avatarSize"
       :avatar-gap="item.avatarGap"
@@ -289,17 +270,164 @@ defineExpose({
         <slot name="loading" :item="item" />
       </template>
     </Bubble>
+
+    <!-- 自定义按钮插槽 默认返回按钮 -->
+
+    <div
+      v-if="showBackToBottom && hasVertical"
+      class="el-bubble-list-default-back-button"
+      :class="{
+        'el-bubble-list-back-to-bottom-solt': $slots.backToBottom,
+      }"
+      :style="{
+        bottom: backButtonPosition.bottom,
+        left: backButtonPosition.left,
+      }"
+      @click="scrollToBottom"
+    >
+      <slot name="backToBottom">
+        <el-icon
+          class="el-bubble-list-back-to-bottom-icon"
+          :style="{ color: props.btnColor }"
+        >
+          <ArrowDownBold />
+          <loadingBg v-if="props.btnLoading" class="back-to-bottom-loading-svg-bg" />
+        </el-icon>
+      </slot>
+    </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .el-bubble-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-height: 0;
   max-height: var(--el-bubble-list-max-height);
-  overflow-y: auto;
+  overflow: auto;
   scroll-behavior: smooth;
+
+  position: relative;
+  /* 默认滚动条样式（透明） */
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    background-color: #0003;
+    border-radius: 10px;
+    transition: background-color .2s ease-in-out;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: transparent;
+  }
+
+  /* 悬停时显示滚动条 */
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+  }
+
+  /* 始终显示滚动条模式 */
+  &.always-scrollbar {
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background: #a8a8a8;
+    }
+  }
+
+}
+
+/* 火狐浏览器滚动条样式 */
+@supports (scrollbar-color: auto) {
+  .el-bubble-list {
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+
+    &:hover {
+      scrollbar-color: #c1c1c1 transparent;
+    }
+
+    &.always-scrollbar {
+      scrollbar-color: #c1c1c1 transparent;
+    }
+  }
+}
+
+.el-bubble-list-default-back-button {
+  position: sticky;
+  user-select: none;
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  // background-color: aquamarine;
+  border-radius: 50%;
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, .02), 0 6px 10px 0 rgba(47, 53, 64, .1);
+  transition: all 0.3s ease;
+  z-index: 100;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .el-bubble-list-back-to-bottom-icon {
+    font-size: var(--el-bubble-list-btn-size);
+    position: relative;
+
+    .back-to-bottom-loading-svg-bg {
+      position: absolute;
+      font-size: calc(var(--el-bubble-list-btn-size) + 26px);
+      animation: is-loading 1s infinite linear;
+    }
+
+    @keyframes is-loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
+
+// 如果是有自定义插槽，则初始化默认样式
+.el-bubble-list-back-to-bottom-solt {
+  position: sticky;
+  user-select: none;
+  cursor: initial;
+  width: fit-content;
+  height: fit-content;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: initial;
+
+  &:hover {
+    transform: translateY(0px);
+    box-shadow: initial;
+  }
 }
 </style>

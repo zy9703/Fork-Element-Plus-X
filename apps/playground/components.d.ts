@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BubbleDemo: typeof import('./src/components/BubbleDemo.vue')['default']
+    BubbleListDemo: typeof import('./src/components/BubbleListDemo.vue')['default']
     DemoUseBubble: typeof import('./src/components/demo-useBubble.vue')['default']
     DemoUseBubbleList: typeof import('./src/components/demo-useBubbleList.vue')['default']
     DemoUseConversations: typeof import('./src/components/demo-useConversations.vue')['default']
@@ -15,9 +17,6 @@ declare module 'vue' {
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElDropdown: typeof import('element-plus/es')['ElDropdown']
-    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
-    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
@@ -27,7 +26,18 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     HooksUseXStreamScenarioSIP: typeof import('./src/components/hooks-useXStream-scenarioSIP.vue')['default']
     HooksUseXStreamScenarioSSE: typeof import('./src/components/hooks-useXStream-scenarioSSE.vue')['default']
+    MentionSenderDemo: typeof import('./src/components/MentionSenderDemo.vue')['default']
+    SenderDemo: typeof import('./src/components/SenderDemo.vue')['default']
+    TestEditorInputDemo: typeof import('./src/components/Test-EditorInputDemo.vue')['default']
+    TestEditorSenderDemo: typeof import('./src/components/Test-EditorSenderDemo.vue')['default']
+    ThinkingDemo: typeof import('./src/components/ThinkingDemo.vue')['default']
+    ThoughtChainDemo: typeof import('./src/components/ThoughtChainDemo.vue')['default']
     UseRecord: typeof import('./src/components/useRecord.vue')['default']
+    UseRecordDemo: typeof import('./src/components/useRecordDemo.vue')['default']
     UseSend: typeof import('./src/components/useSend.vue')['default']
+    UseSendDemo: typeof import('./src/components/useSendDemo.vue')['default']
+    UseXStreamSIPDemo: typeof import('./src/components/useXStreamSIPDemo.vue')['default']
+    UseXStreamSSEDemo: typeof import('./src/components/useXStreamSSEDemo.vue')['default']
+    WelcomeDemo: typeof import('./src/components/WelcomeDemo.vue')['default']
   }
 }

@@ -11,14 +11,24 @@ export interface TypingConfig {
   suffix?: string
 }
 
+/* 打字雾化效果配置 */
+export interface TypingFogfig {
+  /** 雾化背景色 */
+  bgColor?: string
+  /* 雾化宽度 */
+  width?: string
+}
+
 /** 组件 Props 类型 */
 export interface TypewriterProps {
   /** 要显示的内容 */
-  content: string
+  content?: string
   /** 是否解析为 Markdown */
   isMarkdown?: boolean
   /** 打字效果配置（布尔值启用默认配置） */
   typing?: boolean | TypingConfig
+  /* 是否开启打字器雾化效果 */
+  isFog?: boolean | TypingFogfig
 }
 
 /** 组件实例类型 */
