@@ -1,4 +1,13 @@
-const { defineConfig } = require('@vue/cli-service')
-module.exports = defineConfig({
-  transpileDependencies: true
-})
+module.exports = {
+  devServer: {
+    proxy: {
+      '/ollama': {
+        target: 'https://ollama.com',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/ollama': ''
+        }
+      }
+    }
+  }
+}

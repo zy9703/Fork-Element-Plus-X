@@ -42,43 +42,30 @@ export default {
 
 ## 四、组件属性
 
-| 属性名 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `content` | String | '' | 气泡内要展示的文本内容，可与 `slot` 配合使用。 |
-| `reasoning_content` | String | '' | 用于显示AI推理过程或补充说明的文本内容。支持多行文本，常用于展示AI的思考过程。 |
-| `placement` | String | 'start' | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。 |
-| `loading` | Boolean | false | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。 |
-| `shape` | String | null | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。 |
-| `variant` | String | 'filled' | 气泡的样式变体，可选值为 `'filled'`（填充）、`'borderless'`（无边框）、`'outlined'`（轮廓）、`'shadow'`（阴影）。 |
-| `isMarkdown` | Boolean | false | 是否将 `content` 内容作为 Markdown 格式处理。 |
-| `typing` | Boolean \| Object | false | 打字机效果配置。可以是布尔值或配置对象：<br>- `Boolean`: true启用默认配置<br>- `Object`: 自定义配置，包含：<br>  - `suffix`: 光标后缀字符，默认'\|'<br>  - `step`: 每次打字字符数，默认2<br>  - `interval`: 打字间隔(毫秒)，默认50 |
-| `maxWidth` | String | '500px' | 气泡内容的最大宽度。 |
-| `avatarSize` | String | '' | 头像大小。 |
-| `avatarGap` | String | '12px' | 头像与内容的间距。 |
-| `avatarShape` | String | 'circle' | 头像形状，可选值为 `'circle'`（圆形）或 `'square'`（方形）。 |
-| `avatarIcon` | String | '' | 头像图标。 |
-| `avatarFit` | String | 'cover' | 头像图片填充模式，可选值为 `'cover'`、`'contain'`、`'fill'`、`'none'`、`'scale-down'`。 |
-| `noStyle` | Boolean | false | 是否禁用默认样式。 |
+| 属性名       | 类型              | 默认值   | 说明                                                                                                              |
+| ------------ | ----------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `content`    | String            | ''       | 气泡内要展示的文本内容，可与 `slot` 配合使用。                                                                    |
+| `placement`  | String            | 'start'  | 气泡的位置，可选值为 `'start'` 或 `'end'`，分别表示左侧和右侧。                                                   |
+| `loading`    | Boolean           | false    | 是否显示加载状态。为 `true` 时，气泡内会显示加载动画。                                                            |
+| `shape`      | String            | null     | 气泡的形状，可选值为 `'round'`（圆角）或 `'corner'`（有角）。                                                     |
+| `variant`    | String            | 'filled' | 气泡的样式变体，可选值为 `'filled'`（填充）、`'borderless'`（无边框）、`'outlined'`（轮廓）、`'shadow'`（阴影）。 |
+| `isMarkdown` | Boolean           | false    | 是否将 `content` 内容作为 Markdown 格式处理。                                                                     |
+| `typing`     | Boolean \| Object | false    | 是否开启打字效果。若为对象，可设置 `step`（每次打字字符数）、`interval`（打字间隔）和 `suffix`（打字光标后缀内容）。                  |
+| `maxWidth`   | String            | '500px'  | 气泡内容的最大宽度。                                                                                              |
+| `avatarSize` | String            | ''       | 头像大小。                                                                                                        |
+| `avatarGap`  | String            | '12px'   | 头像与内容的间距。                                                                                               |
+| `avatarShape`| String            | 'circle' | 头像形状，可选值为 `'circle'`（圆形）或 `'square'`（方形）。                                                      |
 
 ## 五、组件事件
 
-| 事件名 | 说明 | 回调参数 |
-| --- | --- | --- |
-| `start` | 打字开始时触发的事件。 | `instance`：打字实例对象。 |
-| `finish` | 打字完成时触发的事件。 | `instance`：打字实例对象。 |
-| `writing` | 打字过程中触发的事件。 | `instance`：打字实例对象。 |
-| `avatarError` | 头像加载错误时触发。 | `event`：错误事件对象。 |
+| 事件名       | 说明                   | 回调参数                      |
+| ------------ | ---------------------- | ----------------------------- |
+| `start`      | 打字开始时触发的事件。 | `instance`：打字实例对象。    |
+| `finish`     | 打字完成时触发的事件。 | `instance`：打字实例对象。    |
+| `writing`    | 打字过程中触发的事件。 | `instance`：打字实例对象。    |
+| `avatarError`| 头像加载错误时触发。   | `event`：错误事件对象。       |
 
-## 六、组件方法
-
-| 方法名 | 说明 | 参数 |
-| --- | --- | --- |
-| `interrupt` | 中断当前打字动画。 | - |
-| `continueTyping` | 继续被中断的打字动画。 | - |
-| `restart` | 重置并重新开始打字动画。 | - |
-| `destroy` | 销毁打字动画实例。 | - |
-
-## 七、插槽
+## 六、插槽
 
 ### 1. `avatar`
 
@@ -153,7 +140,7 @@ export default {
 </template>
 ```
 
-## 八、示例
+## 七、示例
 
 ### 基础用法
 
@@ -200,15 +187,12 @@ export default {
 </template>
 ```
 
-### 带头像和推理内容
+### 带头像
 
 ```vue
 <template>
   <A3Bubble 
-    content="这是一条带头像和推理内容的消息" 
-    reasoning_content="正在分析问题...
-1. 首先理解用户输入
-2. 然后生成回答"
+    content="这是一条带头像的消息" 
     avatar="https://example.com/avatar.jpg" 
   />
 </template>
@@ -269,4 +253,4 @@ console.log('Hello, world!');
   }
 }
 </script>
-```
+``` 

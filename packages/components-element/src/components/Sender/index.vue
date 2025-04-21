@@ -132,7 +132,7 @@
               <el-button 
                 v-if="!loading"
                 circle
-                :disabled="(isEmpty && attachmentsList.length === 0) || disabled || readOnly"
+                :disabled="(isEmpty && attachmentsList.length === 0) || disabled || readOnly || loading"
                 type="primary"
                 size="mini"
                 class="el-sender-send-btn"
@@ -615,17 +615,21 @@ export default {
             e.target.setSelectionRange(cursorPosition + 1, cursorPosition + 1)
           })
         }
-        // Enter 键提交
+        // Enter 键提交，但在loading时不提交
         else if (e.keyCode === 13 && !e.shiftKey) {
           e.preventDefault()
-          this.submit()
+          if (!this.loading) {
+            this.submit()
+          }
         }
       }
       else if (this.submitType === 'shiftEnter') {
-        // Shift + 回车键提交
+        // Shift + 回车键提交，但在loading时不提交
         if (e.shiftKey && e.keyCode === 13) {
           e.preventDefault()
-          this.submit()
+          if (!this.loading) {
+            this.submit()
+          }
         }
         // Enter 键插入换行
         else if (e.keyCode === 13 && !e.shiftKey) {
@@ -1247,7 +1251,7 @@ export default {
 /* 下拉菜单相关样式 */
 .el-sender-dropdown-menu {
   position: absolute;
-  top: calc(100% + 5px);
+  bottom: calc(100% + 5px);
   left: 16px;
   z-index: 10;
   width: 240px;

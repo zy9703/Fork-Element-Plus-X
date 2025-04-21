@@ -11,6 +11,9 @@
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
+      <el-tab-pane label="A3AI聊天">
+        <AiChatDemo />
+      </el-tab-pane>
       <el-tab-pane label="A3Attachments">
         <AttachmentsDemo />
       </el-tab-pane>
@@ -37,6 +40,7 @@ import TypewriterDemo from './components/Typewriter/demo.vue'
 import BubbleListDemo from './components/BubbleList/demo.vue'
 import SenderDemo from './components/Sender/demo.vue'
 import AttachmentsDemo from './components/Attachments/demo.vue'
+import AiChatDemo from './components/AiChatDemo/index.vue'
 
 export default {
   name: 'App',
@@ -45,7 +49,8 @@ export default {
     BubbleDemo,
     BubbleListDemo,
     SenderDemo,
-    AttachmentsDemo
+    AttachmentsDemo,
+    AiChatDemo
   }
 }
 </script>
