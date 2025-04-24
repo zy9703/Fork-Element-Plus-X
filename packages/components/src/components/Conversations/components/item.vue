@@ -4,7 +4,7 @@ import type { ConversationItem, ConversationMenu } from '../types'
 // import { MoreFilled } from '@element-plus/icons-vue'
 
 const { item, activeKey, prefixIcon, suffixIcon, showTooltip, labelMaxWidth, menu } = defineProps<{
-  item: ConversationItem<boolean>
+  item: ConversationItem
   activeKey: string
   prefixIcon?: ComponentVNode | null
   suffixIcon?: ComponentVNode | null
@@ -62,8 +62,6 @@ const labelStyle = computed(() => {
     return {
       maxWidth: `${labelMaxWidth}px`,
       overflow: 'hidden',
-      // 不再使用 textOverflow: 'ellipsis' 和 whiteSpace: 'nowrap'
-      // 在CSS中使用渐变遮罩实现文本渐变消失效果
     }
   }
   // 否则返回空对象
@@ -75,44 +73,44 @@ const shouldShowMenu = computed(() => {
   return isHovered.value || item.key === activeKey
 })
 
-// 格式化时间显示
-const formattedTime = computed(() => {
-  // 如果timestamp是数字，格式化它
-  if (typeof item.timestamp === 'number') {
-    const date = new Date(item.timestamp)
-    const now = new Date()
+// // 格式化时间显示
+// const formattedTime = computed(() => {
+//   // 如果timestamp是数字，格式化它
+//   if (typeof item.timestamp === 'number') {
+//     const date = new Date(item.timestamp)
+//     const now = new Date()
 
-    // 今天的日期，显示时间
-    if (date.getDate() === now.getDate()
-      && date.getMonth() === now.getMonth()
-      && date.getFullYear() === now.getFullYear()) {
-      return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
-    }
+//     // 今天的日期，显示时间
+//     if (date.getDate() === now.getDate()
+//       && date.getMonth() === now.getMonth()
+//       && date.getFullYear() === now.getFullYear()) {
+//       return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+//     }
 
-    // 昨天
-    const yesterday = new Date(now)
-    yesterday.setDate(now.getDate() - 1)
-    if (date.getDate() === yesterday.getDate()
-      && date.getMonth() === yesterday.getMonth()
-      && date.getFullYear() === yesterday.getFullYear()) {
-      return '昨天'
-    }
+//     // 昨天
+//     const yesterday = new Date(now)
+//     yesterday.setDate(now.getDate() - 1)
+//     if (date.getDate() === yesterday.getDate()
+//       && date.getMonth() === yesterday.getMonth()
+//       && date.getFullYear() === yesterday.getFullYear()) {
+//       return '昨天'
+//     }
 
-    // 一周内
-    const oneWeekAgo = new Date(now)
-    oneWeekAgo.setDate(now.getDate() - 7)
-    if (date > oneWeekAgo) {
-      const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
-      return days[date.getDay()]
-    }
+//     // 一周内
+//     const oneWeekAgo = new Date(now)
+//     oneWeekAgo.setDate(now.getDate() - 7)
+//     if (date > oneWeekAgo) {
+//       const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+//       return days[date.getDay()]
+//     }
 
-    // 其他日期显示年月日
-    return date.toLocaleDateString()
-  }
+//     // 其他日期显示年月日
+//     return date.toLocaleDateString()
+//   }
 
-  // 字符串timestamp直接显示
-  return item.timestamp
-})
+//   // 字符串timestamp直接显示
+//   return item.timestamp
+// })
 </script>
 
 <template>
@@ -159,7 +157,7 @@ const formattedTime = computed(() => {
               :class="{ 'text-gradient': isTextOverflow(item.label) }"
               :style="labelStyle"
             >{{ item.label }}</span>
-            <span v-if="formattedTime" class="conversation-timestamp">{{ formattedTime }}</span>
+            <!-- <span v-if="formattedTime" class="conversation-timestamp">{{ formattedTime }}</span> -->
           </div>
         </slot>
       </div>

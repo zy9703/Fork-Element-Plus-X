@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UseBubble from './components/BubbleDemo.vue'
 import UseBubbleList from './components/BubbleListDemo.vue'
-import UseConversations from './components/demo-useConversations.vue'
+import UseConversations from './components/ConversationsDemo.vue'
 import UseMentionSender from './components/MentionSenderDemo.vue'
 import UseSender from './components/SenderDemo.vue'
 import UseThinking from './components/ThinkingDemo.vue'

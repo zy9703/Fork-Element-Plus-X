@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { ElScrollbar } from 'element-plus'
-import type { Conversation, ConversationItem, GroupableOptions, TimeRange } from './types'
+import type { Conversation, ConversationItem, GroupableOptions } from './types'
 import { Search, Top } from '@element-plus/icons-vue'
-import { isVNode } from 'vue'
 import Item from './components/item.vue'
 
 const props = withDefaults(defineProps<Conversation>(), {
@@ -73,54 +72,9 @@ function handleClick(key: string) {
 
 // 判断是否需要使用分组
 const shouldUseGrouping = computed(() => {
-  // 有shortcuts时自动启用分组，或者groupable为true/对象/空字符串时启用分组
-  return !!props.shortcuts || props.groupable === '' || !!props.groupable
+  // groupable为true/对象/空字符串时启用分组
+  return props.groupable === '' || !!props.groupable
 })
-
-// 基于时间快捷方式判断时间戳属于哪个组
-function getShortcutGroup(timestamp: number): string | null {
-  if (!props.shortcuts || !timestamp)
-    return null
-
-  for (const [name, value] of Object.entries(props.shortcuts)) {
-    // 处理TimeRange类型
-    if (typeof value === 'object' && 'start' in value && 'end' in value) {
-      const range = value as TimeRange
-      if (timestamp >= range.start && timestamp <= range.end) {
-        return name
-      }
-    }
-    // 处理具体时间戳值
-    else if (typeof value === 'number') {
-      // 当timestamp与时间戳值在同一天时，将其归为一组
-      const itemDate = new Date(timestamp)
-      const shortcutDate = new Date(value)
-      if (
-        itemDate.getFullYear() === shortcutDate.getFullYear()
-        && itemDate.getMonth() === shortcutDate.getMonth()
-        && itemDate.getDate() === shortcutDate.getDate()
-      ) {
-        return name
-      }
-    }
-    // 处理时间戳函数
-    else if (typeof value === 'function') {
-      const dynamicValue = value()
-      // 同样检查是否在同一天
-      const itemDate = new Date(timestamp)
-      const shortcutDate = new Date(dynamicValue)
-      if (
-        itemDate.getFullYear() === shortcutDate.getFullYear()
-        && itemDate.getMonth() === shortcutDate.getMonth()
-        && itemDate.getDate() === shortcutDate.getDate()
-      ) {
-        return name
-      }
-    }
-  }
-
-  return null
-}
 
 // 根据搜索值过滤项目
 const filteredItems = computed(() => {
@@ -157,7 +111,6 @@ const groups = computed(() => {
     title: string
     key: string
     children: ConversationItem[]
-    timestamp?: number // 用于基于时间戳排序
     isUngrouped?: boolean // 标记是否为未分组
   }> = {}
 
@@ -169,11 +122,6 @@ const groups = computed(() => {
     if (item.group) {
       groupName = item.group
     }
-    // 其次，如果有时间戳和快捷方式，则使用快捷方式分组
-    else if (item.timestamp && props.shortcuts) {
-      groupName = getShortcutGroup(item.timestamp)
-    }
-
     // 如果没有找到分组，使用未分组
     const finalGroupName = groupName || props.ungroupedTitle
 
@@ -187,48 +135,8 @@ const groups = computed(() => {
       }
     }
 
-    // 记录组的代表性时间戳
-    if (!groupMap[finalGroupName].isUngrouped) {
-      // 处理具体的shortcuts时间戳
-      if (props.shortcuts && props.shortcuts[finalGroupName]) {
-        const shortcut = props.shortcuts[finalGroupName]
-        if (typeof shortcut === 'number') {
-          groupMap[finalGroupName].timestamp = shortcut
-        }
-        else if (typeof shortcut === 'function') {
-          groupMap[finalGroupName].timestamp = shortcut()
-        }
-        else if (typeof shortcut === 'object' && 'end' in shortcut) {
-          // 使用范围的结束时间作为代表时间戳
-          groupMap[finalGroupName].timestamp = shortcut.end
-        }
-      }
-      // 如果没有直接的timestamp，则放入未分组
-      else if (item.timestamp) {
-        if (!groupMap[finalGroupName].timestamp) {
-          groupMap[finalGroupName].timestamp = item.timestamp
-        }
-        else {
-          groupMap[finalGroupName].timestamp = Math.max(
-            groupMap[finalGroupName].timestamp!,
-            item.timestamp,
-          )
-        }
-      }
-    }
-
     // 将项目添加到相应的组中
     groupMap[finalGroupName].children.push(item)
-  })
-
-  // 对每个组内的项目进行排序
-  Object.values(groupMap).forEach((group) => {
-    // 按时间戳降序排序（如果有的话）
-    group.children.sort((a, b) => {
-      const timestampA = a.timestamp || 0
-      const timestampB = b.timestamp || 0
-      return timestampB - timestampA
-    })
   })
 
   // 将分组转换为数组
@@ -248,33 +156,18 @@ const groups = computed(() => {
     })
   }
 
-  // 否则按时间戳降序排序，未分组总是在最后
+  // 否则只确保未分组在最后，不做其他排序
   return groupArray.sort((a, b) => {
     // 确保未分组总是在最后
     if (a.isUngrouped)
       return 1
     if (b.isUngrouped)
       return -1
-
-    // 按时间戳降序排序
-    return (b.timestamp || 0) - (a.timestamp || 0)
+    
+    // 不做其他排序
+    return 0
   })
 })
-
-// 渲染分组标题
-function renderGroupTitle(groupName: string) {
-  if (typeof props.groupable === 'object' && props.groupable.title) {
-    const titleProp = (props.groupable as GroupableOptions).title
-    if (isVNode(titleProp)) {
-      return titleProp
-    }
-    else if (typeof titleProp === 'function') {
-      return titleProp(groupName)
-    }
-  }
-
-  return groupName
-}
 
 // 添加滚动相关的状态
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null)
@@ -325,30 +218,70 @@ function updateStickyStatus(_e: any) {
   // 先清空当前的吸顶组
   stickyGroupKeys.value.clear()
 
-  // 获取滚动容器的顶部位置
+  // 获取滚动容器
   const scrollContainer = scrollbarRef.value?.wrapRef
   if (!scrollContainer)
     return
 
-  const scrollContainerTop = scrollContainer.getBoundingClientRect().top
+  // 如果只有一个分组，直接设置为吸顶状态
+  if (groups.value.length === 1) {
+    stickyGroupKeys.value.add(groups.value[0].key)
+    return
+  }
 
-  // 遍历所有组，检查哪个组处于吸顶状态
+  const scrollContainerTop = scrollContainer.getBoundingClientRect().top
+  const containerHeight = scrollContainer.clientHeight
+  const scrollHeight = scrollContainer.scrollHeight
+  const scrollTop = scrollContainer.scrollTop
+
+  // 判断是否已经滚动到底部
+  const isNearBottom = scrollHeight - scrollTop - containerHeight < 20
+
+  // 如果已接近底部，直接使最后一个分组吸顶
+  if (isNearBottom && groups.value.length > 0) {
+    stickyGroupKeys.value.add(groups.value[groups.value.length - 1].key)
+    return
+  }
+
+  // 检查每个分组的位置
+  let visibleGroups = []
+
+  // 收集所有可见的分组
   for (const group of groups.value) {
     const groupElement = groupRefs.value[group.key]
     if (groupElement) {
       const groupRect = groupElement.getBoundingClientRect()
-      const titleElement = groupElement.querySelector('.conversation-group-title') as HTMLElement
-
-      if (titleElement) {
-        const titleHeight = titleElement.offsetHeight
-        const relativeTop = groupRect.top - scrollContainerTop
-
-        // 当组的顶部位置接近或小于0，且底部还未完全滚出可视区时，标记为吸顶
-        if (relativeTop <= 0 && relativeTop + groupRect.height > titleHeight) {
-          stickyGroupKeys.value.add(group.key)
-        }
+      const relativeTop = groupRect.top - scrollContainerTop
+      
+      // 分组至少部分可见
+      if ((relativeTop < containerHeight && relativeTop + groupRect.height > 0)) {
+        visibleGroups.push({
+          group,
+          relativeTop,
+          height: groupRect.height
+        })
       }
     }
+  }
+
+  // 对可见分组按相对位置排序
+  visibleGroups.sort((a, b) => a.relativeTop - b.relativeTop)
+
+  // 如果有可见分组
+  if (visibleGroups.length > 0) {
+    // 寻找第一个完全进入视口的分组
+    const fullyVisibleGroup = visibleGroups.find(g => g.relativeTop >= 0)
+    
+    if (fullyVisibleGroup) {
+      // 如果有完全进入视口的分组，选择它
+      stickyGroupKeys.value.add(fullyVisibleGroup.group.key)
+    } else {
+      // 否则选择第一个部分可见的分组（通常是标题已经滚出但内容还可见的）
+      stickyGroupKeys.value.add(visibleGroups[0].group.key)
+    }
+  } else if (groups.value.length > 0) {
+    // 如果没有可见分组，则选择第一个分组
+    stickyGroupKeys.value.add(groups.value[0].key)
   }
 }
 
@@ -421,32 +354,33 @@ onMounted(() => {
                   :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }"
                   :style="{ backgroundColor: mergedStyle.backgroundColor || '#fff' }"
                 >
-                  <component :is="renderGroupTitle(group.title)" v-if="isVNode(renderGroupTitle(group.title))" />
-                  <template v-else>
+                  <slot name="groupTitle" v-bind="{ group }">
                     {{ group.title }}
-                  </template>
+                  </slot>
                 </div>
-                <Item
-                  v-for="item in group.children"
-                  :key="item.key"
-                  :item="item"
-                  :prefix-icon="item.prefixIcon"
-                  :show-tooltip="showTooltip"
-                  :suffix-icon="item.suffixIcon"
-                  :active-key="activeKey || ''"
-                  :label-max-width="labelMaxWidth"
-                  :menu="menu"
-                  @click="handleClick"
-                >
-                  <!-- 传递插槽 -->
-                  <template v-if="$slots.label" #label>
-                    <slot name="label" v-bind="{ item }" />
-                  </template>
+                <div class="conversation-group-items">
+                  <Item
+                    v-for="item in group.children"
+                    :key="item.key"
+                    :item="item"
+                    :prefix-icon="item.prefixIcon"
+                    :show-tooltip="showTooltip"
+                    :suffix-icon="item.suffixIcon"
+                    :active-key="activeKey || ''"
+                    :label-max-width="labelMaxWidth"
+                    :menu="menu"
+                    @click="handleClick"
+                  >
+                    <!-- 传递插槽 -->
+                    <template v-if="$slots.label" #label>
+                      <slot name="label" v-bind="{ item }" />
+                    </template>
 
-                  <template v-if="$slots.menu" #menu>
-                    <slot name="menu" v-bind="{ item }" />
-                  </template>
-                </Item>
+                    <template v-if="$slots.menu" #menu>
+                      <slot name="menu" v-bind="{ item }" />
+                    </template>
+                  </Item>
+                </div>
               </div>
             </template>
 
@@ -547,7 +481,7 @@ onMounted(() => {
 }
 
 .conversation-group {
-  margin-bottom: 16px;
+  position: relative;
 
   &:last-child {
     margin-bottom: 0;
@@ -556,22 +490,31 @@ onMounted(() => {
   .conversation-group-title {
     font-size: 14px;
     color: #909399;
-    padding: 8px 10px;
+    padding: 8px 0;
     font-weight: 500;
     margin-bottom: 4px;
     border-radius: 4px;
     width: 100%;
     margin-right: -10px; /* 负边距让元素向右延伸 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    background-color: inherit;
   }
 
   .sticky-title {
     position: sticky;
     top: 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    z-index: 20;
   }
 
   .active-sticky {
     z-index: 10;
+  }
+  
+  .conversation-group-items {
+    padding-top: 0;
   }
 }
 
