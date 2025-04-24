@@ -504,7 +504,7 @@ defineExpose({
 
       <!-- 底部容器 -->
       <Transition name="slide">
-        <div v-if="$slots.footer" class="el-sender-footer" @mousedown="onContentMouseDown">
+        <div v-if="$slots.footer" class="el-sender-footer">
           <slot name="footer" />
         </div>
       </Transition>
