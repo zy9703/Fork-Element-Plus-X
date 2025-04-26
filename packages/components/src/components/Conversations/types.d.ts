@@ -11,12 +11,17 @@ export interface ConversationItem {
   suffixIcon?: ComponentVNode | null
 }
 
+export type ConversationMenuCommand = string | number | object
+
 export interface ConversationMenu {
   label: string
   key: string
   icon?: ComponentVNode | null
   disabled?: boolean
-  onClick?: () => void
+  divided?: boolean
+  command?: ConversationMenuCommand
+  menuItemStyle?: CSSProperties
+  menuItemHoverStyle?: CSSProperties
 }
 
 // 分组选项
@@ -29,14 +34,25 @@ export interface Conversation {
   items: ConversationItem[]
   style?: CSSProperties
   labelMaxWidth?: number
+  labelHeight?: number
   showTooltip?: boolean
-  // 允许boolean或GroupableOptions类型或空字符串('')
-  // 当为空字符串时，等同于传入groupable但不赋值，相当于groupable=true
-  groupable?: boolean | GroupableOptions | ''
+  tooltipPlacement?: 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'left-start' | 'left-end' | 'right-start' | 'right-end'
+  tooltipOffset?: number
+  // 允许boolean或GroupableOptions类型
+  groupable?: boolean | GroupableOptions
   // 未分组的标题，默认为"未分组"
   ungroupedTitle?: string
   menu?: ConversationMenu[]
+  menuPlacement?: 'top' | 'bottom' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
+  menuOffset?: number
+  menuShowArrow?: boolean
+  menuMaxHeight?: number
+  menuStyle?: CSSProperties
+  menuClassName?: string
+  menuTeleported?: boolean
   loadMore?: () => void
+  loadMoreLoading?: boolean
+  showToTopBtn?: boolean
   search?: string
   /**
    * 搜索方法，接收搜索值作为参数

@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import UseBubble from './components/BubbleDemo.vue'
-import UseBubbleList from './components/BubbleListDemo.vue'
 import UseConversations from './components/ConversationsDemo.vue'
-import UseMentionSender from './components/MentionSenderDemo.vue'
-import UseSender from './components/SenderDemo.vue'
-import UseThinking from './components/ThinkingDemo.vue'
-import UseThoughtChain from './components/ThoughtChainDemo.vue'
-import UseRecord from './components/useRecordDemo.vue'
-import UseSend from './components/useSendDemo.vue'
-import useXStreamSIP from './components/useXStreamSIPDemo.vue'
-import useXStreamSSE from './components/useXStreamSSEDemo.vue'
-import UseWelcome from './components/WelcomeDemo.vue'
 </script>
 
 <template>
@@ -26,50 +15,6 @@ import UseWelcome from './components/WelcomeDemo.vue'
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
-      <el-tab-pane label="Bubble">
-        <UseBubble />
-      </el-tab-pane>
-
-      <el-tab-pane label="BubbleList">
-        <UseBubbleList />
-      </el-tab-pane>
-
-      <el-tab-pane label="Sender">
-        <UseSender />
-      </el-tab-pane>
-
-      <el-tab-pane label="MentionSender">
-        <UseMentionSender />
-      </el-tab-pane>
-
-      <el-tab-pane label="Welcome">
-        <UseWelcome />
-      </el-tab-pane>
-
-      <el-tab-pane label="Thinking">
-        <UseThinking />
-      </el-tab-pane>
-
-      <el-tab-pane label="ThoughtChain">
-        <UseThoughtChain />
-      </el-tab-pane>
-
-      <el-tab-pane label="UseRecord">
-        <UseRecord />
-      </el-tab-pane>
-
-      <el-tab-pane label="UseSend">
-        <UseSend />
-      </el-tab-pane>
-
-      <el-tab-pane label="useXStream-SSE">
-        <useXStreamSSE />
-      </el-tab-pane>
-
-      <el-tab-pane label="useXStream-SIP">
-        <useXStreamSIP />
-      </el-tab-pane>
-
       <el-tab-pane label="Conversations">
         <UseConversations />
       </el-tab-pane>

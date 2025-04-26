@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
-import { Calendar, ChatDotRound, ChatLineRound, Delete, Document, DocumentChecked, DocumentCopy, Download, Edit, InfoFilled, Lock, Message, MoreFilled, Search, Setting, Share, Star, StarFilled } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
+import { Calendar, ChatDotRound, ChatLineRound, Delete, Document, DocumentChecked, DocumentCopy, Edit, Lock, Setting, Share, Star, StarFilled } from '@element-plus/icons-vue'
 import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
 
 const timeBasedItems = ref([
@@ -9,14 +8,16 @@ const timeBasedItems = ref([
     key: '1',
     label: '今天的会话111111111111111111111111111',
     group: 'today',
-    disabled: true
+    disabled: true,
   },
   {
     key: '2',
+    group: 'today',
     label: '今天的会话2',
   },
   {
     key: '3',
+    group: 'yesterday',
     label: '昨天的会话1',
   },
   {
@@ -42,51 +43,51 @@ const groupBasedItems = ref([
   {
     key: 'g1',
     label: '工作文档1',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g2',
     label: '工作文档11111111111111111111111111111111111111111',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g3',
     label: '工作文档3',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g4',
     label: '工作文档4',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g5',
     label: '工作文档5',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g6',
     label: '工作文档6',
-    group: '工作'
+    group: '工作',
   },
   {
     key: 'g7',
     label: '学习笔记1',
-    group: '学习'
+    group: '学习',
   },
   {
     key: 'g8',
     label: '学习笔记2',
-    group: '学习'
+    group: '学习',
   },
   {
     key: 'g9',
     label: '个人文档1',
-    group: '个人'
+    group: '个人',
   },
   {
     key: 'g10',
-    label: '未分组项目'
+    label: '未分组项目',
   },
 ])
 
@@ -94,23 +95,60 @@ const groupBasedItems = ref([
 const menuTestItems = ref([
   {
     key: 'm1',
-    label: '菜单测试项目 1 - 长文本效果演示文本长度溢出效果测试'
+    label: '菜单测试项目 1 - 长文本效果演示文本长度溢出效果测试'.repeat(2),
   },
   {
     key: 'm2',
-    label: '菜单测试项目 2'
+    label: '菜单测试项目 2',
+    disabled: true,
   },
   {
     key: 'm3',
-    label: '菜单测试项目 3'
+    label: '菜单测试项目 3',
   },
   {
     key: 'm4',
-    label: '菜单测试项目 4'
+    label: '菜单测试项目 4',
   },
   {
     key: 'm5',
-    label: '菜单测试项目 5'
+    label: '菜单测试项目 5',
+  },
+  {
+    key: 'm6',
+    label: '菜单测试项目 6',
+  },
+  {
+    key: 'm7',
+    label: '菜单测试项目 7',
+  },
+  {
+    key: 'm8',
+    label: '菜单测试项目 8',
+  },
+  {
+    key: 'm9',
+    label: '菜单测试项目 9',
+  },
+  {
+    key: 'm10',
+    label: '菜单测试项目 10',
+  },
+  {
+    key: 'm11',
+    label: '菜单测试项目 11',
+  },
+  {
+    key: 'm12',
+    label: '菜单测试项目 12',
+  },
+  {
+    key: 'm13',
+    label: '菜单测试项目 13',
+  },
+  {
+    key: 'm14',
+    label: '菜单测试项目 14',
   },
 ])
 
@@ -119,42 +157,42 @@ const searchTestItems = ref([
   {
     key: 'i1',
     label: '重要文档Alpha',
-    prefixIcon: h(Star)
+    prefixIcon: h(Star),
   },
   {
     key: 'i2',
     label: '重要会议Beta',
-    prefixIcon: h(StarFilled)
+    prefixIcon: h(StarFilled),
   },
   {
     key: 'i3',
     label: '普通文档Alpha',
-    prefixIcon: h(Document)
+    prefixIcon: h(Document),
   },
   {
     key: 'i4',
     label: '私密文档Secret',
-    prefixIcon: h(Lock)
+    prefixIcon: h(Lock),
   },
   {
     key: 'i5',
     label: '日程Alpha',
-    prefixIcon: h(Calendar)
+    prefixIcon: h(Calendar),
   },
   {
     key: 'i6',
     label: '备份文档Beta',
-    prefixIcon: h(DocumentCopy)
+    prefixIcon: h(DocumentCopy),
   },
   {
     key: 'i7',
     label: '系统设置',
-    prefixIcon: h(Setting)
+    prefixIcon: h(Setting),
   },
   {
     key: 'i8',
     label: '已完成任务',
-    prefixIcon: h(DocumentChecked)
+    prefixIcon: h(DocumentChecked),
   },
 ])
 
@@ -163,47 +201,47 @@ const lazyItems = ref([
   {
     key: 'l1',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
   {
     key: 'l2',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound)
+    prefixIcon: h(ChatDotRound),
   },
   {
     key: 'l3',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
   {
-    key: 'l1',
+    key: 'l4',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
   {
-    key: 'l2',
+    key: 'l5',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound)
+    prefixIcon: h(ChatDotRound),
   },
   {
-    key: 'l3',
+    key: 'l6',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
   {
-    key: 'l1',
+    key: 'l7',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
   {
-    key: 'l2',
+    key: 'l8',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound)
+    prefixIcon: h(ChatDotRound),
   },
   {
-    key: 'l3',
+    key: 'l9',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound)
+    prefixIcon: h(ChatLineRound),
   },
 ])
 
@@ -224,34 +262,60 @@ const conversationMenuItems = [
     key: 'edit',
     label: '编辑',
     icon: h(Edit),
+    command: {
+      self_id: '1',
+      self_message: '编辑',
+      self_type: 'text',
+    },
   },
   {
     key: 'delete',
     label: '删除',
     icon: h(Delete),
+    disabled: true,
+    divided: true,
   },
   {
     key: 'share',
     label: '分享',
     icon: h(Share),
+    command: 'share',
   },
 ]
+
+// 内置菜单点击方法
+function handleMenuCommand(command: ConversationMenuCommand, item: ConversationItem) {
+  console.log('内置菜单点击事件：', command, item)
+  // 直接修改 item 是否生效
+  if (command === 'delete') {
+    const index = menuTestItems.value.findIndex(itemSlef => itemSlef.key === item.key)
+
+    if (index !== -1) {
+      menuTestItems.value.splice(index, 1)
+      ElMessage.success('删除成功')
+    }
+  }
+  if (command === 'rename') {
+    item.label = '已修改'
+    ElMessage.success('重命名成功')
+  }
+}
 
 // 搜索相关
 const searchValue = ref('')
 const searchResults = ref([...searchTestItems.value])
 
 // 搜索处理函数
-function handleSearch(value: string) {
-  if (!value) {
-    searchResults.value = [...searchTestItems.value]
-    return
-  }
+// function handleSearch(value: string) {
+//   if (!value) {
+//     searchResults.value = [...searchTestItems.value]
+//     return
+//   }
 
-  searchResults.value = searchTestItems.value.filter(item =>
-    item.label.toLowerCase().includes(value.toLowerCase()),
-  )
-}
+//   searchResults.value = searchTestItems.value.filter(item =>
+//     item.label.toLowerCase().includes(value.toLowerCase()),
+//   )
+// }
 
 // 加载更多处理
 const isLoading = ref(false)
@@ -269,18 +333,18 @@ function loadMoreItems() {
       {
         key: `l${lazyItems.value.length + 1}`,
         label: `加载的项目${lazyItems.value.length + 1}`,
-        prefixIcon: h(ChatLineRound)
+        prefixIcon: h(ChatLineRound),
       },
       {
         key: `l${lazyItems.value.length + 2}`,
         label: `加载的项目${lazyItems.value.length + 2}`,
-        prefixIcon: h(ChatDotRound)
+        prefixIcon: h(ChatDotRound),
       },
     ]
 
     lazyItems.value = [...lazyItems.value, ...newItems]
     isLoading.value = false
-  }, 1000)
+  }, 2000)
 }
 
 // 激活的键
@@ -289,10 +353,12 @@ const activeKey2 = ref('g1')
 const activeKey4 = ref('m1')
 const activeKey5 = ref('i1')
 const activeKey6 = ref('l1')
-const activeKey7 = ref('d1')
+// const activeKey7 = ref('d1')
 
 // 处理菜单点击
 function handleMenuClick(menuKey: string, item: any) {
+  console.log('菜单点击', menuKey, item)
+
   switch (menuKey) {
     case 'edit':
       ElMessage.info(`编辑: ${item.label}`)
@@ -309,18 +375,36 @@ function handleMenuClick(menuKey: string, item: any) {
 
 <template>
   <div class="demo-container">
-    <h2>基础时间分组 (groupable)</h2>
+    <h2>内置下拉菜单测试 (内置 rename 和 delete)</h2>
+    <div class="demo-card">
+      <Conversations
+        v-model:active="activeKey4"
+        :items="menuTestItems"
+        :label-max-width="200"
+        :show-tooltip="true"
+        tooltip-placement="right"
+        :tooltip-offset="35"
+        :menu-style="{
+          backgroundColor: '#fff',
+          boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
+        }"
+        show-to-top-btn
+        @menu-command="handleMenuCommand"
+      />
+    </div>
+
+    <h2>基础时间分组 (groupable) 内置分组吸顶功能</h2>
     <div class="demo-card">
       <Conversations
         v-model:active="activeKey1"
         :items="timeBasedItems"
         groupable
         :label-max-width="200"
-        :show-tooltip="true"
+        :show-tooltip="false"
       />
     </div>
 
-    <h2>自定义分组 (groupable为对象)</h2>
+    <h2>自定义分组 (groupable为对象) 内置分组吸顶功能 </h2>
     <div class="demo-card">
       <Conversations
         v-model:active="activeKey2"
@@ -328,6 +412,7 @@ function handleMenuClick(menuKey: string, item: any) {
         :groupable="customGroupOptions"
         :label-max-width="200"
         :show-tooltip="true"
+        show-to-top-btn
       >
         <template #groupTitle="{ group }">
           <div class="custom-group-title">
@@ -342,20 +427,22 @@ function handleMenuClick(menuKey: string, item: any) {
       </Conversations>
     </div>
 
-    <h2>菜单功能测试</h2>
+    <h2>自定义菜单功能测试</h2>
     <div class="demo-card">
       <Conversations
         v-model:active="activeKey4"
         :items="menuTestItems"
         :label-max-width="200"
         :show-tooltip="true"
+        :menu="conversationMenuItems"
+        show-to-top-btn
       >
         <template #menu="{ item }">
           <div class="menu-buttons">
             <el-button
               v-for="menuItem in conversationMenuItems"
               :key="menuItem.key"
-              type="text"
+              link
               size="small"
               @click.stop="handleMenuClick(menuItem.key, item)"
             >
@@ -377,6 +464,7 @@ function handleMenuClick(menuKey: string, item: any) {
         :items="searchResults"
         :label-max-width="200"
         :show-tooltip="true"
+        show-to-top-btn
       />
       <!-- :search-method="handleSearch" -->
     </div>
@@ -389,6 +477,8 @@ function handleMenuClick(menuKey: string, item: any) {
         :label-max-width="200"
         :show-tooltip="true"
         :load-more="loadMoreItems"
+        :load-more-loading="isLoading"
+        show-to-top-btn
       />
     </div>
   </div>
@@ -430,6 +520,7 @@ function handleMenuClick(menuKey: string, item: any) {
 
 .menu-buttons {
   display: flex;
+  flex-direction: column;
   gap: 8px;
   align-items: center;
 
