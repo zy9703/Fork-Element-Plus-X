@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ElScrollbar } from 'element-plus'
 import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions } from './types'
-import { Delete, Edit, Loading, Search, Top } from '@element-plus/icons-vue'
+import { Delete, Edit, Loading, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
 
 const props = withDefaults(defineProps<Conversation>(), {
@@ -46,28 +46,6 @@ const emits = defineEmits<{
   (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void
 }>()
 
-// 定义搜索值模型
-const searchModel = defineModel<string>('search', { required: false })
-
-// 当未绑定search属性但提供了searchMethod时，使用内部状态
-const internalSearchValue = ref('')
-
-// 实际用于搜索的值
-const actualSearchValue = computed(() => {
-  // 如果明确绑定了search属性，使用searchModel
-  if (props.search !== undefined) {
-    return searchModel.value || ''
-  }
-  // 否则使用内部状态
-  return internalSearchValue.value
-})
-
-// 判断是否显示搜索框 - 当存在 search 或 searchMethod 时显示
-const shouldShowSearch = computed(() => {
-  // 检查props中是否明确传入了search或searchMethod
-  return props.search !== undefined || props.searchMethod !== undefined
-})
-
 // 将传入的样式与默认样式合并
 const mergedStyle = computed(() => {
   const defaultStyle = {
@@ -110,21 +88,7 @@ const shouldUseGrouping = computed(() => {
 
 // 根据搜索值过滤项目
 const filteredItems = computed(() => {
-  if (!actualSearchValue.value)
-    return props.items
-
-  // 当searchMethod存在时，调用它并传递搜索值
-  if (props.searchMethod !== undefined) {
-    // 调用searchMethod，只传递搜索值
-    props.searchMethod(actualSearchValue.value)
-    // 返回原始items，由外部逻辑更新items
-    return props.items
-  }
-
-  // 默认的搜索方法
-  return props.items.filter(item =>
-    item.label.toLowerCase().includes(actualSearchValue.value.toLowerCase()),
-  )
+  return props.items
 })
 
 // 根据分组方式进行分组
@@ -354,23 +318,6 @@ onMounted(() => {
     }"
   >
     <ul class="conversations-list" :style="mergedStyle">
-      <!-- 搜索框 -->
-      <li
-        v-if="shouldShowSearch"
-        class="conversations-search"
-      >
-        <el-input
-          :model-value="actualSearchValue"
-          clearable
-          placeholder="搜索"
-          @update:model-value="props.search !== undefined ? searchModel = $event : internalSearchValue = $event"
-        >
-          <template #prefix>
-            <el-icon><Search /></el-icon>
-          </template>
-        </el-input>
-      </li>
-
       <!-- 滚动区域容器 -->
       <li class="conversations-scroll-wrapper">
         <el-scrollbar
@@ -511,15 +458,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-.conversations-search {
-  width: calc(100% - 20px);
-  z-index: 10;
-  background-color: inherit;
-  border-bottom: 1px solid #f0f0f0;
-  margin-bottom: 10px;
-  background-color: var(--conversation-list-auto-bg-color, #fff);
 }
 
 .conversations-scroll-wrapper {
