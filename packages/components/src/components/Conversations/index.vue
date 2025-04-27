@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ElScrollbar } from 'element-plus'
-import type { Conversation, ConversationItem, GroupableOptions } from './types'
-import { Search, Top } from '@element-plus/icons-vue'
+import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions } from './types'
+import { Delete, Edit, Loading, Search, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
 
 const props = withDefaults(defineProps<Conversation>(), {
@@ -10,9 +10,41 @@ const props = withDefaults(defineProps<Conversation>(), {
   showTooltip: () => false,
   groupable: () => false,
   labelMaxWidth: undefined,
-  menu: () => [],
+  labelHeight: 20,
+  menu: () => [
+    {
+      label: '重命名',
+      key: 'rename',
+      icon: h(Edit),
+      command: 'rename',
+    },
+    {
+      label: '删除',
+      key: 'delete',
+      icon: h(Delete),
+      command: 'delete',
+      menuItemHoverStyle: {
+        color: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+      },
+    },
+  ],
   ungroupedTitle: '未分组',
+  tooltipPlacement: 'top',
+  tooltipOffset: 12,
+  menuPlacement: 'bottom-start',
+  menuOffset: 50,
+  menuShowArrow: false,
+  menuClassName: '',
+  menuTeleported: true,
+  menuStyle: () => ({}),
+  loadMoreLoading: false,
+  showToTopBtn: false,
 })
+
+const emits = defineEmits<{
+  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void
+}>()
 
 // 定义搜索值模型
 const searchModel = defineModel<string>('search', { required: false })
@@ -73,7 +105,7 @@ function handleClick(key: string) {
 // 判断是否需要使用分组
 const shouldUseGrouping = computed(() => {
   // groupable为true/对象/空字符串时启用分组
-  return props.groupable === '' || !!props.groupable
+  return !!props.groupable
 })
 
 // 根据搜索值过滤项目
@@ -163,7 +195,7 @@ const groups = computed(() => {
       return 1
     if (b.isUngrouped)
       return -1
-    
+
     // 不做其他排序
     return 0
   })
@@ -244,7 +276,7 @@ function updateStickyStatus(_e: any) {
   }
 
   // 检查每个分组的位置
-  let visibleGroups = []
+  const visibleGroups = []
 
   // 收集所有可见的分组
   for (const group of groups.value) {
@@ -252,13 +284,13 @@ function updateStickyStatus(_e: any) {
     if (groupElement) {
       const groupRect = groupElement.getBoundingClientRect()
       const relativeTop = groupRect.top - scrollContainerTop
-      
+
       // 分组至少部分可见
       if ((relativeTop < containerHeight && relativeTop + groupRect.height > 0)) {
         visibleGroups.push({
           group,
           relativeTop,
-          height: groupRect.height
+          height: groupRect.height,
         })
       }
     }
@@ -271,15 +303,17 @@ function updateStickyStatus(_e: any) {
   if (visibleGroups.length > 0) {
     // 寻找第一个完全进入视口的分组
     const fullyVisibleGroup = visibleGroups.find(g => g.relativeTop >= 0)
-    
+
     if (fullyVisibleGroup) {
       // 如果有完全进入视口的分组，选择它
       stickyGroupKeys.value.add(fullyVisibleGroup.group.key)
-    } else {
+    }
+    else {
       // 否则选择第一个部分可见的分组（通常是标题已经滚出但内容还可见的）
       stickyGroupKeys.value.add(visibleGroups[0].group.key)
     }
-  } else if (groups.value.length > 0) {
+  }
+  else if (groups.value.length > 0) {
     // 如果没有可见分组，则选择第一个分组
     stickyGroupKeys.value.add(groups.value[0].key)
   }
@@ -297,6 +331,11 @@ function scrollToTop() {
   scrollbarRef.value?.setScrollTop(0)
 }
 
+// 菜单 item 点击事件
+function handleMenuItemClick(command: ConversationMenuCommand, item: ConversationItem) {
+  emits('menuCommand', command, item)
+}
+
 // 组件挂载后初始化第一个标题为吸顶状态
 onMounted(() => {
   // 如果有分组，默认将第一个分组设置为吸顶状态
@@ -308,16 +347,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="conversations-container">
+  <div
+    class="conversations-container" :style="{
+      '--conversation-label-height': `${props.labelHeight}px`,
+      '--conversation-list-auto-bg-color': mergedStyle.backgroundColor,
+    }"
+  >
     <ul class="conversations-list" :style="mergedStyle">
       <!-- 搜索框 -->
       <li
         v-if="shouldShowSearch"
         class="conversations-search"
-        :style="{
-          width: `calc(${mergedStyle.width} - 20px)`,
-          backgroundColor: mergedStyle.backgroundColor || '#fff',
-        }"
       >
         <el-input
           :model-value="actualSearchValue"
@@ -352,7 +392,6 @@ onMounted(() => {
                 <div
                   class="conversation-group-title sticky-title"
                   :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }"
-                  :style="{ backgroundColor: mergedStyle.backgroundColor || '#fff' }"
                 >
                   <slot name="groupTitle" v-bind="{ group }">
                     {{ group.title }}
@@ -365,11 +404,21 @@ onMounted(() => {
                     :item="item"
                     :prefix-icon="item.prefixIcon"
                     :show-tooltip="showTooltip"
+                    :tooltip-placement="props.tooltipPlacement"
+                    :tooltip-offset="props.tooltipOffset"
                     :suffix-icon="item.suffixIcon"
                     :active-key="activeKey || ''"
                     :label-max-width="labelMaxWidth"
                     :menu="menu"
+                    :menu-placement="props.menuPlacement"
+                    :menu-offset="props.menuOffset"
+                    :menu-max-height="props.menuMaxHeight"
+                    :menu-style="props.menuStyle"
+                    :menu-show-arrow="props.menuShowArrow"
+                    :menu-class-name="props.menuClassName"
+                    :menu-teleported="props.menuTeleported"
                     @click="handleClick"
+                    @menu-command="handleMenuItemClick"
                   >
                     <!-- 传递插槽 -->
                     <template v-if="$slots.label" #label>
@@ -391,11 +440,21 @@ onMounted(() => {
                 :item="item"
                 :prefix-icon="item.prefixIcon"
                 :show-tooltip="showTooltip"
+                :tooltip-placement="props.tooltipPlacement"
+                :tooltip-offset="props.tooltipOffset"
                 :suffix-icon="item.suffixIcon"
                 :active-key="activeKey || ''"
                 :label-max-width="labelMaxWidth"
                 :menu="menu"
+                :menu-placement="props.menuPlacement"
+                :menu-offset="props.menuOffset"
+                :menu-max-height="props.menuMaxHeight"
+                :menu-style="props.menuStyle"
+                :menu-show-arrow="props.menuShowArrow"
+                :menu-class-name="props.menuClassName"
+                :menu-teleported="props.menuTeleported"
                 @click="handleClick"
+                @menu-command="handleMenuItemClick"
               >
                 <!-- 传递插槽 -->
                 <template v-if="$slots.label" #label>
@@ -408,13 +467,23 @@ onMounted(() => {
               </Item>
             </template>
           </div>
+
+          <!-- 加载更多 -->
+          <div v-if="props.loadMoreLoading" class="conversations-load-more">
+            <slot name="load-more">
+              <el-icon class="conversations-load-more-is-loading">
+                <Loading />
+              </el-icon>
+              <span>加载更多...</span>
+            </slot>
+          </div>
         </el-scrollbar>
       </li>
     </ul>
 
     <!-- 滚动到顶部按钮 -->
     <el-button
-      v-show="showScrollTop"
+      v-show="showScrollTop && props.showToTopBtn"
       class="scroll-to-top-btn"
       circle
       @click="scrollToTop"
@@ -430,6 +499,7 @@ onMounted(() => {
   flex-direction: column;
   height: 100%;
   position: relative;
+  width: fit-content;
 }
 
 .conversations-list {
@@ -444,10 +514,12 @@ onMounted(() => {
 }
 
 .conversations-search {
+  width: calc(100% - 20px);
   z-index: 10;
   background-color: inherit;
   border-bottom: 1px solid #f0f0f0;
   margin-bottom: 10px;
+  background-color: var(--conversation-list-auto-bg-color, #fff);
 }
 
 .conversations-scroll-wrapper {
@@ -468,9 +540,35 @@ onMounted(() => {
   }
 }
 
+// 加载更多
+.conversations-load-more {
+  display: flex;
+  width: calc(100% - 20px);
+  padding: 4px 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  gap: 3px;
+  height: 100%;
+  color: #909399;
+  background-color: var(--conversation-list-auto-bg-color, #fff);
+}
+// 加载动画
+.conversations-load-more-is-loading {
+  margin-top: 2px;
+  animation: spinloading 2s linear infinite;
+}
+@keyframes spinloading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .scroll-content {
   min-height: 100%;
-  padding-bottom: 20px;
 }
 
 .loading-more {
@@ -494,25 +592,21 @@ onMounted(() => {
     font-weight: 500;
     margin-bottom: 4px;
     border-radius: 4px;
-    width: 100%;
-    margin-right: -10px; /* 负边距让元素向右延伸 */
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: calc(100% - 20px);
     box-sizing: border-box;
-    background-color: inherit;
   }
 
   .sticky-title {
     position: sticky;
     top: 0;
     z-index: 20;
+    background-color: var(--conversation-list-auto-bg-color, #fff);
   }
 
   .active-sticky {
     z-index: 10;
   }
-  
+
   .conversation-group-items {
     padding-top: 0;
   }
@@ -520,7 +614,7 @@ onMounted(() => {
 
 .scroll-to-top-btn {
   position: absolute;
-  right: 24px;
+  right: 16px;
   bottom: 16px;
   z-index: 99;
   opacity: 0.8;
@@ -531,22 +625,22 @@ onMounted(() => {
   }
 }
 
-/* 自定义滚动条样式 */
-.custom-scrollbar {
-  /* 调整滚动条样式 */
-  :deep(.el-scrollbar__bar.is-vertical) {
-    right: 0px !important; /* 滚动条位置 */
-    width: 6px !important; /* 调整滚动条宽度 */
-  }
+// /* 自定义滚动条样式 */
+// .custom-scrollbar {
+//   /* 调整滚动条样式 */
+//   :deep(.el-scrollbar__bar.is-vertical) {
+//     right: 0px !important; /* 滚动条位置 */
+//     width: 6px !important; /* 调整滚动条宽度 */
+//   }
 
-  :deep(.el-scrollbar__thumb) {
-    background-color: rgba(144, 147, 153, 0.5) !important; /* 设置滚动条颜色为半透明灰色 */
-  }
+//   :deep(.el-scrollbar__thumb) {
+//     background-color: rgba(144, 147, 153, 0.5) !important; /* 设置滚动条颜色为半透明灰色 */
+//   }
 
-  /* 移除原始滚动条的轨道 */
-  :deep(.el-scrollbar__wrap) {
-    margin-right: -10px !important; /* 调整这个值控制滚动条位置 */
-    padding-right: 26px !important; /* 为内容添加右侧填充，从20px增加到30px，为title提供更多空间 */
-  }
-}
+//   /* 移除原始滚动条的轨道 */
+//   :deep(.el-scrollbar__wrap) {
+//     margin-right: -10px !important; /* 调整这个值控制滚动条位置 */
+//     padding-right: 26px !important; /* 为内容添加右侧填充，从20px增加到30px，为title提供更多空间 */
+//   }
+// }
 </style>
