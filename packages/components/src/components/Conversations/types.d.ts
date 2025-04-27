@@ -53,11 +53,4 @@ export interface Conversation {
   loadMore?: () => void
   loadMoreLoading?: boolean
   showToTopBtn?: boolean
-  search?: string
-  /**
-   * 搜索方法，接收搜索值作为参数
-   * 用户可以在此方法中处理异步搜索逻辑，然后自行更新items数据
-   * @param searchValue 搜索值
-   */
-  searchMethod?: (searchValue: string) => void
 }
