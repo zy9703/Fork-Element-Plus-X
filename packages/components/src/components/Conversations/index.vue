@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Conversation>(), {
   groupable: () => false,
   labelMaxWidth: undefined,
   labelHeight: 20,
+  showBuiltInMenu: false,
   menu: () => [
     {
       label: '重命名',
@@ -357,6 +358,7 @@ onMounted(() => {
                     :active-key="activeKey || ''"
                     :label-max-width="labelMaxWidth"
                     :menu="menu"
+                    :show-built-in-menu="props.showBuiltInMenu"
                     :menu-placement="props.menuPlacement"
                     :menu-offset="props.menuOffset"
                     :menu-max-height="props.menuMaxHeight"
@@ -370,6 +372,10 @@ onMounted(() => {
                     <!-- 传递插槽 -->
                     <template v-if="$slots.label" #label>
                       <slot name="label" v-bind="{ item }" />
+                    </template>
+
+                    <template v-if="$slots['more-filled']" #more-filled>
+                      <slot name="more-filled" />
                     </template>
 
                     <template v-if="$slots.menu" #menu>
@@ -393,6 +399,7 @@ onMounted(() => {
                 :active-key="activeKey || ''"
                 :label-max-width="labelMaxWidth"
                 :menu="menu"
+                :show-built-in-menu="props.showBuiltInMenu"
                 :menu-placement="props.menuPlacement"
                 :menu-offset="props.menuOffset"
                 :menu-max-height="props.menuMaxHeight"
@@ -406,6 +413,10 @@ onMounted(() => {
                 <!-- 传递插槽 -->
                 <template v-if="$slots.label" #label>
                   <slot name="label" v-bind="{ item }" />
+                </template>
+
+                <template v-if="$slots['more-filled']" #more-filled>
+                  <slot name="more-filled" />
                 </template>
 
                 <template v-if="$slots.menu" #menu>

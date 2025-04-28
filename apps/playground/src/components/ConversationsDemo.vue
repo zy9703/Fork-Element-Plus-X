@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
-import { Calendar, ChatDotRound, ChatLineRound, Delete, Document, DocumentChecked, DocumentCopy, Edit, Lock, Setting, Share, Star, StarFilled } from '@element-plus/icons-vue'
+import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
 import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
 
 const timeBasedItems = ref([
@@ -152,50 +152,6 @@ const menuTestItems = ref([
   },
 ])
 
-// 测试数据 - 用于搜索功能和图标功能测试的会话
-const searchTestItems = ref([
-  {
-    key: 'i1',
-    label: '重要文档Alpha',
-    prefixIcon: h(Star),
-  },
-  {
-    key: 'i2',
-    label: '重要会议Beta',
-    prefixIcon: h(StarFilled),
-  },
-  {
-    key: 'i3',
-    label: '普通文档Alpha',
-    prefixIcon: h(Document),
-  },
-  {
-    key: 'i4',
-    label: '私密文档Secret',
-    prefixIcon: h(Lock),
-  },
-  {
-    key: 'i5',
-    label: '日程Alpha',
-    prefixIcon: h(Calendar),
-  },
-  {
-    key: 'i6',
-    label: '备份文档Beta',
-    prefixIcon: h(DocumentCopy),
-  },
-  {
-    key: 'i7',
-    label: '系统设置',
-    prefixIcon: h(Setting),
-  },
-  {
-    key: 'i8',
-    label: '已完成任务',
-    prefixIcon: h(DocumentChecked),
-  },
-])
-
 // 测试数据 - 懒加载测试
 const lazyItems = ref([
   {
@@ -301,22 +257,6 @@ function handleMenuCommand(command: ConversationMenuCommand, item: ConversationI
   }
 }
 
-// 搜索相关
-const searchValue = ref('')
-const searchResults = ref([...searchTestItems.value])
-
-// 搜索处理函数
-// function handleSearch(value: string) {
-//   if (!value) {
-//     searchResults.value = [...searchTestItems.value]
-//     return
-//   }
-
-//   searchResults.value = searchTestItems.value.filter(item =>
-//     item.label.toLowerCase().includes(value.toLowerCase()),
-//   )
-// }
-
 // 加载更多处理
 const isLoading = ref(false)
 
@@ -351,7 +291,6 @@ function loadMoreItems() {
 const activeKey1 = ref('1')
 const activeKey2 = ref('g1')
 const activeKey4 = ref('m1')
-const activeKey5 = ref('i1')
 const activeKey6 = ref('l1')
 // const activeKey7 = ref('d1')
 
@@ -389,6 +328,7 @@ function handleMenuClick(menuKey: string, item: any) {
           boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
         }"
         show-to-top-btn
+        show-built-in-menu
         @menu-command="handleMenuCommand"
       />
     </div>
@@ -434,9 +374,13 @@ function handleMenuClick(menuKey: string, item: any) {
         :items="menuTestItems"
         :label-max-width="200"
         :show-tooltip="true"
-        :menu="conversationMenuItems"
         show-to-top-btn
+        show-built-in-menu
       >
+        <template #more-filled>
+          <el-icon><EditPen /></el-icon>
+        </template>
+
         <template #menu="{ item }">
           <div class="menu-buttons">
             <el-button
@@ -454,19 +398,6 @@ function handleMenuClick(menuKey: string, item: any) {
           </div>
         </template>
       </Conversations>
-    </div>
-
-    <h2>搜索和图标功能</h2>
-    <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey5"
-        :search="searchValue"
-        :items="searchResults"
-        :label-max-width="200"
-        :show-tooltip="true"
-        show-to-top-btn
-      />
-      <!-- :search-method="handleSearch" -->
     </div>
 
     <h2>加载更多功能</h2>

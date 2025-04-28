@@ -43,6 +43,7 @@ export interface Conversation {
   // 未分组的标题，默认为"未分组"
   ungroupedTitle?: string
   menu?: ConversationMenu[]
+  showBuiltInMenu?: boolean
   menuPlacement?: 'top' | 'bottom' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
   menuOffset?: number
   menuShowArrow?: boolean

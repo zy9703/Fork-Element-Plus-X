@@ -11,6 +11,7 @@ const props = defineProps<{
   showTooltip?: boolean
   labelMaxWidth?: number
   menu?: ConversationMenu[]
+  showBuiltInMenu?: boolean
   tooltipPlacement?: 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'left-start' | 'left-end' | 'right-start' | 'right-end'
   tooltipOffset?: number
   menuPlacement?: 'top' | 'bottom' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
@@ -37,6 +38,7 @@ const {
   showTooltip,
   labelMaxWidth,
   menu,
+  showBuiltInMenu,
   tooltipPlacement,
   tooltipOffset,
   menuPlacement,
@@ -248,7 +250,7 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
       </span>
 
       <!-- 菜单区域 - 只在hover或active状态下显示 -->
-      <div v-if="shouldShowMenu">
+      <div v-if="shouldShowMenu && showBuiltInMenu">
         <div v-if="menu && menu.length" ref="menuButtonRef" class="conversation-dropdown-more" @click="(e) => e.stopPropagation()">
           <el-dropdown
             trigger="click"
@@ -261,9 +263,13 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
             @visible-change="updateMenuStatus"
             @command="(command: string | number | object) => nemuCommand(command, item)"
           >
-            <el-icon class="conversation-dropdown-more-icon">
-              <MoreFilled />
-            </el-icon>
+            <template #default>
+              <slot name="more-filled">
+                <el-icon class="conversation-dropdown-more-icon">
+                  <MoreFilled />
+                </el-icon>
+              </slot>
+            </template>
             <template #dropdown>
               <slot name="menu">
                 <el-dropdown-menu :style="mergedMenuStyle">
@@ -377,11 +383,15 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
     height: 100%;
     display: flex;
     align-items: center;
-    margin-right: 8px;
   }
 
   .conversation-dropdown-more-icon {
     font-size: 16px;
+    padding: 2px;
+    border-radius: 5px;
+    &:hover {
+      background-color: #d3d3d3;
+    }
   }
 
   .conversation-menu {
