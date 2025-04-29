@@ -1,0 +1,10 @@
+// 自定义组件导入导出
+export { default as Bubble } from './bubble'
+export { default as BubbleList } from './bubbleList'
+export { default as Button } from './button'
+export { default as MentionSender } from './mentionSender'
+export { default as Sender } from './sender'
+export { default as Thinking } from './thinking'
+export { default as ThoughtChain } from './thoughtChain'
+export { default as Typewriter } from './typewriter'
+export { default as Welcome } from './welcome'
