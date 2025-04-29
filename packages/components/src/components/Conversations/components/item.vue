@@ -5,6 +5,10 @@ import { MoreFilled } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   item: ConversationItem
+  itemsStyle?: CSSProperties
+  itemsHoverStyle?: CSSProperties
+  itemsActiveStyle?: CSSProperties
+  itemsMenuOpenedStyle?: CSSProperties
   activeKey: string
   prefixIcon?: ComponentVNode | null
   suffixIcon?: ComponentVNode | null
@@ -32,6 +36,10 @@ const slots = defineSlots()
 
 const {
   item,
+  itemsStyle,
+  itemsHoverStyle,
+  itemsActiveStyle,
+  itemsMenuOpenedStyle,
   activeKey,
   prefixIcon,
   suffixIcon,
@@ -113,6 +121,8 @@ const menuButtonRef = ref<any>(null)
 
 // 合并菜单样式
 const mergedMenuStyle = computed(() => {
+  console.log('menuStyle', menuStyle.value)
+
   return {
     ...menuStyle.value,
   }
@@ -199,8 +209,14 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
     :class="{
       disabled: item.disabled,
       active: item.key === activeKey,
-      hovered: isHovered,
+      hovered: item.disabled ? false : isHovered,
       menuopened: isShowMenuBtn,
+    }"
+    :style="{
+      ...itemsStyle,
+      ...(isHovered ? itemsHoverStyle : {}),
+      ...(isShowMenuBtn ? itemsMenuOpenedStyle : {}),
+      ...(item.key === activeKey ? itemsActiveStyle : {}),
     }"
     @click="handleClick(item.key)"
     @mouseenter="handleMouseEnter"
@@ -264,7 +280,16 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
             @command="(command: string | number | object) => nemuCommand(command, item)"
           >
             <template #default>
-              <slot name="more-filled">
+              <slot
+                name="more-filled"
+                v-bind="{
+                  item,
+                  isHovered: item.disabled ? false : isHovered,
+                  isActive: item.key === activeKey,
+                  isMenuOpened: isShowMenuBtn,
+                  isDisabled: item.disabled,
+                }"
+              >
                 <el-icon class="conversation-dropdown-more-icon">
                   <MoreFilled />
                 </el-icon>

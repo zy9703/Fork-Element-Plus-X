@@ -32,6 +32,10 @@ export interface GroupableOptions {
 
 export interface Conversation {
   items: ConversationItem[]
+  itemsStyle?: CSSProperties
+  itemsHoverStyle?: CSSProperties
+  itemsActiveStyle?: CSSProperties
+  itemsMenuOpenedStyle?: CSSProperties
   style?: CSSProperties
   labelMaxWidth?: number
   labelHeight?: number

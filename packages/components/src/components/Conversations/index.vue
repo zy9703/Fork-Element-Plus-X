@@ -6,6 +6,10 @@ import Item from './components/item.vue'
 
 const props = withDefaults(defineProps<Conversation>(), {
   items: () => [],
+  itemsStyle: () => ({}),
+  itemsHoverStyle: () => ({}),
+  itemsActiveStyle: () => ({}),
+  itemsMenuOpenedStyle: () => ({}),
   style: () => ({}),
   showTooltip: () => false,
   groupable: () => false,
@@ -350,6 +354,10 @@ onMounted(() => {
                     v-for="item in group.children"
                     :key="item.key"
                     :item="item"
+                    :items-style="props.itemsStyle"
+                    :items-hover-style="props.itemsHoverStyle"
+                    :items-active-style="props.itemsActiveStyle"
+                    :items-menu-opened-style="props.itemsMenuOpenedStyle"
                     :prefix-icon="item.prefixIcon"
                     :show-tooltip="showTooltip"
                     :tooltip-placement="props.tooltipPlacement"
@@ -374,8 +382,8 @@ onMounted(() => {
                       <slot name="label" v-bind="{ item }" />
                     </template>
 
-                    <template v-if="$slots['more-filled']" #more-filled>
-                      <slot name="more-filled" />
+                    <template v-if="$slots['more-filled']" #more-filled="moreFilledSoltProps">
+                      <slot name="more-filled" v-bind="moreFilledSoltProps" />
                     </template>
 
                     <template v-if="$slots.menu" #menu>
@@ -391,6 +399,10 @@ onMounted(() => {
                 v-for="item in filteredItems"
                 :key="item.key"
                 :item="item"
+                :items-style="props.itemsStyle"
+                :items-hover-style="props.itemsHoverStyle"
+                :items-active-style="props.itemsActiveStyle"
+                :items-menu-opened-style="props.itemsMenuOpenedStyle"
                 :prefix-icon="item.prefixIcon"
                 :show-tooltip="showTooltip"
                 :tooltip-placement="props.tooltipPlacement"
@@ -415,8 +427,8 @@ onMounted(() => {
                   <slot name="label" v-bind="{ item }" />
                 </template>
 
-                <template v-if="$slots['more-filled']" #more-filled>
-                  <slot name="more-filled" />
+                <template v-if="$slots['more-filled']" #more-filled="moreFilledSoltProps">
+                  <slot name="more-filled" v-bind="moreFilledSoltProps" />
                 </template>
 
                 <template v-if="$slots.menu" #menu>
@@ -541,7 +553,10 @@ onMounted(() => {
     font-weight: 500;
     margin-bottom: 4px;
     border-radius: 4px;
-    width: calc(100% - 20px);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    // 预留滚动条宽度
+    width: calc(100% - 10px);
     box-sizing: border-box;
   }
 
@@ -573,23 +588,4 @@ onMounted(() => {
     opacity: 1;
   }
 }
-
-// /* 自定义滚动条样式 */
-// .custom-scrollbar {
-//   /* 调整滚动条样式 */
-//   :deep(.el-scrollbar__bar.is-vertical) {
-//     right: 0px !important; /* 滚动条位置 */
-//     width: 6px !important; /* 调整滚动条宽度 */
-//   }
-
-//   :deep(.el-scrollbar__thumb) {
-//     background-color: rgba(144, 147, 153, 0.5) !important; /* 设置滚动条颜色为半透明灰色 */
-//   }
-
-//   /* 移除原始滚动条的轨道 */
-//   :deep(.el-scrollbar__wrap) {
-//     margin-right: -10px !important; /* 调整这个值控制滚动条位置 */
-//     padding-right: 26px !important; /* 为内容添加右侧填充，从20px增加到30px，为title提供更多空间 */
-//   }
-// }
 </style>
