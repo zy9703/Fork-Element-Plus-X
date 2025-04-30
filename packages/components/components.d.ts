@@ -35,6 +35,7 @@ declare module 'vue' {
     Loading: typeof import('./src/components/BubbleList/loading.vue')['default']
     LoadingButton: typeof import('./src/components/EditorSender/components/LoadingButton/index.vue')['default']
     MentionSender: typeof import('./src/components/MentionSender/index.vue')['default']
+    Prompts: typeof import('./src/components/Prompts/index.vue')['default']
     SendButton: typeof import('./src/components/EditorSender/components/SendButton/index.vue')['default']
     Sender: typeof import('./src/components/Sender/index.vue')['default']
     SpeechButton: typeof import('./src/components/EditorSender/components/SpeechButton/index.vue')['default']

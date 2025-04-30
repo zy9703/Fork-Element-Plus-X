@@ -121,8 +121,6 @@ const menuButtonRef = ref<any>(null)
 
 // 合并菜单样式
 const mergedMenuStyle = computed(() => {
-  console.log('menuStyle', menuStyle.value)
-
   return {
     ...menuStyle.value,
   }

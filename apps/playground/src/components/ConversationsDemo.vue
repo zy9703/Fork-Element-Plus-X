@@ -444,8 +444,8 @@ function handleMenuClick(menuKey: string, item: any) {
           border: '2px dashed transparent',
         }"
         :items-menu-opened-style="{
-          background: '#32CD32',
-          color: '#FFFAFA',
+          // background: '#32CD32',  // 背景色和选中样式保持一致
+          // color: '#FFFAFA',
           border: '2px dashed transparent',
         }"
         :menu-style="{

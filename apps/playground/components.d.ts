@@ -22,6 +22,7 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     MentionSenderDemo: typeof import('./src/components/MentionSenderDemo.vue')['default']
+    PromptsDemo: typeof import('./src/components/PromptsDemo.vue')['default']
     SenderDemo: typeof import('./src/components/SenderDemo.vue')['default']
     TestEditorInputDemo: typeof import('./src/components/Test-EditorInputDemo.vue')['default']
     TestEditorSenderDemo: typeof import('./src/components/Test-EditorSenderDemo.vue')['default']

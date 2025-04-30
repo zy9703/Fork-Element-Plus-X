@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UseConversations from './components/ConversationsDemo.vue'
+import PromptsDemo from './components/PromptsDemo.vue'
 </script>
 
 <template>
@@ -15,8 +15,8 @@ import UseConversations from './components/ConversationsDemo.vue'
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
-      <el-tab-pane label="Conversations">
-        <UseConversations />
+      <el-tab-pane label="Prompts">
+        <PromptsDemo />
       </el-tab-pane>
     </el-tabs>
   </div>
