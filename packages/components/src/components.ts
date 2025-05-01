@@ -1,4 +1,5 @@
 // Auto-Element-Plus-X by auto-export-all-components script
+export { default as Attachments } from './components/Attachments/index.vue'
 export { default as Bubble } from './components/Bubble/index.vue'
 export { default as BubbleList } from './components/BubbleList/index.vue'
 export { default as Conversations } from './components/Conversations/index.vue'

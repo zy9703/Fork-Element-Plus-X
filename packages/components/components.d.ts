@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Attachments: typeof import('./src/components/Attachments/index.vue')['default']
     Bubble: typeof import('./src/components/Bubble/index.vue')['default']
     BubbleList: typeof import('./src/components/BubbleList/index.vue')['default']
     ClearButton: typeof import('./src/components/EditorSender/components/ClearButton/index.vue')['default']

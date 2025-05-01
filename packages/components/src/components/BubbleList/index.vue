@@ -104,7 +104,7 @@ function scrollToBottom() {
       nextTick(() => {
         scrollContainer.value!.scrollTop = scrollContainer.value!.scrollHeight
         // 修复清空BubbleList后，再次调用 scrollToBottom()，不触发自动滚动问题
-        stopAutoScrollToBottom.value = false 
+        stopAutoScrollToBottom.value = false
       })
     }
   }

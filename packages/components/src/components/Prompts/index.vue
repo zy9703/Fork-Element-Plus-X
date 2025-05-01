@@ -47,28 +47,28 @@ function isActive(key: string | number) {
 }
 </script>
 
-<template name="Prompts">
-  <div class="elx-prompts" :style="props.style">
+<template>
+  <div class="el-prompts" :style="props.style">
     <slot v-if="$slots.title || props.title" name="title">
-      <div class="elx-prompts-title">
+      <div class="el-prompts-title">
         {{ title }}
       </div>
     </slot>
 
     <div
-      class="elx-prompts-items"
+      class="el-prompts-items"
       :class="{
-        'elx-prompts-items-wrap': props.wrap,
-        'elx-prompts-items-vertical': props.vertical,
+        'el-prompts-items-wrap': props.wrap,
+        'el-prompts-items-vertical': props.vertical,
       }"
     >
       <div
         v-for="item in items"
         :key="item.key"
-        class="elx-prompts-item"
+        class="el-prompts-item"
         :class="{
-          'elx-prompts-item-disabled': item.disabled,
-          'elx-prompts-item-gap': item.icon || $slots.icon,
+          'el-prompts-item-disabled': item.disabled,
+          'el-prompts-item-gap': item.icon || $slots.icon,
           'hovered': isHovered(item.key),
           'actived': isActive(item.key),
         }"
@@ -85,24 +85,24 @@ function isActive(key: string | number) {
       >
         <div class="item-content-container">
           <slot v-if="$slots.icon || item.icon" name="icon" :item="item">
-            <el-icon class="elx-prompts-item-icon">
+            <el-icon class="el-prompts-item-icon">
               <component :is="item.icon" />
             </el-icon>
           </slot>
-          <div class="elx-prompts-item-content">
+          <div class="el-prompts-item-content">
             <slot v-if="$slots.label || item.label" name="label" :item="item">
-              <h6 class="elx-prompts-item-label">
+              <h6 class="el-prompts-item-label">
                 {{ item.label }}
               </h6>
             </slot>
             <slot v-if="$slots.description || item.description" name="description" :item="item">
-              <p class="elx-prompts-item-description">
+              <p class="el-prompts-item-description">
                 {{ item.description }}
               </p>
             </slot>
           </div>
           <!-- 递归渲染子项 -->
-          <div v-if="item.children && item.children.length > 0" class="elx-prompts-children">
+          <div v-if="item.children && item.children.length > 0" class="el-prompts-children">
             <!-- 递归调用自身，传递子项数据和必要的 props -->
             <index
               :items="item.children"
@@ -118,10 +118,10 @@ function isActive(key: string | number) {
 </template>
 
 <style scoped lang="scss">
-.elx-prompts {
+.el-prompts {
   display: flex;
   flex-direction: column;
-  .elx-prompts-title {
+  .el-prompts-title {
     margin-block-start: 0;
     font-weight: normal;
     color: rgba(0, 0, 0, 0.45);
@@ -134,7 +134,7 @@ function isActive(key: string | number) {
       sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
 
-  .elx-prompts-items {
+  .el-prompts-items {
     display: flex;
     gap: 12px;
     overflow-x: auto;
@@ -146,16 +146,16 @@ function isActive(key: string | number) {
     box-sizing: border-box;
   }
 
-  .elx-prompts-items-wrap {
+  .el-prompts-items-wrap {
     flex-wrap: wrap;
   }
 
-  .elx-prompts-items-vertical {
+  .el-prompts-items-vertical {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .elx-prompts-item {
+  .el-prompts-item {
     flex: none;
     display: flex;
     height: 100%;
@@ -169,12 +169,12 @@ function isActive(key: string | number) {
     border: 1px solid #f0f0f0;
   }
 
-  .elx-prompts-item-disabled {
+  .el-prompts-item-disabled {
     pointer-events: none;
     background: rgba(0, 0, 0, 0.04);
   }
 
-  .elx-prompts-item-gap {
+  .el-prompts-item-gap {
     gap: 8px;
   }
 
@@ -193,14 +193,14 @@ function isActive(key: string | number) {
     flex: 1;
   }
 
-  .elx-prompts-item-content {
+  .el-prompts-item-content {
     flex: auto;
     min-width: 0;
     display: flex;
     gap: 4px;
     flex-direction: column;
     align-items: flex-start;
-    .elx-prompts-item-icon {
+    .el-prompts-item-icon {
       margin: 0;
       padding: 0;
       font-size: 14px;
@@ -209,7 +209,7 @@ function isActive(key: string | number) {
       white-space: normal;
     }
 
-    .elx-prompts-item-label {
+    .el-prompts-item-label {
       color: rgba(0, 0, 0, 0.88);
       font-weight: 500;
       margin: 0;
@@ -219,7 +219,7 @@ function isActive(key: string | number) {
       text-align: start;
       white-space: normal;
     }
-    .elx-prompts-item-description {
+    .el-prompts-item-description {
       color: rgba(0, 0, 0, 0.45);
       margin: 0;
       padding: 0;
@@ -231,8 +231,8 @@ function isActive(key: string | number) {
   }
 
   // 限制子项的宽度
-  .elx-prompts-children {
-    .elx-prompts-items-vertical {
+  .el-prompts-children {
+    .el-prompts-items-vertical {
       align-items: initial;
     }
   }

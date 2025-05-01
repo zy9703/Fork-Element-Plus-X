@@ -11,7 +11,9 @@ export default defineConfig({
     vue(),
     AutoImport({
       imports: ["vue"],
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({
+        exclude: /ElButtonGroup/ // 忽略自动导入 ElButtonGroup
+      })],
       dts: 'src/auto-import.d.ts'
     }),
     Components({
