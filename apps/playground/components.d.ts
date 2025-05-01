@@ -8,11 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AttachmentsDemo: typeof import('./src/components/AttachmentsDemo.vue')['default']
     Bubble: typeof import('vue-element-plus-x')['Bubble']
     BubbleDemo: typeof import('./src/components/BubbleDemo.vue')['default']
     BubbleList: typeof import('vue-element-plus-x')['BubbleList']
     BubbleListDemo: typeof import('./src/components/BubbleListDemo.vue')['default']
     ConversationsDemo: typeof import('./src/components/ConversationsDemo.vue')['default']
+    copy: typeof import('./src/components/PromptsDemo copy.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']

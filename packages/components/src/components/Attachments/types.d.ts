@@ -1,3 +1,3 @@
 export interface AttachmentsProps {
-    list: string[];
+  list?: string[]
 }
