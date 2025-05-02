@@ -1,25 +1,15 @@
 <script setup lang="ts">
 import PromptsDemo from './components/PromptsDemo.vue'
+import ConversationsDemo from './components/ConversationsDemo.vue';
 </script>
 
 <template>
-  <div id="app">
-    <el-alert
-      title="💖 欢迎使用 Element-Plus-X"
-      type="success"
-      closable
-    >
-      <p class="self-description">
-        详情可移步使用文档：👉 <a href="https://element-plus-x.com">element-plus-x.com</a>
-      </p>
-    </el-alert>
-
-    <el-tabs type="border-card" class="demo-tabs">
-      <el-tab-pane label="Prompts">
-        <PromptsDemo />
-      </el-tab-pane>
-    </el-tabs>
-  </div>
+  <el-tabs type="border-card" class="demo-tabs">
+    <el-tab-pane label="Prompts">
+      <!-- <PromptsDemo /> -->
+      <ConversationsDemo />
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <style scoped>

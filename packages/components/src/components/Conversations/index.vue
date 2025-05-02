@@ -1,10 +1,12 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends AnyObject = AnyObject">
 import type { ElScrollbar } from 'element-plus'
 import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions } from './types'
 import { Delete, Edit, Loading, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
+import { get } from 'radash';
+import type { AnyObject } from 'typescript-api-pro';
 
-const props = withDefaults(defineProps<Conversation>(), {
+const props = withDefaults(defineProps<Conversation<T>>(), {
   items: () => [],
   itemsStyle: () => ({}),
   itemsHoverStyle: () => ({}),
@@ -48,8 +50,12 @@ const props = withDefaults(defineProps<Conversation>(), {
 })
 
 const emits = defineEmits<{
-  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void
+  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void,
 }>()
+
+const getKey = (item: ConversationItem, index: number) => {
+  return props.rowKey ? get(item, props.rowKey as string) as string : index.toString()
+}
 
 // 将传入的样式与默认样式合并
 const mergedStyle = computed(() => {
@@ -67,19 +73,21 @@ const activeKey = defineModel<string>('active', { required: false })
 
 // 获取第一个非disabled的item的key，作为备选值
 const firstAvailableKey = computed(() => {
-  return props.items.find(item => !item.disabled)?.key || ''
+  const firstAvailableItem = props.items.find(item => !item.disabled)
+  if (!firstAvailableItem) return ''
+  return getKey(firstAvailableItem, 0)
 })
 
 // 如果没有绑定activeKey或绑定的是disabled项，则使用initialKey
 watchEffect(() => {
-  if (!activeKey.value || props.items.find(item => item.key === activeKey.value)?.disabled) {
+  if (!activeKey.value || props.items.find((item, index) => getKey(item, index) === activeKey.value)?.disabled) {
     activeKey.value = firstAvailableKey.value
   }
 })
 
 function handleClick(key: string) {
   // 如果是disabled状态，则不允许选中
-  if (props.items.find(item => item.key === key)?.disabled) {
+  if (props.items.find((item, index) => getKey(item, index) === key)?.disabled) {
     return
   }
   activeKey.value = key
@@ -316,67 +324,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="conversations-container" :style="{
-      '--conversation-label-height': `${props.labelHeight}px`,
-      '--conversation-list-auto-bg-color': mergedStyle.backgroundColor,
-    }"
-  >
+  <div class="conversations-container" :style="{
+    '--conversation-label-height': `${props.labelHeight}px`,
+    '--conversation-list-auto-bg-color': mergedStyle.backgroundColor,
+  }">
     <ul class="conversations-list" :style="mergedStyle">
       <!-- 滚动区域容器 -->
       <li class="conversations-scroll-wrapper">
-        <el-scrollbar
-          ref="scrollbarRef"
-          height="100%"
-          class="custom-scrollbar"
-          always
-          @scroll="handleScroll"
-        >
+        <el-scrollbar ref="scrollbarRef" height="100%" class="custom-scrollbar" always @scroll="handleScroll">
           <div class="scroll-content">
             <template v-if="shouldUseGrouping">
               <!-- 分组显示 -->
-              <div
-                v-for="group in groups"
-                :key="group.key"
-                :ref="el => { if (el) groupRefs[group.key] = el as HTMLDivElement }"
-                class="conversation-group"
-              >
-                <div
-                  class="conversation-group-title sticky-title"
-                  :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }"
-                >
+              <div v-for="group in groups" :key="group.key"
+                :ref="el => { if (el) groupRefs[group.key] = el as HTMLDivElement }" class="conversation-group">
+                <div class="conversation-group-title sticky-title"
+                  :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }">
                   <slot name="groupTitle" v-bind="{ group }">
                     {{ group.title }}
                   </slot>
                 </div>
                 <div class="conversation-group-items">
-                  <Item
-                    v-for="item in group.children"
-                    :key="item.key"
-                    :item="item"
-                    :items-style="props.itemsStyle"
-                    :items-hover-style="props.itemsHoverStyle"
-                    :items-active-style="props.itemsActiveStyle"
-                    :items-menu-opened-style="props.itemsMenuOpenedStyle"
-                    :prefix-icon="item.prefixIcon"
-                    :show-tooltip="showTooltip"
-                    :tooltip-placement="props.tooltipPlacement"
-                    :tooltip-offset="props.tooltipOffset"
-                    :suffix-icon="item.suffixIcon"
-                    :active-key="activeKey || ''"
-                    :label-max-width="labelMaxWidth"
-                    :menu="menu"
-                    :show-built-in-menu="props.showBuiltInMenu"
-                    :menu-placement="props.menuPlacement"
-                    :menu-offset="props.menuOffset"
-                    :menu-max-height="props.menuMaxHeight"
-                    :menu-style="props.menuStyle"
-                    :menu-show-arrow="props.menuShowArrow"
-                    :menu-class-name="props.menuClassName"
-                    :menu-teleported="props.menuTeleported"
-                    @click="handleClick"
-                    @menu-command="handleMenuItemClick"
-                  >
+                  <Item v-for="(item, index) in group.children" :key="getKey(item, index)" :item="item"
+                    :items-style="props.itemsStyle" :items-hover-style="props.itemsHoverStyle"
+                    :items-active-style="props.itemsActiveStyle" :items-menu-opened-style="props.itemsMenuOpenedStyle"
+                    :prefix-icon="item.prefixIcon" :show-tooltip="showTooltip"
+                    :tooltip-placement="props.tooltipPlacement" :tooltip-offset="props.tooltipOffset"
+                    :suffix-icon="item.suffixIcon" :active-key="activeKey || ''" :label-max-width="labelMaxWidth"
+                    :menu="menu" :show-built-in-menu="props.showBuiltInMenu" :menu-placement="props.menuPlacement"
+                    :menu-offset="props.menuOffset" :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
+                    :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
+                    :menu-teleported="props.menuTeleported" @click="handleClick" @menu-command="handleMenuItemClick">
                     <!-- 传递插槽 -->
                     <template v-if="$slots.label" #label>
                       <slot name="label" v-bind="{ item }" />
@@ -395,33 +372,16 @@ onMounted(() => {
             </template>
 
             <template v-else>
-              <Item
-                v-for="item in filteredItems"
-                :key="item.key"
-                :item="item"
-                :items-style="props.itemsStyle"
-                :items-hover-style="props.itemsHoverStyle"
-                :items-active-style="props.itemsActiveStyle"
-                :items-menu-opened-style="props.itemsMenuOpenedStyle"
-                :prefix-icon="item.prefixIcon"
-                :show-tooltip="showTooltip"
-                :tooltip-placement="props.tooltipPlacement"
-                :tooltip-offset="props.tooltipOffset"
-                :suffix-icon="item.suffixIcon"
-                :active-key="activeKey || ''"
-                :label-max-width="labelMaxWidth"
-                :menu="menu"
-                :show-built-in-menu="props.showBuiltInMenu"
-                :menu-placement="props.menuPlacement"
-                :menu-offset="props.menuOffset"
-                :menu-max-height="props.menuMaxHeight"
-                :menu-style="props.menuStyle"
-                :menu-show-arrow="props.menuShowArrow"
-                :menu-class-name="props.menuClassName"
-                :menu-teleported="props.menuTeleported"
-                @click="handleClick"
-                @menu-command="handleMenuItemClick"
-              >
+              <Item v-for="(item, index) in filteredItems" :key="getKey(item, index)" :item="item" :items-style="props.itemsStyle"
+                :items-hover-style="props.itemsHoverStyle" :items-active-style="props.itemsActiveStyle"
+                :items-menu-opened-style="props.itemsMenuOpenedStyle" :prefix-icon="item.prefixIcon"
+                :show-tooltip="showTooltip" :tooltip-placement="props.tooltipPlacement"
+                :tooltip-offset="props.tooltipOffset" :suffix-icon="item.suffixIcon" :active-key="activeKey || ''"
+                :label-max-width="labelMaxWidth" :menu="menu" :show-built-in-menu="props.showBuiltInMenu"
+                :menu-placement="props.menuPlacement" :menu-offset="props.menuOffset"
+                :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
+                :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
+                :menu-teleported="props.menuTeleported" @click="handleClick" @menu-command="handleMenuItemClick">
                 <!-- 传递插槽 -->
                 <template v-if="$slots.label" #label>
                   <slot name="label" v-bind="{ item }" />
@@ -452,13 +412,10 @@ onMounted(() => {
     </ul>
 
     <!-- 滚动到顶部按钮 -->
-    <el-button
-      v-show="showScrollTop && props.showToTopBtn"
-      class="scroll-to-top-btn"
-      circle
-      @click="scrollToTop"
-    >
-      <el-icon><Top /></el-icon>
+    <el-button v-show="showScrollTop && props.showToTopBtn" class="scroll-to-top-btn" circle @click="scrollToTop">
+      <el-icon>
+        <Top />
+      </el-icon>
     </el-button>
   </div>
 </template>
@@ -494,10 +451,12 @@ onMounted(() => {
     position: absolute;
     top: 0;
     right: 0;
-    width: 8px; /* 右侧留白宽度 */
+    width: 8px;
+    /* 右侧留白宽度 */
     height: 100%;
     background-color: transparent;
-    pointer-events: none; /* 确保不影响交互 */
+    pointer-events: none;
+    /* 确保不影响交互 */
   }
 }
 
@@ -514,15 +473,18 @@ onMounted(() => {
   color: #909399;
   background-color: var(--conversation-list-auto-bg-color, #fff);
 }
+
 // 加载动画
 .conversations-load-more-is-loading {
   margin-top: 2px;
   animation: spinloading 2s linear infinite;
 }
+
 @keyframes spinloading {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

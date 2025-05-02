@@ -5,6 +5,7 @@ import BubbleList from './components/BubbleList/index.vue'
 import Conversations from './components/Conversations/index.vue'
 import EditorInput from './components/EditorInput/index.vue'
 import EditorSender from './components/EditorSender/index.vue'
+import FilesCard from './components/FilesCard/index.vue'
 import MentionSender from './components/MentionSender/index.vue'
 import Prompts from './components/Prompts/index.vue'
 import Sender from './components/Sender/index.vue'
@@ -24,6 +25,7 @@ const ElementPlusX: Plugin = {
     app.component('Conversations', Conversations)
     app.component('EditorInput', EditorInput)
     app.component('EditorSender', EditorSender)
+    app.component('FilesCard', FilesCard)
     app.component('MentionSender', MentionSender)
     app.component('Prompts', Prompts)
     app.component('Sender', Sender)
@@ -31,7 +33,7 @@ const ElementPlusX: Plugin = {
     app.component('ThoughtChain', ThoughtChain)
     app.component('Typewriter', Typewriter)
     app.component('Welcome', Welcome)
-  },
+  }
 }
 
 export default ElementPlusX

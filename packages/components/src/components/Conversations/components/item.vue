@@ -3,7 +3,7 @@ import type { VNode as ComponentVNode, CSSProperties } from 'vue'
 import type { ConversationItem, ConversationMenu, ConversationMenuCommand } from '../types'
 import { MoreFilled } from '@element-plus/icons-vue'
 
-const props = defineProps<{
+interface Props {
   item: ConversationItem
   itemsStyle?: CSSProperties
   itemsHoverStyle?: CSSProperties
@@ -25,7 +25,9 @@ const props = defineProps<{
   menuShowArrow?: boolean
   menuClassName?: string
   menuTeleported?: boolean
-}>()
+}
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'click', key: string): void
@@ -188,7 +190,7 @@ function updateMenuStatus(isOpen: boolean) {
 }
 
 // 菜单命令处理
-function nemuCommand(command: string | number | object, item: ConversationItem) {
+function menuCommand(command: string | number | object, item: ConversationItem) {
   // 如果已经有自定义插槽，则不执行这个函数
   // 菜单的所有内容由开发者自行处理
   if (slots.menu) {
@@ -208,7 +210,7 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
       disabled: item.disabled,
       active: item.key === activeKey,
       hovered: item.disabled ? false : isHovered,
-      menuopened: isShowMenuBtn,
+      'menu-opened': isShowMenuBtn,
     }"
     :style="{
       ...itemsStyle,
@@ -275,7 +277,7 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
             :max-height="menuMaxHeight"
             :disabled="item.disabled"
             @visible-change="updateMenuStatus"
-            @command="(command: string | number | object) => nemuCommand(command, item)"
+            @command="(command: string | number | object) => menuCommand(command, item)"
           >
             <template #default>
               <slot
@@ -317,116 +319,5 @@ function nemuCommand(command: string | number | object, item: ConversationItem) 
   </li>
 </template>
 
-<style scoped lang="scss">
-.conversation-item {
-  padding: 14px 10px;
-  margin-right: 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  & + & {
-    margin-top: 4px;
-  }
-
-  &.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    color: #c0c4cc;
-  }
-
-  &.active {
-    background-color: #f0f0f0;
-  }
-
-  &.hovered, &:hover {
-    background-color: #f0f0f0;
-  }
-
-  &.menuopened {
-    background-color: #f0f0f0;
-  }
-}
-
-.conversation-content {
-  display: flex;
-  align-items: center;
-  height: var(--conversation-label-height, 20px);
-
-  .conversation-prefix-icon {
-    margin-right: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .conversation-content-main {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .conversation-label-container {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .conversation-label {
-    font-size: 14px;
-    color: #303133;
-    position: relative;
-    white-space: nowrap;
-
-    &.text-gradient {
-      mask-image: linear-gradient(to right, black 60%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
-    }
-  }
-
-  .conversation-timestamp {
-    font-size: 14px;
-    color: #909399;
-    margin-left: 8px;
-  }
-
-  .conversation-suffix-icon {
-    margin-left: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .conversation-dropdown-more {
-    justify-self: center;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .conversation-dropdown-more-icon {
-    font-size: 16px;
-    padding: 2px;
-    border-radius: 5px;
-    &:hover {
-      background-color: #d3d3d3;
-    }
-  }
-
-  .conversation-menu {
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-
-    .hovered &, .active & {
-      opacity: 1;
-    }
-  }
-}
+<style scoped lang="scss" src="./style.scss">
 </style>

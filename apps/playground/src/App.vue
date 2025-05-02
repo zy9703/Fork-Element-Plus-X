@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import AttachmentsDemo from './components/AttachmentsDemo.vue'
+import Dev from './App-dev.vue';
+import Test from './App-test.vue';
+import Prod from './App-prod.vue';
+const mode = import.meta.env.MODE;
+console.log(mode, 'mode');
 </script>
 
 <template>
@@ -13,12 +17,9 @@ import AttachmentsDemo from './components/AttachmentsDemo.vue'
         详情可移步使用文档：👉 <a href="https://element-plus-x.com">element-plus-x.com</a>
       </p>
     </el-alert>
-
-    <el-tabs type="border-card" class="demo-tabs">
-      <el-tab-pane label="Prompts">
-        <AttachmentsDemo />
-      </el-tab-pane>
-    </el-tabs>
+    <Dev v-if="mode === 'development'" />
+    <Test v-else-if="mode === 'test'" />
+    <Prod v-else />
   </div>
 </template>
 
