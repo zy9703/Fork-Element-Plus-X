@@ -8,6 +8,7 @@ export * from './components'
 interface ComponentWithInstall {
   install?: (app: any) => void // install 方法可选
 }
+console.log("components:", components);
 export default {
   install(app: any) {
     // 这里的componentName我们暂时用到，可以先将它加个下划线避免eslint报错

@@ -8,9 +8,10 @@ title: direction 属性
 
 <script setup lang="ts">
 import { Refresh } from '@element-plus/icons-vue'
+import { WelcomeProps } from '../types'
 
 const bgColor = ref('linear-gradient(97deg, rgba(90,196,255,0.12) 0%, rgba(174,136,255,0.12) 100%)')
-const value = ref('ltr')
+const value = ref<WelcomeProps['direction']>('ltr')
 
 // 生成随机的渐变颜色
 function generateGradientColor(): string {

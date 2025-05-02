@@ -8,7 +8,7 @@ title: useRecord 调用浏览器内置 语音识别
 
 <script setup lang="ts">
 import { Eleme, Loading, Mic, Microphone, RefreshRight, Service } from '@element-plus/icons-vue'
-import { useRecord } from '../../hooks'
+import { useRecord } from 'vue-element-plus-x'
 
 // useRecord 这是常规 写法
 // const { start, value, loading, stop } = useRecord({ onEnd: handleEnd })

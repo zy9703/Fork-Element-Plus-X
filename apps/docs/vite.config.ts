@@ -22,13 +22,13 @@ export default defineConfig({
   plugins: [
     AutoImport({
       imports: ['vue'],
-      resolvers: [ElementPlusResolver()],
+      // resolvers: [ElementPlusResolver()],
       // dts: 'packages/vue-element-plus-x/src/auto-imports.d.ts',
     }) as PluginOption,
     Components({
       resolvers: [
         tovUIResolver(),
-        ElementPlusResolver(),
+        // ElementPlusResolver(),
       ],
     }) as PluginOption,
     tsxAutoProps(),

@@ -21,7 +21,7 @@ import {
   VideoPause,
   VideoPlay,
 } from '@element-plus/icons-vue'
-import { useSend } from '../../hooks'
+import { useSend } from 'vue-element-plus-x'
 
 const { send, abort, loading } = useSend({
   sendHandler: startFn,
