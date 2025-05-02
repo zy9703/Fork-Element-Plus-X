@@ -51,6 +51,7 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
 
 const emits = defineEmits<{
   (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void,
+  (e: 'change', item: ConversationItem): void
 }>()
 
 const getKey = (item: ConversationItem, index: number) => {
@@ -85,12 +86,11 @@ watchEffect(() => {
   }
 })
 
-function handleClick(key: string) {
+function handleClick(item: ConversationItem, index: number) {
   // 如果是disabled状态，则不允许选中
-  if (props.items.find((item, index) => getKey(item, index) === key)?.disabled) {
-    return
-  }
-  activeKey.value = key
+  if(item.disabled) return;
+  emits('change', item)
+  activeKey.value = getKey(item, index)
 }
 
 // 判断是否需要使用分组
@@ -353,7 +353,7 @@ onMounted(() => {
                     :menu="menu" :show-built-in-menu="props.showBuiltInMenu" :menu-placement="props.menuPlacement"
                     :menu-offset="props.menuOffset" :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
                     :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
-                    :menu-teleported="props.menuTeleported" @click="handleClick" @menu-command="handleMenuItemClick">
+                    :menu-teleported="props.menuTeleported" @click="handleClick(item, index)" @menu-command="handleMenuItemClick">
                     <!-- 传递插槽 -->
                     <template v-if="$slots.label" #label>
                       <slot name="label" v-bind="{ item }" />
@@ -381,7 +381,7 @@ onMounted(() => {
                 :menu-placement="props.menuPlacement" :menu-offset="props.menuOffset"
                 :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
                 :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
-                :menu-teleported="props.menuTeleported" @click="handleClick" @menu-command="handleMenuItemClick">
+                :menu-teleported="props.menuTeleported" @click="handleClick(item, index)" @menu-command="handleMenuItemClick">
                 <!-- 传递插槽 -->
                 <template v-if="$slots.label" #label>
                   <slot name="label" v-bind="{ item }" />
