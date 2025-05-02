@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
-import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
+import { Conversations } from 'vue-element-plus-x'
 
 const timeBasedItems = ref([
   {
@@ -414,15 +414,8 @@ function handleMenuClick(menuKey: string, item: any) {
   <div class="demo-container">
     <h2>绝对自定义-默认样式，悬停样式，选中样式，以及自定义 label</h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey5"
-        :items="menuTestItems1"
-        :label-max-width="200"
-        :show-tooltip="true"
-        tooltip-placement="right"
-        :tooltip-offset="35"
-        show-built-in-menu
-        :groupable="customGroupOptions"
+      <Conversations v-model:active="activeKey5" :items="menuTestItems1" :label-max-width="200" :show-tooltip="true"
+        tooltip-placement="right" :tooltip-offset="35" show-built-in-menu :groupable="customGroupOptions" row-key="key"
         :items-style="{
           padding: '10px 20px',
           borderRadius: '10px',
@@ -433,27 +426,22 @@ function handleMenuClick(menuKey: string, item: any) {
           transition: 'all 0.3s',
           marginBottom: '20px',
           border: '2px dashed transparent',
-        }"
-        :items-hover-style="{
+        }" :items-hover-style="{
           background: '#FAFAD2',
           border: '2px dashed #006400',
-        }"
-        :items-active-style="{
+        }" :items-active-style="{
           background: '#006400',
           color: '#FFFAFA',
           border: '2px dashed transparent',
-        }"
-        :items-menu-opened-style="{
+        }" :items-menu-opened-style="{
           // background: '#32CD32',  // 背景色和选中样式保持一致
           // color: '#FFFAFA',
           border: '2px dashed transparent',
-        }"
-        :menu-style="{
+        }" :menu-style="{
           backgroundColor: 'red',
           boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
           padding: '10px 20px',
-        }"
-      >
+        }">
         <template #label="{ item }">
           <div class="custom-label">
             {{ item.label }}
@@ -475,30 +463,24 @@ function handleMenuClick(menuKey: string, item: any) {
           <span v-if="isHovered">✍️</span>
           <span v-if="isActive">✅</span>
           <span v-if="isMenuOpened">🥰</span>
-          <span
-            v-if="isDisabled"
-            :style="{
-              background: 'black',
-              padding: '5px',
-              borderRadius: '10px',
-              color: 'white',
-              fontSize: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }"
-          >
+          <span v-if="isDisabled" :style="{
+            background: 'black',
+            padding: '5px',
+            borderRadius: '10px',
+            color: 'white',
+            fontSize: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }">
             🫥是否禁用：{{ item?.disabled }}
           </span>
         </template>
 
         <template #menu="{ item }">
           <div class="menu-buttons">
-            <div
-              v-for="menuItem in conversationMenuItems1"
-              :key="menuItem.key" class="menu-self-button"
-              @click.stop="handleMenuClick(menuItem.key, item)"
-            >
+            <div v-for="menuItem in conversationMenuItems1" :key="menuItem.key" class="menu-self-button"
+              @click.stop="handleMenuClick(menuItem.key, item)">
               <span v-if="menuItem.icon">{{ menuItem.icon }}</span>
               <span v-if="menuItem.label">{{ menuItem.label }}</span>
             </div>
@@ -509,40 +491,21 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>内置下拉菜单测试 (内置 rename 和 delete)</h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey4"
-        :items="menuTestItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        tooltip-placement="right"
-        :tooltip-offset="35"
-        show-to-top-btn
-        show-built-in-menu
-        @menu-command="handleMenuCommand"
-      />
+      <Conversations v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        row-key="key" tooltip-placement="right" :tooltip-offset="35" show-to-top-btn show-built-in-menu
+        @menu-command="handleMenuCommand" />
     </div>
 
     <h2>基础时间分组 (groupable) 内置分组吸顶功能</h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey1"
-        :items="timeBasedItems"
-        groupable
-        :label-max-width="200"
-        :show-tooltip="false"
-      />
+      <Conversations v-model:active="activeKey1" :items="timeBasedItems" groupable :label-max-width="200"
+        :show-tooltip="false" row-key="key" />
     </div>
 
     <h2>自定义分组 (groupable为对象) 内置分组吸顶功能 </h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey2"
-        :items="groupBasedItems"
-        :groupable="customGroupOptions"
-        :label-max-width="200"
-        :show-tooltip="true"
-        show-to-top-btn
-      >
+      <Conversations v-model:active="activeKey2" :items="groupBasedItems" :groupable="customGroupOptions"
+        :label-max-width="200" :show-tooltip="true" show-to-top-btn row-key="key">
         <template #groupTitle="{ group }">
           <div class="custom-group-title">
             <!-- 为不同组添加不同的前缀 -->
@@ -558,27 +521,18 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>自定义菜单功能测试</h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey4"
-        :items="menuTestItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        show-to-top-btn
-        show-built-in-menu
-      >
+      <Conversations v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        show-to-top-btn show-built-in-menu>
         <template #more-filled>
-          <el-icon><EditPen /></el-icon>
+          <el-icon>
+            <EditPen />
+          </el-icon>
         </template>
 
         <template #menu="{ item }">
           <div class="menu-buttons">
-            <el-button
-              v-for="menuItem in conversationMenuItems"
-              :key="menuItem.key"
-              link
-              size="small"
-              @click.stop="handleMenuClick(menuItem.key, item)"
-            >
+            <el-button v-for="menuItem in conversationMenuItems" :key="menuItem.key" link size="small"
+              @click.stop="handleMenuClick(menuItem.key, item)">
               <el-icon v-if="menuItem.icon">
                 <component :is="menuItem.icon" />
               </el-icon>
@@ -591,15 +545,8 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>加载更多功能</h2>
     <div class="demo-card">
-      <Conversations
-        v-model:active="activeKey6"
-        :items="lazyItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        :load-more="loadMoreItems"
-        :load-more-loading="isLoading"
-        show-to-top-btn
-      />
+      <Conversations v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" :show-tooltip="true"
+        :load-more="loadMoreItems" :load-more-loading="isLoading" show-to-top-btn />
     </div>
   </div>
 </template>
@@ -664,6 +611,7 @@ function handleMenuClick(menuKey: string, item: any) {
     margin-left: 0;
     cursor: pointer;
     gap: 8px;
+
     &:hover {
       background-color: #f5f7fa;
       color: #409EFF;

@@ -372,10 +372,10 @@ onMounted(() => {
             </template>
 
             <template v-else>
-              <Item v-for="(item, index) in filteredItems" :key="getKey(item, index)" :item="item" :items-style="props.itemsStyle"
-                :items-hover-style="props.itemsHoverStyle" :items-active-style="props.itemsActiveStyle"
-                :items-menu-opened-style="props.itemsMenuOpenedStyle" :prefix-icon="item.prefixIcon"
-                :show-tooltip="showTooltip" :tooltip-placement="props.tooltipPlacement"
+              <Item v-for="(item, index) in filteredItems" :key="getKey(item, index)" :item="item"
+                :items-style="props.itemsStyle" :items-hover-style="props.itemsHoverStyle"
+                :items-active-style="props.itemsActiveStyle" :items-menu-opened-style="props.itemsMenuOpenedStyle"
+                :prefix-icon="item.prefixIcon" :show-tooltip="showTooltip" :tooltip-placement="props.tooltipPlacement"
                 :tooltip-offset="props.tooltipOffset" :suffix-icon="item.suffixIcon" :active-key="activeKey || ''"
                 :label-max-width="labelMaxWidth" :menu="menu" :show-built-in-menu="props.showBuiltInMenu"
                 :menu-placement="props.menuPlacement" :menu-offset="props.menuOffset"

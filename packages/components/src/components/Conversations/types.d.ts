@@ -16,7 +16,7 @@ export type ConversationMenuCommand = string | number | object
 
 export interface ConversationMenu {
   label: string
-  // key: string
+  key: string
   icon?: ComponentVNode | null
   disabled?: boolean
   divided?: boolean
