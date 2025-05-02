@@ -26,11 +26,25 @@
   "module": "dist/es/index.js",
   "unpkg": "dist/umd/index.js",
   "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/umd/index.js",
+      "types": "./types/index.d.ts"
+    },
+    "./styles/*": "./dist/styles/*",
+    "./src/*": {
+      "import": "./src/*",
+      "require": "./src/*"
+    },
+    "./types/*": "./types/components/*/types.d.ts"
+  },
   "files": [
     "!dist/**/*.map",
     "README.md",
     "dist",
-    "types"
+    "types",
+    "src"
   ],
   "scripts": {
     "dev": "vite",

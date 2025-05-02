@@ -1,13 +1,16 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
-import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
+import { usePrism, Bubble } from 'vue-element-plus-x'
+import 'vue-element-plus-x/styles/prism-solarizedlight.min.css'
 
 const avatar = ref(
   'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
 )
 const loading = ref(true)
 const content = ref('')
+
+const highlight = usePrism();
 
 onMounted(() => {
   setTimeout(() => {
@@ -32,19 +35,10 @@ console.log('Hello, world!');
   <div class="component-container">
     <p>新版本支持 打字器 雾化效果</p>
     <div class="component-1">
-      <Bubble
-        placement="start"
-        :content="content"
-        shape="corner"
-        variant="shadow"
-        :loading="loading"
-        :typing="{
-          step: 2,
-          suffix: '💗',
-        }"
-        :is-markdown="true"
-        :is-fog="{ bgColor: '#FFFFFF' }"
-      >
+      <Bubble placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
+        step: 2,
+        suffix: '💗',
+      }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }" :highlight="highlight">
         <template #avatar>
           <el-avatar :size="32" :src="avatar" />
         </template>
@@ -58,12 +52,7 @@ console.log('Hello, world!');
             <el-button type="info" :icon="Refresh" size="small" circle />
             <el-button type="success" :icon="Search" size="small" circle />
             <el-button type="warning" :icon="Star" size="small" circle />
-            <el-button
-              color="#626aef"
-              :icon="DocumentCopy"
-              size="small"
-              circle
-            />
+            <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
           </div>
         </template>
       </Bubble>
@@ -76,10 +65,11 @@ console.log('Hello, world!');
   background-color: white;
   padding: 12px;
   border-radius: 15px;
+
   .component-1 {
     .footer-container {
       :deep() {
-        .el-button + .el-button {
+        .el-button+.el-button {
           margin-left: 8px;
         }
       }

@@ -29,6 +29,7 @@ export interface TypewriterProps {
   typing?: boolean | TypingConfig
   /* 是否开启打字器雾化效果 */
   isFog?: boolean | TypingFogfig
+  highlight?: (code: string, language: string)=> string;
 }
 
 /** 组件实例类型 */

@@ -1,6 +1,6 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
-import type { PromptsItemsProps } from 'vue-element-plus-x/types/components/Prompts/types.d.ts'
+import type { PromptsItemsProps } from 'vue-element-plus-x/types/Prompts'
 import Prompts from 'vue-element-plus-x/src/components/Prompts/index.vue'
 
 onMounted(() => {

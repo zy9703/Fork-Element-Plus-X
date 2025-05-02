@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
+import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/types/Conversations'
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
 import { Conversations } from 'vue-element-plus-x'
 

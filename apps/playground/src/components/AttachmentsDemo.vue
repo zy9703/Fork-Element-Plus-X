@@ -1,7 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 // import type { PromptsItemsProps } from 'vue-element-plus-x/types/components/Attachments/types.d.ts'
-import Attachments from 'vue-element-plus-x/src/components/Attachments/index.vue'
+import { Attachments } from 'vue-element-plus-x'
 </script>
 
 <template>
@@ -29,6 +29,7 @@ import Attachments from 'vue-element-plus-x/src/components/Attachments/index.vue
     line-height: 1.5;
     margin-bottom: 12px;
     margin-top: 24px;
+
     &::after {
       position: absolute;
       content: '';
