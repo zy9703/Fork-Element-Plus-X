@@ -4,11 +4,6 @@ import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
 import { usePrism } from '../../hooks/usePrism';
-// 在组件中初始化时
-// import 'github-markdown-css'
-// import 'prismjs/themes/prism.css' // 样式影响其他组件库 暂时注释处理
-
-// TODO: 通过markdown得hooks来获取到一个解析器function, 然后通过props传入
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
@@ -48,17 +43,6 @@ const md = new MarkdownIt({
   breaks: true,
   highlight: (code, language) => {
     return highlight.value?.(code, language);
-    // try {
-    //   // 检查并修正可能的拼写错误
-    //   if (Prism.languages[language]) {
-    //     return Prism.highlight(code, Prism.languages[language], language)
-    //   }
-    //   return code // 返回原始代码，避免抛出异常
-    // }
-    // catch (error) {
-    //   console.error('Error during code highlighting:', error)
-    //   return code // 返回原始代码，避免抛出异常
-    // }
   },
 })
 const typingIndex = ref(0)
