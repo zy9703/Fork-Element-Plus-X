@@ -50,11 +50,11 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
 })
 
 const emits = defineEmits<{
-  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem): void,
-  (e: 'change', item: ConversationItem): void
+  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem<T>): void,
+  (e: 'change', item: ConversationItem<T>): void
 }>()
 
-const getKey = (item: ConversationItem, index: number) => {
+const getKey = (item: ConversationItem<T>, index: number) => {
   return props.rowKey ? get(item, props.rowKey as string) as string : index.toString()
 }
 
@@ -86,7 +86,7 @@ watchEffect(() => {
   }
 })
 
-function handleClick(item: ConversationItem, index: number) {
+function handleClick(item: ConversationItem<T>, index: number) {
   // 如果是disabled状态，则不允许选中
   if(item.disabled) return;
   emits('change', item)
@@ -119,7 +119,7 @@ const groups = computed(() => {
   const groupMap: Record<string, {
     title: string
     key: string
-    children: ConversationItem[]
+    children: ConversationItem<T>[]
     isUngrouped?: boolean // 标记是否为未分组
   }> = {}
 
@@ -309,7 +309,7 @@ function scrollToTop() {
 }
 
 // 菜单 item 点击事件
-function handleMenuItemClick(command: ConversationMenuCommand, item: ConversationItem) {
+function handleMenuItemClick(command: ConversationMenuCommand, item: ConversationItem<T>) {
   emits('menuCommand', command, item)
 }
 
