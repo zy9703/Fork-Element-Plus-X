@@ -5,7 +5,10 @@ import Components from 'unplugin-vue-components/vite'
 
 const plugins: PluginOption[] = [
   AutoImport({
-    imports: ['vue'],
+    imports: [{
+      vue: ['computed', 'createApp', 'ref', 'watchEffect', 'watch', ['h', 'vueH']]
+    }],
+    ignore: ['h'],
     resolvers: [ElementPlusResolver()],
     dts: 'src/auto-import.d.ts',
   }),

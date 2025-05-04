@@ -22,13 +22,13 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
     {
       label: '重命名',
       key: 'rename',
-      icon: h(Edit),
+      icon: vueH(Edit),
       command: 'rename',
     },
     {
       label: '删除',
       key: 'delete',
-      icon: h(Delete),
+      icon: vueH(Delete),
       command: 'delete',
       menuItemHoverStyle: {
         color: 'red',

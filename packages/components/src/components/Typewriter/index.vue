@@ -4,6 +4,7 @@ import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
 import { usePrism } from '../../hooks/usePrism';
+import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid';
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
@@ -12,8 +13,8 @@ const props = withDefaults(defineProps<TypewriterProps>(), {
   isFog: false,
 })
 
-const highlight = computed(()=> {
-  if(!props.highlight){
+const highlight = computed(() => {
+  if (!props.highlight) {
     return usePrism();
   }
   return props.highlight;
@@ -45,6 +46,19 @@ const md = new MarkdownIt({
     return highlight.value?.(code, language);
   },
 })
+
+md.use(markdownItMermaid({delay: 100}))
+
+const initMarkdownPlugins = ()=> {
+  if(props.mdPlugins && props.mdPlugins.length) {
+    props.mdPlugins.forEach((plugin) => {
+      md.use(plugin);
+    })
+  }
+}
+
+initMarkdownPlugins()
+
 const typingIndex = ref(0)
 const isTyping = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
@@ -242,75 +256,20 @@ defineExpose(instance)
 
 <template>
   <div ref="typeWriterRef" class="typer-container">
-    <div
-      ref="markdownContentRef"
-      class="typer-content"
-      :class="[
-        {
-          'markdown-content': isMarkdown,
-          'typing-cursor': typing && mergedConfig.suffix && isTyping,
-          'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
-          'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
-        },
-        isMarkdown ? 'markdown-body' : '',
-      ]"
-      :style="{
-        '--cursor-char': `'${mergedConfig.suffix}'`,
-        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
-        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
-      }"
-      v-html="renderedContent"
-    />
+    <div ref="markdownContentRef" class="typer-content" :class="[
+      {
+        'markdown-content': isMarkdown,
+        'typing-cursor': typing && mergedConfig.suffix && isTyping,
+        'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
+        'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
+      },
+      isMarkdown ? 'markdown-body' : '',
+    ]" :style="{
+      '--cursor-char': `'${mergedConfig.suffix}'`,
+      '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
+      '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
+    }" v-html="renderedContent" />
   </div>
 </template>
 
-<style scoped lang="scss">
-/* Markdown基础样式 */
-.markdown-content :deep(ul) { list-style-type: disc; }
-// 新增 md 雾化效果
-// 添加对 h1-h6, ol, ul 的特殊处理
-.typing-markdown-cursor-foggy,.typing-cursor-foggy {
-  &.markdown-content :deep() h1,
-  &.markdown-content :deep() h2,
-  &.markdown-content :deep() h3,
-  &.markdown-content :deep() h4,
-  &.markdown-content :deep() h5,
-  &.markdown-content :deep() h6,
-  &.markdown-content :deep() p,
-  &.markdown-content :deep() ol:last-child li,
-  &.markdown-content :deep() ul:last-child li {
-    position: relative;
-    overflow: hidden;
-    &:last-child:after {
-      content: '';
-      width: var(--cursor-fog-width);
-      height: 1.5em;
-      background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-      position: absolute;
-      margin-left: calc(-1 * var(--cursor-fog-width));
-    }
-  }
-}
-
-/* 修改光标样式 */
-.typer-content.typing-cursor::after {
-  content: var(--cursor-char);
-  margin-left: 2px;
-  display: inline-block; /* 确保光标对齐 */
-}
-
-// 新增 雾化样式
-.typer-content.typing-cursor-foggy {
-  position: relative;
-  overflow: hidden;
-
-  &:last-child:after {
-    content: '';
-    width: var(--cursor-fog-width);
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-    position: absolute;
-    margin-left: calc(-1 * var(--cursor-fog-width));
-  }
-}
-</style>
+<style scoped lang="scss" src="./style.scss"></style>

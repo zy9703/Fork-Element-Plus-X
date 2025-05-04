@@ -1,8 +1,10 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
-import { usePrism, Bubble } from 'vue-element-plus-x'
+import { usePrism } from 'vue-element-plus-x'
 import 'vue-element-plus-x/styles/prism-solarizedlight.min.css'
+
+import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
 
 const avatar = ref(
   'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
@@ -23,6 +25,17 @@ onMounted(() => {
 **粗体文本** 和 *斜体文本*
 \`\`\`javascript
 console.log('Hello, world!');
+\`\`\`
+
+\`\`\`mermaid
+pie
+    "传媒及文化相关" : 35
+    "广告与市场营销" : 8
+    "游戏开发" : 15
+    "影视动画与特效" : 12
+    "互联网产品设计" : 10
+    "VR/AR开发" : 5
+    "其他" : 15
 \`\`\`
 `.trim()
       loading.value = false

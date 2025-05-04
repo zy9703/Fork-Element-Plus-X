@@ -157,47 +157,47 @@ const lazyItems = ref([
   {
     key: 'l1',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l2',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l3',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l4',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l5',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l6',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l7',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l8',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l9',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
 ])
 
@@ -217,7 +217,7 @@ const conversationMenuItems = [
   {
     key: 'edit',
     label: '编辑',
-    icon: h(Edit),
+    icon: vueH(Edit),
     command: {
       self_id: '1',
       self_message: '编辑',
@@ -227,14 +227,14 @@ const conversationMenuItems = [
   {
     key: 'delete',
     label: '删除',
-    icon: h(Delete),
+    icon: vueH(Delete),
     disabled: true,
     divided: true,
   },
   {
     key: 'share',
     label: '分享',
-    icon: h(Share),
+    icon: vueH(Share),
     command: 'share',
   },
 ]
@@ -370,12 +370,12 @@ function loadMoreItems() {
       {
         key: `l${lazyItems.value.length + 1}`,
         label: `加载的项目${lazyItems.value.length + 1}`,
-        prefixIcon: h(ChatLineRound),
+        prefixIcon: vueH(ChatLineRound),
       },
       {
         key: `l${lazyItems.value.length + 2}`,
         label: `加载的项目${lazyItems.value.length + 2}`,
-        prefixIcon: h(ChatDotRound),
+        prefixIcon: vueH(ChatDotRound),
       },
     ]
 
