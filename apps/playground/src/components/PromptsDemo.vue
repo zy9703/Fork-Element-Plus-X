@@ -193,7 +193,7 @@ function handleItemClick(item: PromptsItemsProps) {
     display: flex;
     align-items: center;
     position: relative;
-    padding-left: 8px;
+    padding-left: 12px;
     font-weight: 700;
     line-height: 1.5;
     margin-bottom: 12px;

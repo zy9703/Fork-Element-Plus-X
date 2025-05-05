@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AttachmentsDemo from './components/AttachmentsDemo.vue'
+import FilesCardDemo from './components/FilesCardDemo.vue'
 </script>
 
 <template>
@@ -15,8 +16,11 @@ import AttachmentsDemo from './components/AttachmentsDemo.vue'
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
-      <el-tab-pane label="Prompts">
+      <el-tab-pane label="Attachments">
         <AttachmentsDemo />
+      </el-tab-pane>
+      <el-tab-pane label="FilesCard">
+        <FilesCardDemo />
       </el-tab-pane>
     </el-tabs>
   </div>
