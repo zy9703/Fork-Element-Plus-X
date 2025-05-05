@@ -1,14 +1,15 @@
-import Prism from 'prismjs';
+import Prism from 'prismjs'
 
-export const usePrism = () => {
+export function usePrism() {
   const highlight = (code: string, lang: string) => {
     try {
-      const grammar = Prism.languages[lang];
+      const grammar = Prism.languages[lang]
       if (grammar) {
         return Prism.highlight(code, grammar, lang)
       }
       return code
-    } catch (_error) {
+    }
+    catch {
       return code
     }
   }

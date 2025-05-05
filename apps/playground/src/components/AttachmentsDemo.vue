@@ -1,7 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 import type { FilesCardProps, FilesType } from 'vue-element-plus-x/types/FilesCard'
-// import Attachments from 'vue-element-plus-x'
+// import Attachments from 'vue-element-plus-x/src/components/Attachments/index.vue'
 import { colorMap1 } from '../assets/mock.ts'
 
 type SelfFilesCardProps = FilesCardProps & {
@@ -36,8 +36,10 @@ function handleBeforUpload(file: any) {
   }
 }
 
-function handleUploadDrop(file: any, props: any) {
+async function handleUploadDrop(file: any, props: any) {
   console.log('drop', file, props)
+
+  await handleHttpRequest({ file })
 }
 
 async function handleHttpRequest(options: any) {
@@ -90,6 +92,10 @@ function handleDeleteCard(item: SelfFilesCardProps) {
       :list-style="{
         padding: '0 12px',
       }"
+      :before-upload="handleBeforUpload"
+      :hide-upload="false"
+      :http-request="handleHttpRequest"
+      @upload-drop="handleUploadDrop"
     >
       <!-- 自定义列表内容 -->
       <template #file-list="{ items }">
@@ -116,6 +122,11 @@ function handleDeleteCard(item: SelfFilesCardProps) {
       :list-style="{
         padding: '0 12px',
       }"
+      :http-request="handleHttpRequest"
+      :before-upload="handleBeforUpload"
+      :hide-upload="false"
+      @upload-drop="handleUploadDrop"
+      @delete-card="handleDeleteCard"
     >
       <!-- 自定义左侧按钮（覆盖默认插槽） -->
       <template #prev-button="{ show, onScrollLeft }">
@@ -186,10 +197,6 @@ function handleDeleteCard(item: SelfFilesCardProps) {
       :items="files"
       drag
       overflow="wrap"
-      :list-style="{
-        padding: '0 12px',
-        height: '200px',
-      }"
       :before-upload="handleBeforUpload"
       :hide-upload="false"
       @upload-drop="handleUploadDrop"

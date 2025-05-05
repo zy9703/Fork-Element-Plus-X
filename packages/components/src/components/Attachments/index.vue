@@ -209,12 +209,8 @@ defineExpose({
     <div v-if="!items.length && !props.hideUpload">
       <slot name="empty-upload">
         <el-upload
-          class="elx-attachments-upload-btn"
-          v-bind="$attrs"
-          :show-file-list="false"
-          @change="handleUploadChange"
-          @success="handleUploadSuccess"
-          @error="handleUploadError"
+          class="elx-attachments-upload-btn" v-bind="$attrs" :show-file-list="false"
+          @change="handleUploadChange" @success="handleUploadSuccess" @error="handleUploadError"
         >
           <el-icon class="uploader-icon">
             <Plus />
@@ -245,7 +241,10 @@ defineExpose({
         <slot name="file-list" :items="items">
           <div v-for="(item, index) in items" :key="item.uid" class="elx-attachments-card">
             <transition name="card-motion">
-              <FilesCard v-if="item.uid" v-bind="item" class="elx-attachments-card-item" @delete="handleDelete(item, index)" />
+              <FilesCard
+                v-if="item.uid" v-bind="item" class="elx-attachments-card-item"
+                @delete="handleDelete(item, index)"
+              />
             </transition>
           </div>
         </slot>
@@ -253,14 +252,9 @@ defineExpose({
         <div v-if="items.length && !_isOverLimit && !props.hideUpload" class="elx-attachments-upload-placeholder">
           <slot name="no-empty-upload">
             <el-upload
-              v-bind="$attrs"
-              :show-file-list="false"
-              :style="{
+              v-bind="$attrs" :show-file-list="false" :style="{
                 height: overflow === 'scrollY' && '',
-              }"
-              class="elx-attachments-upload-btn"
-              @change="handleUploadChange"
-              @success="handleUploadSuccess"
+              }" class="elx-attachments-upload-btn" @change="handleUploadChange" @success="handleUploadSuccess"
               @error="handleUploadError"
             >
               <template #trigger>
@@ -326,7 +320,8 @@ defineExpose({
 .card-motion-leave-to {
   opacity: 0;
   /* 从左侧外进入（进场）/ 移动到右侧外（退场） */
-  transform: translateX(-100%); /* 进场初始位置在左侧外 */
+  transform: translateX(-100%);
+  /* 进场初始位置在左侧外 */
   /* 如果你希望从左侧稍微偏移进入，可以用 translateX(-10px) */
 }
 
@@ -341,6 +336,7 @@ defineExpose({
   height: 100%;
   align-items: center;
 }
+
 .elx-attachments-upload-placeholder {
   display: inline-block;
   width: fit-content;
@@ -350,6 +346,7 @@ defineExpose({
 
 .elx-attachments-card {
   display: inline-block;
+  vertical-align: top;
 }
 
 .elx-attachments-card-item {
@@ -368,9 +365,11 @@ defineExpose({
   padding: 4px 0px;
   border-radius: 3px;
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
+
   &:active {
     background-color: rgba(0, 0, 0, 0.7);
   }
@@ -420,9 +419,11 @@ defineExpose({
 
 .elx-attachments-overflow-scrollX {
   height: 100%;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
 }
 
@@ -448,6 +449,14 @@ defineExpose({
     position: relative;
     overflow: hidden;
     transition: var(--el-transition-duration-fast);
+
+    &:hover {
+      border-color: var(--el-color-primary);
+
+      .el-icon.uploader-icon {
+        color: var(--el-color-primary);
+      }
+    }
   }
 
   .el-icon.uploader-icon {
@@ -460,6 +469,12 @@ defineExpose({
 
   .el-upload-dragger {
     padding: 0;
+
+    &:hover {
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
   }
 }
 
