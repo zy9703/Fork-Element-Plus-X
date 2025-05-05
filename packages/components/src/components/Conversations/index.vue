@@ -5,6 +5,7 @@ import { Delete, Edit, Loading, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
 import { get } from 'radash';
 import type { AnyObject } from 'typescript-api-pro';
+import type { ComponentPublicInstance } from 'vue';
 
 const props = withDefaults(defineProps<Conversation<T>>(), {
   items: () => [],
@@ -22,13 +23,13 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
     {
       label: '重命名',
       key: 'rename',
-      icon: Edit,
+      icon: markRaw(Edit),
       command: 'rename',
     },
     {
       label: '删除',
       key: 'delete',
-      icon: Delete,
+      icon: markRaw(Delete),
       command: 'delete',
       menuItemHoverStyle: {
         color: 'red',
@@ -309,7 +310,7 @@ function handleMenuItemClick(command: ConversationMenuCommand, item: Conversatio
 }
 
 function bindGroupRef(el: Element | ComponentPublicInstance | null, item: GroupItem) {
-  if(el){
+  if (el) {
     groupRefs.value[item.key] = el as HTMLDivElement;
   }
 }
@@ -338,8 +339,8 @@ onMounted(() => {
           <div class="scroll-content">
             <template v-if="shouldUseGrouping">
               <!-- 分组显示 -->
-              <div v-for="group in groups" :key="group.key"
-                :ref="el => bindGroupRef(el, group)" class="conversation-group">
+              <div v-for="group in groups" :key="group.key" :ref="el => bindGroupRef(el, group)"
+                class="conversation-group">
                 <div class="conversation-group-title sticky-title"
                   :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }">
                   <slot name="groupTitle" v-bind="{ group }">

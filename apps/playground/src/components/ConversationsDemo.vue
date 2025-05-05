@@ -153,7 +153,7 @@ const menuTestItems = ref([
 ])
 
 // 测试数据 - 懒加载测试
-const lazyItems = ref([
+const lazyItems = shallowRef([
   {
     key: 'l1',
     label: '初始项目1',
@@ -370,12 +370,12 @@ function loadMoreItems() {
       {
         key: `l${lazyItems.value.length + 1}`,
         label: `加载的项目${lazyItems.value.length + 1}`,
-        prefixIcon: ChatLineRound,
+        prefixIcon: markRaw(ChatLineRound),
       },
       {
         key: `l${lazyItems.value.length + 2}`,
         label: `加载的项目${lazyItems.value.length + 2}`,
-        prefixIcon: ChatDotRound,
+        prefixIcon: markRaw(ChatDotRound),
       },
     ]
 
