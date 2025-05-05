@@ -1,38 +1,33 @@
+// import type { Plugin } from 'vitepress'
+// import { prismjsPlugin } from 'vite-plugin-prismjs'
 import { defineConfig } from 'vitepress'
-import type { Plugin } from 'vitepress'
-import { prismjsPlugin } from 'vite-plugin-prismjs'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Element-Plus-X",
-  description: "一个 Vue3 + Element-Plus AI体验组件库",
-  locales: {
-    root: {
-      label: '简体中文',
-      lang: 'zh-CN'
-    },
-    en: {
-      label: 'English',
-      lang: 'en', // 可选，将作为 `lang` 属性添加到 `html` 标签中
-      link: '/en/', // 默认 /fr/ -- 显示在导航栏翻译菜单上，可以是外部的
-      themeConfig: {
-        nav: [
-          // 这里大家需要注意我们直接写/introduce，他会自动读取我们运行目录中的introduce.md文件
-          // 我们来实现一下这个文件，
-          // 我们的根目录就是我们的项目的根目录
-          // { text: '介绍', link: '/introduce' },
-          // 我们这种最后带着斜杠的，他真正读取的是我们根目录下的components/index.md的文件，那么我们先创建一下这个文件
-          { text: '💌 Invitation', link: '/guide/introduce' },
-          { text: '🎀 Roadmap', link: '/roadmap' },
-          { text: '📆 Changelog', link: '/update-log' },
-          { text: '🧭 Guide', link: '/guide/install/' },
-          { text: '🎨 Components', link: '/components/typewriter/' },
-        ],
-      }
-    }
-  },
+  title: 'Element-Plus-X',
+  description: '一个 Vue3 + Element-Plus AI体验组件库',
+  // locales: {
+  //   root: {
+  //     label: '简体中文',
+  //     lang: 'zh-CN',
+  //   },
+  //   en: {
+  //     label: 'English',
+  //     lang: 'en', // 可选，将作为 `lang` 属性添加到 `html` 标签中
+  //     link: '/en/', // 默认 /fr/ -- 显示在导航栏翻译菜单上，可以是外部的
+  //     themeConfig: {
+  //       nav: [
+  //         { text: '💌 Invitation', link: '/introduce' },
+  //         { text: '🎀 Roadmap', link: '/roadmap' },
+  //         { text: '📆 Changelog', link: '/update-log' },
+  //         { text: '🧭 Guide', link: '/guide/install/' },
+  //         { text: '🎨 Components', link: '/components/typewriter/' },
+  //       ],
+  //     },
+  //   },
+  // },
   rewrites: {
-    // 'docs/(.*)': '(.*)',
+    'docs/(.*)': '(.*)',
     // 'packages/icons/docs/(.*)': 'components/icons/(.*)',
     // 'packages/vue-element-plus-x/src/:path/(.*)': 'components/:path/(.*)',
     // 'packages/utils/src/:path/(.*)': 'utils/:path/(.*)',
@@ -68,8 +63,8 @@ export default defineConfig({
       // 我们的根目录就是我们的项目的根目录
       // { text: '介绍', link: '/introduce' },
       // 我们这种最后带着斜杠的，他真正读取的是我们根目录下的components/index.md的文件，那么我们先创建一下这个文件
-      { text: '💌 交流邀请', link: '/guide/introduce' },
-      { text: '🎀 开发计划', link: '/guide/roadmap' },
+      { text: '💌 交流邀请', link: '/introduce' },
+      { text: '🎀 开发计划', link: '/roadmap' },
       { text: '📆 更新日志', link: '/update-log' },
       { text: '🧭 指南', link: '/guide/install/' },
       { text: '🎨 组件', link: '/components/typewriter/' },
@@ -111,7 +106,7 @@ export default defineConfig({
         {
           text: '工具',
           items: [
-            { text: 'useRecord 🪴', link: '/components/useRecord/' },
+            { text: 'useRecord 🌴', link: '/components/useRecord/' },
             { text: 'useXStream 🌱', link: '/components/useXStream/' },
             { text: 'useSend & XRequest 🌳', link: '/components/useSend/' },
           ],
@@ -127,13 +122,7 @@ export default defineConfig({
           ],
         },
       ],
-      // 我们还可以添加一些utils的配置，如果我们还需要添加其他的配置，我们就以此类推就可以。
-      // '/utils/': [
-      //   {
-      //     text: '类名生成器',
-      //     link: '/utils/gen-class/',
-      //   },
-      // ],
+
     },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/HeJiaYue520/Element-Plus-X' },
@@ -202,11 +191,10 @@ export default defineConfig({
       // inspect(),
       // https://github.com/antfu/vite-plugin-pages
       // 页面路由
-      prismjsPlugin({
-        languages: 'all', // 语言
-        theme: 'default', // 主题
-        css: true,
-      }) as Plugin
+      // prismjsPlugin({
+      //   languages: 'all', // 语言
+      //   theme: 'default', // 主题
+      // }) as Plugin,
     ],
   },
 })

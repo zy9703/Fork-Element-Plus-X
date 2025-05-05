@@ -8,9 +8,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Bubble: typeof import('vue-element-plus-x')['Bubble']
+    ElAvatar: typeof import('element-plus')['ElAvatar']
     ElButton: typeof import('element-plus')['ElButton']
+    ElDialog: typeof import('element-plus')['ElDialog']
     ElIcon: typeof import('element-plus')['ElIcon']
     ElProgress: typeof import('element-plus')['ElProgress']
+    ElRadioButton: typeof import('element-plus')['ElRadioButton']
+    ElRadioGroup: typeof import('element-plus')['ElRadioGroup']
+    ElSwitch: typeof import('element-plus')['ElSwitch']
+    Sender: typeof import('vue-element-plus-x')['Sender']
+    Thinking: typeof import('vue-element-plus-x')['Thinking']
+    ThoughtChain: typeof import('vue-element-plus-x')['ThoughtChain']
     Typewriter: typeof import('vue-element-plus-x')['Typewriter']
   }
 }
