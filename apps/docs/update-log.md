@@ -1,3 +1,92 @@
+
+
+## [v1.2.0] - 2025-05-05
+
+### 💥 破坏性变更
+
+- `types`  **TS类型引入 写法变更** 
+
+  以前的写法：太长了
+
+  ```vue
+  import { BubbleProps } from 'vue-element-plus-x/types/components/Bubble/types.d.ts'
+  ```
+
+  v1.2.0 以后写法：简洁一些
+
+  ```vue
+  import { BubbleProps } from 'vue-element-plus-x/types/Bubble'
+  ```
+
+### 🐛 修复
+
+- 修复 **`Typewriter`**  打字组件，md 代码高亮输出时候，超出最大宽度的样式问题
+
+### 🚀 新增功能
+
+- **`Typewriter`** 打字器组件，新增 **雾化效果**。**`Bubble`** 气泡组件、**`BubbleList`** 气泡列表组件，在不自定义内容插槽的时候，自动继承，支持雾化效果属性。
+- **`BubbleList`** 组件新增 **回到底部按钮**，同时新增 悬停内容区域出现滚动条。增强交互体验
+- **`Sender`** 组件新增 **变体**、**底部**、**指令触发功能**。
+- 上新 **`MentionSender`** 组件，这是 **`Sender`** 组件另一种**指令**的方式
+
+### 🛠 改进
+
+- 改进 **`Typewriter`**  打字器组件内置的 **markdown-it** 渲染机制。
+
+  1. 组件库内部提供 prismjs 代码高亮 css 样式文件，可以自己替换对应文件。在你需要渲染 md 的地方引入。
+
+     引入的时候会有代码提示，如果没有提示，在这里展示所有的样式文件引入代码，复制到需要渲染md 的地方也可以。
+
+     ```ts
+     // 导入 Prism 语法高亮的不同主题样式（基于 vue-element-plus-x 插件提供的样式文件）
+     // 每个文件对应一种独立的代码高亮主题风格，可根据项目需求选择启用
+     
+     // 1. Coy 主题（简约浅色风格，适合日常阅读）
+     import 'vue-element-plus-x/styles/prism-coy.min.css'
+     
+     // 2. Dark 主题（深色背景主题，适合夜间模式或低光环境）
+     import 'vue-element-plus-x/styles/prism-dark.min.css'
+     
+     // 3. Funky 主题（鲜艳色彩风格，代码语法高亮对比强烈）
+     import 'vue-element-plus-x/styles/prism-funky.min.css'
+     
+     // 4. Okaidia 主题（深色高对比度主题，注重代码结构区分）
+     import 'vue-element-plus-x/styles/prism-okaidia.min.css'
+     
+     // 5. Solarized Light 主题（柔和浅色主题，基于 Solarized 配色方案）
+     import 'vue-element-plus-x/styles/prism-solarizedlight.min.css'
+     
+     // 6. Tomorrow 主题（现代简约风格，适合宽屏和大字体显示）
+     import 'vue-element-plus-x/styles/prism-tomorrow.min.css'
+     
+     // 7. Twilight 主题（黄昏色调主题，介于明暗之间的平衡风格）
+     import 'vue-element-plus-x/styles/prism-twilight.min.css'
+     
+     // 8. Prism 核心基础样式（必须导入，包含语法高亮的基础样式和结构）
+     import 'vue-element-plus-x/styles/prism.min.css'
+     
+     /* 使用说明：
+     1. prism.min.css 是 Prism 的核心样式，包含基本的代码块布局和通用样式，必须保留
+     2. 其他以 prism-开头的文件是不同的主题样式，可根据项目视觉设计选择 1 个或多个导入
+     3. 若同时导入多个主题，后导入的样式会覆盖先导入的（可通过切换类名动态切换主题）
+     4. 主题名称对应 Prism 官方预设主题（如 Coy、Okaidia 等），样式细节可参考 Prism 主题文档
+     */
+     ```
+
+     
+
+  2. 组件支持使用者自己定义 高亮 MarkdownIt 代码块函数，新增 highlight?: (code: string, language: string) => string 透传 markdown-it 高亮方法。
+
+  3. 组件支持使用者自定义 MarkdownIt 插件，新增 mdPlugins?: MarkdownItPlugin[] 透传用户自定义的 markdown-it 插件
+
+
+###  📚文档更新
+
+- 更新线上开发计划文档，展示我们陆续的开发计划。有想法提 pr 的伙伴，可以先看看我们的开发计划，有感兴趣的模块，可以进交流群，一起研究推进 **[开发计划](https://element-plus-x.com/roadmap.html)**
+- 更新 **`指南文档`**  中的 **[开发文档](https://element-plus-x.com/guide/develop.html)** ，修复文档介绍错误问题
+
+
+
 ## [v1.1.6] - 2025-04-16
 
 ### 🐛 修复

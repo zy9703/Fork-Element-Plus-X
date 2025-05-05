@@ -170,7 +170,10 @@ defineExpose({
           }" @mouseenter="imageHovered = true" @mouseleave="imageHovered = false"
         >
           <el-image
-            v-if="_previewImgUrl" ref="imgRef" class="elx-files-card-img" :src="_previewImgUrl"
+            v-if="_previewImgUrl"
+            ref="imgRef"
+            class="elx-files-card-img"
+            :src="_previewImgUrl"
             :preview-src-list="props.imgPreview ? [_previewImgUrl] : []" fit="cover" :show-progress="false"
             hide-on-click-modal @show="handlePreviewAction('self')"
           />
@@ -357,7 +360,10 @@ defineExpose({
 .image-preview-container {
   position: relative;
   padding: 0px;
-  display: flex;
+  width: var(--elx-files-card-icon-size);
+  height: var(--elx-files-card-icon-size);
+  // display: flex;
+  display: inline-block;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s;
