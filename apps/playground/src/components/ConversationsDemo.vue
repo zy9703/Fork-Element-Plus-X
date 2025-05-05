@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/types/Conversations'
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
-import { Conversations } from 'vue-element-plus-x'
+import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
 
 const timeBasedItems = ref([
   {
@@ -157,47 +157,47 @@ const lazyItems = ref([
   {
     key: 'l1',
     label: '初始项目1',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
   {
     key: 'l2',
     label: '初始项目2',
-    prefixIcon: vueH(ChatDotRound),
+    prefixIcon: ChatDotRound,
   },
   {
     key: 'l3',
     label: '初始项目3',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
   {
     key: 'l4',
     label: '初始项目1',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
   {
     key: 'l5',
     label: '初始项目2',
-    prefixIcon: vueH(ChatDotRound),
+    prefixIcon: ChatDotRound,
   },
   {
     key: 'l6',
     label: '初始项目3',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
   {
     key: 'l7',
     label: '初始项目1',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
   {
     key: 'l8',
     label: '初始项目2',
-    prefixIcon: vueH(ChatDotRound),
+    prefixIcon: ChatDotRound,
   },
   {
     key: 'l9',
     label: '初始项目3',
-    prefixIcon: vueH(ChatLineRound),
+    prefixIcon: ChatLineRound,
   },
 ])
 
@@ -217,7 +217,7 @@ const conversationMenuItems = [
   {
     key: 'edit',
     label: '编辑',
-    icon: vueH(Edit),
+    icon: Edit,
     command: {
       self_id: '1',
       self_message: '编辑',
@@ -227,14 +227,14 @@ const conversationMenuItems = [
   {
     key: 'delete',
     label: '删除',
-    icon: vueH(Delete),
+    icon: Delete,
     disabled: true,
     divided: true,
   },
   {
     key: 'share',
     label: '分享',
-    icon: vueH(Share),
+    icon: Share,
     command: 'share',
   },
 ]
@@ -370,12 +370,12 @@ function loadMoreItems() {
       {
         key: `l${lazyItems.value.length + 1}`,
         label: `加载的项目${lazyItems.value.length + 1}`,
-        prefixIcon: vueH(ChatLineRound),
+        prefixIcon: ChatLineRound,
       },
       {
         key: `l${lazyItems.value.length + 2}`,
         label: `加载的项目${lazyItems.value.length + 2}`,
-        prefixIcon: vueH(ChatDotRound),
+        prefixIcon: ChatDotRound,
       },
     ]
 

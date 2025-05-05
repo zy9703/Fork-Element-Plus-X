@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends AnyObject = AnyObject">
 import type { ElScrollbar } from 'element-plus'
-import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions } from './types'
+import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions, GroupItem } from './types'
 import { Delete, Edit, Loading, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
 import { get } from 'radash';
@@ -22,13 +22,13 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
     {
       label: '重命名',
       key: 'rename',
-      icon: h(Edit),
+      icon: Edit,
       command: 'rename',
     },
     {
       label: '删除',
       key: 'delete',
-      icon: h(Delete),
+      icon: Delete,
       command: 'delete',
       menuItemHoverStyle: {
         color: 'red',
@@ -88,7 +88,7 @@ watchEffect(() => {
 
 function handleClick(item: ConversationItem<T>, index: number) {
   // 如果是disabled状态，则不允许选中
-  if(item.disabled) return;
+  if (item.disabled) return;
   emits('change', item)
   activeKey.value = getKey(item, index)
 }
@@ -116,12 +116,7 @@ const groups = computed(() => {
   }
 
   // 用于存储每个组的项目
-  const groupMap: Record<string, {
-    title: string
-    key: string
-    children: ConversationItem<T>[]
-    isUngrouped?: boolean // 标记是否为未分组
-  }> = {}
+  const groupMap: Record<string, GroupItem> = {}
 
   // 使用过滤后的项目进行分组
   filteredItems.value.forEach((item) => {
@@ -313,6 +308,12 @@ function handleMenuItemClick(command: ConversationMenuCommand, item: Conversatio
   emits('menuCommand', command, item)
 }
 
+function bindGroupRef(el: Element | ComponentPublicInstance | null, item: GroupItem) {
+  if(el){
+    groupRefs.value[item.key] = el as HTMLDivElement;
+  }
+}
+
 // 组件挂载后初始化第一个标题为吸顶状态
 onMounted(() => {
   // 如果有分组，默认将第一个分组设置为吸顶状态
@@ -328,6 +329,8 @@ onMounted(() => {
     '--conversation-label-height': `${props.labelHeight}px`,
     '--conversation-list-auto-bg-color': mergedStyle.backgroundColor,
   }">
+    <slot name="header">
+    </slot>
     <ul class="conversations-list" :style="mergedStyle">
       <!-- 滚动区域容器 -->
       <li class="conversations-scroll-wrapper">
@@ -336,7 +339,7 @@ onMounted(() => {
             <template v-if="shouldUseGrouping">
               <!-- 分组显示 -->
               <div v-for="group in groups" :key="group.key"
-                :ref="el => { if (el) groupRefs[group.key] = el as HTMLDivElement }" class="conversation-group">
+                :ref="el => bindGroupRef(el, group)" class="conversation-group">
                 <div class="conversation-group-title sticky-title"
                   :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }">
                   <slot name="groupTitle" v-bind="{ group }">
@@ -353,7 +356,8 @@ onMounted(() => {
                     :menu="menu" :show-built-in-menu="props.showBuiltInMenu" :menu-placement="props.menuPlacement"
                     :menu-offset="props.menuOffset" :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
                     :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
-                    :menu-teleported="props.menuTeleported" @click="handleClick(item, index)" @menu-command="handleMenuItemClick">
+                    :menu-teleported="props.menuTeleported" @click="handleClick(item, index)"
+                    @menu-command="handleMenuItemClick">
                     <!-- 传递插槽 -->
                     <template v-if="$slots.label" #label>
                       <slot name="label" v-bind="{ item }" />
@@ -381,7 +385,8 @@ onMounted(() => {
                 :menu-placement="props.menuPlacement" :menu-offset="props.menuOffset"
                 :menu-max-height="props.menuMaxHeight" :menu-style="props.menuStyle"
                 :menu-show-arrow="props.menuShowArrow" :menu-class-name="props.menuClassName"
-                :menu-teleported="props.menuTeleported" @click="handleClick(item, index)" @menu-command="handleMenuItemClick">
+                :menu-teleported="props.menuTeleported" @click="handleClick(item, index)"
+                @menu-command="handleMenuItemClick">
                 <!-- 传递插槽 -->
                 <template v-if="$slots.label" #label>
                   <slot name="label" v-bind="{ item }" />
@@ -410,7 +415,8 @@ onMounted(() => {
         </el-scrollbar>
       </li>
     </ul>
-
+    <slot name="footer">
+    </slot>
     <!-- 滚动到顶部按钮 -->
     <el-button v-show="showScrollTop && props.showToTopBtn" class="scroll-to-top-btn" circle @click="scrollToTop">
       <el-icon>
@@ -427,13 +433,15 @@ onMounted(() => {
   height: 100%;
   position: relative;
   width: fit-content;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .conversations-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   flex: 1;
   display: flex;
   flex-direction: column;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { VNode as ComponentVNode, CSSProperties } from 'vue'
+import type { CSSProperties, Component } from 'vue'
 import type { ConversationItem, ConversationMenu, ConversationMenuCommand } from '../types'
 import { MoreFilled } from '@element-plus/icons-vue'
 
@@ -10,8 +10,8 @@ interface Props {
   itemsActiveStyle?: CSSProperties
   itemsMenuOpenedStyle?: CSSProperties
   activeKey: string
-  prefixIcon?: ComponentVNode | null
-  suffixIcon?: ComponentVNode | null
+  prefixIcon?: Component | null
+  suffixIcon?: Component | null
   showTooltip?: boolean
   labelMaxWidth?: number
   menu?: ConversationMenu[]
@@ -228,9 +228,9 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
         <slot name="label">
           <!-- 前缀图标 -->
           <span v-if="prefixIcon" class="conversation-prefix-icon">
-            <ElIcon>
+            <el-icon>
               <component :is="prefixIcon" />
-            </ElIcon>
+            </el-icon>
           </span>
 
           <!-- 标签和时间戳 -->
