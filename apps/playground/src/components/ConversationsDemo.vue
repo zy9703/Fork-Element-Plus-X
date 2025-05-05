@@ -3,37 +3,37 @@ import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
 import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
 
-const timeBasedItems = ref([
+const timeBasedItems = ref<ConversationItem<{id: string, label: string}>[]>([
   {
-    key: '1',
+    id: '1',
     label: '今天的会话111111111111111111111111111',
     group: 'today',
     disabled: true,
   },
   {
-    key: '2',
+    id: '2',
     group: 'today',
     label: '今天的会话2',
   },
   {
-    key: '3',
+    id: '3',
     group: 'yesterday',
     label: '昨天的会话1',
   },
   {
-    key: '4',
+    id: '4',
     label: '昨天的会话2',
   },
   {
-    key: '5',
+    id: '5',
     label: '一周前的会话',
   },
   {
-    key: '6',
+    id: '6',
     label: '一个月前的会话',
   },
   {
-    key: '7',
+    id: '7',
     label: '很久以前的会话',
   },
 ])
@@ -508,7 +508,7 @@ function handleMenuClick(menuKey: string, item: any) {
     <div class="demo-card">
       <Conversations
         v-model:active="activeKey1" :items="timeBasedItems" groupable :label-max-width="200"
-        :show-tooltip="false" row-key="key"
+        :show-tooltip="false" row-key="id"
       />
     </div>
 
@@ -534,7 +534,7 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>自定义菜单功能测试</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        v-model:active="activeKey4" :items="menuTestItems" row-key="key" :label-max-width="200" :show-tooltip="true"
         show-to-top-btn show-built-in-menu
       >
         <template #more-filled>
@@ -562,7 +562,7 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>加载更多功能</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" :show-tooltip="true"
+        v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" row-key="key" :show-tooltip="true"
         :load-more="loadMoreItems" :load-more-loading="isLoading" show-to-top-btn
       />
     </div>

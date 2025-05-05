@@ -2,17 +2,22 @@ import type { AnyObject } from 'typescript-api-pro'
 import type { CSSProperties, Component } from 'vue'
 
 // 基础ConversationItem接口
-export interface ConversationItem<T extends AnyObject = AnyObject> extends T {
-  // key: string
-  label: string
+export type ConversationItem<T extends AnyObject = AnyObject> = T & {
   group?: string
-  // icon?: ComponentVNode | null
   icon?: Component | null
   disabled?: boolean
-  // prefixIcon?: ComponentVNode | null
+  label?: string
   prefixIcon?: Component | null
-  // suffixIcon?: ComponentVNode | null
   suffixIcon?: Component | null
+}
+
+export type ConversationItemUseOptions<T extends AnyObject = AnyObject> = T & {
+  uniqueKey: string | number;
+  label: string;
+  icon?: Component | null;
+  disabled?: boolean;
+  prefixIcon?: Component | null;
+  suffixIcon?: Component | null;
 }
 
 export type ConversationMenuCommand = string | number | object
@@ -20,7 +25,6 @@ export type ConversationMenuCommand = string | number | object
 export interface ConversationMenu {
   label: string
   key: string
-  // icon?: ComponentVNode | null
   icon?: Component | null
   disabled?: boolean
   divided?: boolean
@@ -64,11 +68,12 @@ export interface Conversation<T extends AnyObject = AnyObject> {
   loadMoreLoading?: boolean
   showToTopBtn?: boolean
   rowKey?: keyof T
+  labelKey?: keyof T
 }
 
 export interface GroupItem {
   title: string
   key: string
-  children: ConversationItem<T>[]
+  children: ConversationItemUseOptions<T>[]
   isUngrouped?: boolean // 标记是否为未分组
 }

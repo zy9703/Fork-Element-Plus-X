@@ -9,7 +9,6 @@ interface Props {
   itemsHoverStyle?: CSSProperties
   itemsActiveStyle?: CSSProperties
   itemsMenuOpenedStyle?: CSSProperties
-  activeKey: string
   prefixIcon?: Component | null
   suffixIcon?: Component | null
   showTooltip?: boolean
@@ -25,6 +24,7 @@ interface Props {
   menuShowArrow?: boolean
   menuClassName?: string
   menuTeleported?: boolean
+  active?: boolean
 }
 
 const props = defineProps<Props>()
@@ -42,7 +42,6 @@ const {
   itemsHoverStyle,
   itemsActiveStyle,
   itemsMenuOpenedStyle,
-  activeKey,
   showTooltip,
   labelMaxWidth,
   menu,
@@ -88,7 +87,7 @@ function handleClick(key: string) {
 }
 
 const isTextOverflow = computed(() => {
-  return (label: string) => {
+  return (label: string = '') => {
     // 如果没有设置labelMaxWidth，直接返回false
     if (!labelMaxWidth.value)
       return false
@@ -127,7 +126,8 @@ const isShowMenuBtn = ref(false)
 
 // 判断是否显示菜单
 const shouldShowMenu = computed(() => {
-  return isHovered.value || item.value.key === activeKey.value || isShowMenuBtn.value
+  // return isHovered.value || item.value.key === activeKey.value || isShowMenuBtn.value
+  return isHovered.value || props.active || isShowMenuBtn.value
 })
 
 /* 内置菜单 开始 */
@@ -210,7 +210,6 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
   }
   emit('menuCommand', command, item)
 }
-
 /* 内置菜单 结束 */
 </script>
 
@@ -220,7 +219,7 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
     class="conversation-item"
     :class="{
       disabled: item.disabled,
-      active: item.key === activeKey,
+      active: active,
       hovered: item.disabled ? false : isHovered,
       'menu-opened': isShowMenuBtn,
     }"
@@ -228,7 +227,7 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
       ...itemsStyle,
       ...(isHovered ? itemsHoverStyle : {}),
       ...(isShowMenuBtn ? itemsMenuOpenedStyle : {}),
-      ...(item.key === activeKey ? itemsActiveStyle : {}),
+      ...(active ? itemsActiveStyle : {}),
     }"
     @click="handleClick(item.key)"
     @mouseenter="handleMouseEnter"
@@ -297,7 +296,7 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
                 v-bind="{
                   item,
                   isHovered: item.disabled ? false : isHovered,
-                  isActive: item.key === activeKey,
+                  isActive: active,
                   isMenuOpened: isShowMenuBtn,
                   isDisabled: item.disabled,
                 }"
