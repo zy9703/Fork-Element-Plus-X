@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
+import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
-import { usePrism } from '../../hooks/usePrism';
-import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid';
+import { usePrism } from '../../hooks/usePrism'
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
@@ -13,14 +13,7 @@ const props = withDefaults(defineProps<TypewriterProps>(), {
   isFog: false,
 })
 
-const highlight = computed(() => {
-  if (!props.highlight) {
-    return usePrism();
-  }
-  return props.highlight;
-})
-
-const emit = defineEmits<{
+const emits = defineEmits<{
   /** 开始打字时触发 */
   start: [instance: TypewriterInstance]
   /** 打字过程中触发（携带进度百分比） */
@@ -28,6 +21,13 @@ const emit = defineEmits<{
   /** 打字结束时触发 */
   finish: [instance: TypewriterInstance]
 }>()
+
+const highlight = computed(() => {
+  if (!props.highlight) {
+    return usePrism()
+  }
+  return props.highlight
+})
 
 const markdownContentRef = ref<HTMLElement | null>(null)
 const typeWriterRef = ref<HTMLElement | null>(null)
@@ -43,16 +43,16 @@ const md = new MarkdownIt({
   typographer: true,
   breaks: true,
   highlight: (code, language) => {
-    return highlight.value?.(code, language);
+    return highlight.value?.(code, language)
   },
 })
 
-md.use(markdownItMermaid({delay: 100}))
+md.use(markdownItMermaid({ delay: 100 }))
 
-const initMarkdownPlugins = ()=> {
-  if(props.mdPlugins && props.mdPlugins.length) {
+function initMarkdownPlugins() {
+  if (props.mdPlugins && props.mdPlugins.length) {
     props.mdPlugins.forEach((plugin) => {
-      md.use(plugin);
+      md.use(plugin)
     })
   }
 }
@@ -170,11 +170,11 @@ function startTyping() {
     return
 
   isTyping.value = true
-  emit('start', instance)
+  emits('start', instance)
 
   const typeNext = () => {
     typingIndex.value += mergedConfig.value.step!
-    emit('writing', instance)
+    emits('writing', instance)
 
     if (typingIndex.value >= contentCache.value.length) {
       finishTyping()
@@ -190,7 +190,7 @@ function startTyping() {
 function finishTyping() {
   isTyping.value = false
   typingIndex.value = contentCache.value.length
-  emit('finish', instance)
+  emits('finish', instance)
 }
 
 // 公共方法
@@ -256,20 +256,23 @@ defineExpose(instance)
 
 <template>
   <div ref="typeWriterRef" class="typer-container">
-    <div ref="markdownContentRef" class="typer-content" :class="[
-      {
-        'markdown-content': isMarkdown,
-        'typing-cursor': typing && mergedConfig.suffix && isTyping,
-        'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
-        'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
-      },
-      isMarkdown ? 'markdown-body' : '',
-    ]" :style="{
-      '--cursor-char': `'${mergedConfig.suffix}'`,
-      '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
-      '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
-    }" v-html="renderedContent" />
+    <div
+      ref="markdownContentRef" class="typer-content" :class="[
+        {
+          'markdown-content': isMarkdown,
+          'typing-cursor': typing && mergedConfig.suffix && isTyping,
+          'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
+          'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
+        },
+        isMarkdown ? 'markdown-body' : '',
+      ]" :style="{
+        '--cursor-char': `'${mergedConfig.suffix}'`,
+        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
+        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
+      }" v-html="renderedContent"
+    />
   </div>
 </template>
 
+<!-- 样式转移-暂定方案-为后续主题做准备 -->
 <style scoped lang="scss" src="./style.scss"></style>
