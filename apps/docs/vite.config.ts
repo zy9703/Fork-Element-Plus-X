@@ -5,7 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import ElementPlus from 'unplugin-element-plus/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+// import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import eslintPlugin from 'vite-plugin-eslint'
@@ -16,12 +16,72 @@ import { tovUIResolver } from './scripts/vue-element-plus-x-resolver'
 
 // 读取我们当前的根目录
 // const baseUrl = fileURLToPath(new URL('.', import.meta.url))
-
+const vueAutoImports = [
+  'EffectScope',
+  'computed',
+  'createApp',
+  'customRef',
+  'defineAsyncComponent',
+  'defineComponent',
+  'effectScope',
+  'getCurrentInstance',
+  'getCurrentScope',
+  ['h', 'vueH'] as [string, string],
+  'inject',
+  'isProxy',
+  'isReactive',
+  'isReadonly',
+  'isRef',
+  'markRaw',
+  'nextTick',
+  'onActivated',
+  'onBeforeMount',
+  'onBeforeUnmount',
+  'onBeforeUpdate',
+  'onDeactivated',
+  'onErrorCaptured',
+  'onMounted',
+  'onRenderTracked',
+  'onRenderTriggered',
+  'onScopeDispose',
+  'onServerPrefetch',
+  'onUnmounted',
+  'onUpdated',
+  'onWatcherCleanup',
+  'provide',
+  'reactive',
+  'readonly',
+  'ref',
+  'resolveComponent',
+  'shallowReactive',
+  'shallowReadonly',
+  'shallowRef',
+  'toRaw',
+  'toRef',
+  'toRefs',
+  'toValue',
+  'triggerRef',
+  'unref',
+  'useAttrs',
+  'useCssModule',
+  'useCssVars',
+  'useId',
+  'useModel',
+  'useSlots',
+  'useTemplateRef',
+  'watch',
+  'watchEffect',
+  'watchPostEffect',
+  'watchSyncEffect'
+];
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     AutoImport({
-      imports: ['vue'],
+      // imports: ['vue'],
+      imports: {
+        vue: vueAutoImports
+      }
       // resolvers: [ElementPlusResolver()],
       // dts: 'packages/vue-element-plus-x/src/auto-imports.d.ts',
     }) as PluginOption,
