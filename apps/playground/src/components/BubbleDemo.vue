@@ -3,8 +3,7 @@
 import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
 import { usePrism } from 'vue-element-plus-x'
 import 'vue-element-plus-x/styles/prism-solarizedlight.min.css'
-
-import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
+// import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
 
 const avatar = ref(
   'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
@@ -12,7 +11,7 @@ const avatar = ref(
 const loading = ref(true)
 const content = ref('')
 
-const highlight = usePrism();
+const highlight = usePrism()
 
 onMounted(() => {
   setTimeout(() => {
@@ -46,12 +45,14 @@ pie
 
 <template>
   <div class="component-container">
-    <p>新版本支持 打字器 雾化效果</p>
+    <p>新版本支持 打字器 雾化效果 使用 Mermaid.js 支持简单的图表和函数公式 </p>
     <div class="component-1">
-      <Bubble placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
-        step: 2,
-        suffix: '💗',
-      }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }" :highlight="highlight">
+      <Bubble
+        placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
+          step: 2,
+          suffix: '💗',
+        }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }" :highlight="highlight"
+      >
         <template #avatar>
           <el-avatar :size="32" :src="avatar" />
         </template>

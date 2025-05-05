@@ -15,7 +15,6 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
 </script>
 
 <template>
-
   <el-tabs type="border-card" class="demo-tabs">
     <el-tab-pane label="Bubble">
       <BubbleDemo />
@@ -79,7 +78,7 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
 }
 
 .demo-tabs {
-  min-height: calc(100vh - 64px - 64px);
+  min-height: calc(100vh - 64px);
   background-color: beige;
 }
 

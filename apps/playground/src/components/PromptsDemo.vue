@@ -1,7 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
 import type { PromptsItemsProps } from 'vue-element-plus-x/types/Prompts'
-import Prompts from 'vue-element-plus-x/src/components/Prompts/index.vue'
+// import Prompts from 'vue-element-plus-x/src/components/Prompts/index.vue'
 
 onMounted(() => {
   setItems()
@@ -193,7 +193,7 @@ function handleItemClick(item: PromptsItemsProps) {
     display: flex;
     align-items: center;
     position: relative;
-    padding-left: 8px;
+    padding-left: 12px;
     font-weight: 700;
     line-height: 1.5;
     margin-bottom: 12px;

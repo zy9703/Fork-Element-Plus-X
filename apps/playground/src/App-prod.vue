@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import AttachmentsDemo from './components/AttachmentsDemo.vue'
 import BubbleDemo from './components/BubbleDemo.vue'
 import BubbleListDemo from './components/BubbleListDemo.vue'
 import ConversationsDemo from './components/ConversationsDemo.vue'
+import FilesCardDemo from './components/FilesCardDemo.vue'
 import MentionSenderDemo from './components/MentionSenderDemo.vue'
 import PromptsDemo from './components/PromptsDemo.vue'
 import SenderDemo from './components/SenderDemo.vue'
@@ -15,7 +17,6 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
 </script>
 
 <template>
-
   <el-tabs type="border-card" class="demo-tabs">
     <el-tab-pane label="Bubble">
       <BubbleDemo />
@@ -27,6 +28,14 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
 
     <el-tab-pane label="Conversations">
       <ConversationsDemo />
+    </el-tab-pane>
+
+    <el-tab-pane label="FilesCard">
+      <FilesCardDemo />
+    </el-tab-pane>
+
+    <el-tab-pane label="Attachments">
+      <AttachmentsDemo />
     </el-tab-pane>
 
     <el-tab-pane label="Sender">
@@ -79,7 +88,7 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
 }
 
 .demo-tabs {
-  min-height: calc(100vh - 64px - 64px);
+  min-height: calc(100vh - 64px);
   background-color: beige;
 }
 

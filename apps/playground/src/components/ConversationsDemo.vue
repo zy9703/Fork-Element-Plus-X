@@ -204,7 +204,7 @@ const lazyItems = ref([
 // 自定义分组选项
 const customGroupOptions: GroupableOptions = {
   // 自定义分组排序，学习 > 工作 > 个人 > 未分组
-  sort: (a, b) => {
+  sort: (a: any, b: any) => {
     const order: Record<string, number> = { 学习: 0, 工作: 1, 个人: 2, 未分组: 3 }
     const orderA = order[a] !== undefined ? order[a] : 999
     const orderB = order[b] !== undefined ? order[b] : 999
@@ -414,7 +414,8 @@ function handleMenuClick(menuKey: string, item: any) {
   <div class="demo-container">
     <h2>绝对自定义-默认样式，悬停样式，选中样式，以及自定义 label</h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey5" :items="menuTestItems1" :label-max-width="200" :show-tooltip="true"
+      <Conversations
+        v-model:active="activeKey5" :items="menuTestItems1" :label-max-width="200" :show-tooltip="true"
         tooltip-placement="right" :tooltip-offset="35" show-built-in-menu :groupable="customGroupOptions" row-key="key"
         :items-style="{
           padding: '10px 20px',
@@ -441,7 +442,8 @@ function handleMenuClick(menuKey: string, item: any) {
           backgroundColor: 'red',
           boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
           padding: '10px 20px',
-        }">
+        }"
+      >
         <template #label="{ item }">
           <div class="custom-label">
             {{ item.label }}
@@ -463,24 +465,28 @@ function handleMenuClick(menuKey: string, item: any) {
           <span v-if="isHovered">✍️</span>
           <span v-if="isActive">✅</span>
           <span v-if="isMenuOpened">🥰</span>
-          <span v-if="isDisabled" :style="{
-            background: 'black',
-            padding: '5px',
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }">
+          <span
+            v-if="isDisabled" :style="{
+              background: 'black',
+              padding: '5px',
+              borderRadius: '10px',
+              color: 'white',
+              fontSize: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }"
+          >
             🫥是否禁用：{{ item?.disabled }}
           </span>
         </template>
 
         <template #menu="{ item }">
           <div class="menu-buttons">
-            <div v-for="menuItem in conversationMenuItems1" :key="menuItem.key" class="menu-self-button"
-              @click.stop="handleMenuClick(menuItem.key, item)">
+            <div
+              v-for="menuItem in conversationMenuItems1" :key="menuItem.key" class="menu-self-button"
+              @click.stop="handleMenuClick(menuItem.key, item)"
+            >
               <span v-if="menuItem.icon">{{ menuItem.icon }}</span>
               <span v-if="menuItem.label">{{ menuItem.label }}</span>
             </div>
@@ -491,21 +497,27 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>内置下拉菜单测试 (内置 rename 和 delete)</h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+      <Conversations
+        v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
         row-key="key" tooltip-placement="right" :tooltip-offset="35" show-to-top-btn show-built-in-menu
-        @menu-command="handleMenuCommand" />
+        @menu-command="handleMenuCommand"
+      />
     </div>
 
     <h2>基础时间分组 (groupable) 内置分组吸顶功能</h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey1" :items="timeBasedItems" groupable :label-max-width="200"
-        :show-tooltip="false" row-key="key" />
+      <Conversations
+        v-model:active="activeKey1" :items="timeBasedItems" groupable :label-max-width="200"
+        :show-tooltip="false" row-key="key"
+      />
     </div>
 
     <h2>自定义分组 (groupable为对象) 内置分组吸顶功能 </h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey2" :items="groupBasedItems" :groupable="customGroupOptions"
-        :label-max-width="200" :show-tooltip="true" show-to-top-btn row-key="key">
+      <Conversations
+        v-model:active="activeKey2" :items="groupBasedItems" :groupable="customGroupOptions"
+        :label-max-width="200" :show-tooltip="true" show-to-top-btn row-key="key"
+      >
         <template #groupTitle="{ group }">
           <div class="custom-group-title">
             <!-- 为不同组添加不同的前缀 -->
@@ -521,8 +533,10 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>自定义菜单功能测试</h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
-        show-to-top-btn show-built-in-menu>
+      <Conversations
+        v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        show-to-top-btn show-built-in-menu
+      >
         <template #more-filled>
           <el-icon>
             <EditPen />
@@ -531,8 +545,10 @@ function handleMenuClick(menuKey: string, item: any) {
 
         <template #menu="{ item }">
           <div class="menu-buttons">
-            <el-button v-for="menuItem in conversationMenuItems" :key="menuItem.key" link size="small"
-              @click.stop="handleMenuClick(menuItem.key, item)">
+            <el-button
+              v-for="menuItem in conversationMenuItems" :key="menuItem.key" link size="small"
+              @click.stop="handleMenuClick(menuItem.key, item)"
+            >
               <el-icon v-if="menuItem.icon">
                 <component :is="menuItem.icon" />
               </el-icon>
@@ -545,8 +561,10 @@ function handleMenuClick(menuKey: string, item: any) {
 
     <h2>加载更多功能</h2>
     <div class="demo-card">
-      <Conversations v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" :show-tooltip="true"
-        :load-more="loadMoreItems" :load-more-loading="isLoading" show-to-top-btn />
+      <Conversations
+        v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" :show-tooltip="true"
+        :load-more="loadMoreItems" :load-more-loading="isLoading" show-to-top-btn
+      />
     </div>
   </div>
 </template>

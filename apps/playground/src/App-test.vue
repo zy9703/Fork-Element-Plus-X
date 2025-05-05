@@ -26,7 +26,7 @@ import EditorSenderDemo from './components/Test-EditorSenderDemo.vue'
 }
 
 .demo-tabs {
-  min-height: calc(100vh - 64px - 64px);
+  min-height: calc(100vh - 64px);
   background-color: beige;
 }
 

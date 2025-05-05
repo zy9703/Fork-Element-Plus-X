@@ -13,7 +13,6 @@ export interface BubbleListProps<T extends BubbleListItemProps = BubbleListItemP
   list: T[]
   maxHeight?: string
   triggerIndices?: 'only-last' | 'all' | number[]
-  // v1.1.1+ 新增 --- start
   alwaysShowScrollbar?: boolean // 是否始终显示滚动条
   backButtonThreshold?: number // 底部按钮出现的 滚动阈值
   showBackButton?: boolean // 是否显示 底部按钮
@@ -21,8 +20,8 @@ export interface BubbleListProps<T extends BubbleListItemProps = BubbleListItemP
   btnLoading?: boolean
   btnColor?: string
   btnIconSize?: number
-  // v1.1.1+ 新增 --- end
   highlight?: TypewriterProps['highlight']
+  mdPlugins?: TypewriterProps['mdPlugins']
 }
 
 // 定义组件实例类型

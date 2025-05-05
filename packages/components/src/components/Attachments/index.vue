@@ -1,77 +1,498 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { FilesCardProps } from '../FilesCard/types.d.ts'
-import type { AttachmentsProps } from './types.d.ts'
+import type { FileListProps } from './types'
+import { ArrowLeftBold, ArrowRightBold, Plus, UploadFilled } from '@element-plus/icons-vue'
+import { debounce } from 'radash'
 import FilesCard from '../FilesCard/index.vue'
 
-const props = withDefaults(defineProps<AttachmentsProps>(), {
-  list: () => [],
+const props = withDefaults(defineProps<FileListProps>(), {
+  items: () => [],
+  overflow: 'scrollX',
+  listStyle: () => ({}),
+  uploadIconSize: '64px',
+  dragTarget: undefined,
+  hideUpload: false,
 })
 
-// const emits = defineEmits([])
+const emits = defineEmits(['uploadChange', 'uploadSuccess', 'uploadError', 'uploadDrop', 'deleteCard'])
 
-// 通义给的主题颜色
-// const colorMap = {
-//   word: '#5E74A8', // 蓝灰色调（微软Word蓝）
-//   excel: '#4A6B4A', // 墨绿色（Excel经典绿）
-//   ppt: '#C27C40', // 暖橙色（PowerPoint橙）
-//   pdf: '#5A6976', // 冷灰色（Adobe PDF灰）
-//   txt: '#D4C58C', // 米黄色（纯文本文件色）
-//   image: '#8E7CC3', // 紫罗兰（图像文件通用色）
-//   audio: '#A67B5B', // 浅陶土（音频文件色）
-//   video: '#4A5568', // 深石墨（视频文件色）
-//   three: '#5F9E86', // 青绿色（Three.js 3D文件）
-//   code: '#4B636E', // 深海水蓝（代码文件）
-//   database: '#4A5A6B', // 钢蓝色（数据库文件）
-//   link: '#5D7CBA', // 天青石蓝（超链接色）
-//   zip: '#8B5E3C', // 深琥珀色（压缩包）
-//   file: '#AAB2BF', // 浅灰蓝（通用文件）
-//   unknown: '#888888', // 中性灰（未知类型）
-// }
+/* 列表相关 开始 */
+const containerRef = ref<HTMLDivElement | null>(null)
+const wrapperRef = ref<HTMLDivElement | null>(null)
+const firstMount = ref(false)
+const pingStart = ref(false)
+const pingEnd = ref(false)
+const TOLERANCE = 1
+function checkPing() {
+  const containerEle = containerRef.value
+  if (!containerEle)
+    return
 
-// 豆包给的主题颜色
-const colorMap = {
-  word: '#0078D4', // 文档（柔和商务蓝）
-  excel: '#4CB050', // 表格（低饱和青绿色）
-  ppt: '#FF9933', // 演示文稿（暖调橙黄）
-  pdf: '#E81123', // 文档（淡玫瑰红）
-  txt: '#666666', // 纯文本（中灰度）
-  image: '#B490F3', // 图片（淡薰衣草紫）
-  audio: '#00B2EE', // 音频（天蓝色）
-  video: '#2EC4B6', // 视频（薄荷绿）
-  three: '#00C8FF', // 3D文件（清透 cyan 蓝）
-  code: '#00589F', // 代码（深海蓝）
-  database: '#F5A623', // 数据库（暖金色）
-  link: '#007BFF', // 链接（淡普鲁士蓝）
-  zip: '#888888', // 压缩包（深暖灰）
-  file: '#F0D9B5', // 通用文件（米黄色）
-  unknown: '#D8D8D8', // 未知文件（浅暖灰）
+  if (props.overflow === 'scrollX') {
+    pingStart.value = Math.abs(containerEle.scrollLeft) >= TOLERANCE
+    pingEnd.value = containerEle.scrollWidth - containerEle.clientWidth - Math.abs(containerEle.scrollLeft) >= TOLERANCE
+  }
+  else if (props.overflow === 'scrollY') {
+    pingStart.value = containerEle.scrollTop !== 0
+    pingEnd.value = containerEle.scrollHeight - containerEle.clientHeight !== containerEle.scrollTop
+  }
+  else {
+    pingStart.value = false
+    pingEnd.value = false
+  }
+}
+function onScrollOffset(offset: -1 | 1) {
+  const containerEle = containerRef.value
+  if (containerEle) {
+    containerEle.scrollTo({
+      left: props.overflow === 'scrollX' ? containerEle.scrollLeft + offset * containerEle.clientWidth : containerEle.scrollLeft,
+      top: props.overflow === 'scrollY' ? containerEle.scrollTop + offset * containerEle.clientHeight : containerEle.scrollTop,
+      behavior: 'smooth',
+    })
+  }
+}
+function onScrollLeft() {
+  onScrollOffset(-1)
+}
+function onScrollRight() {
+  onScrollOffset(1)
+}
+const debouncedCheckPing = debounce({ delay: 100 }, checkPing)
+/* 列表相关 结束 */
+
+/* 上传相关 开始 */
+const targetElement = ref<HTMLElement | null>(null)
+// 是否在 targetElement 上进行了拖拽
+const isTargetDrag = ref(false)
+const debouncedStyle = debounce({ delay: 100 }, toggleDragStyle)
+// 是否超过上传长度限制
+const _isOverLimit = computed(() => {
+  if (props.limit && props.items.length >= props.limit) {
+    return true
+  }
+  return false
+})
+
+// 添加/移除 拖拽类名和定位信息
+function toggleDragStyle(isDrag: boolean) {
+  isTargetDrag.value = isDrag
+  if (targetElement.value) {
+    if (isDrag) {
+      targetElement.value.classList.add('elx-attachments-dragover')
+    }
+    else {
+      targetElement.value.classList.remove('elx-attachments-dragover')
+    }
+  }
 }
 
-type ColorKey = keyof typeof colorMap
+function handleUploadChange(file: File, fileList: FileListProps) {
+  emits('uploadChange', file, fileList)
+}
 
-const colorKeys = Object.keys(colorMap) as ColorKey[]
+function handleUploadSuccess(response: any, file: File, fileList: FileListProps) {
+  emits('uploadSuccess', response, file, fileList)
+}
 
-const item = ref<FilesCardProps>({
-  uid: '1',
-  name: 'test.pdf',
-  fileType: 'three',
-  // noStyle: true,
+function handleUploadError(error: any, file: File, fileList: FileListProps) {
+  emits('uploadError', error, file, fileList)
+}
+function getTargetElement() {
+  if (!props.dragTarget)
+    return wrapperRef.value
+  if (typeof props.dragTarget === 'string') {
+    return document.getElementById(props.dragTarget)
+  }
+  else if (isRef(props.dragTarget)) {
+    return props.dragTarget.value as HTMLElement
+  }
+  else {
+    return wrapperRef.value
+  }
+}
+
+function targetDragEnter(event: DragEvent) {
+  event.preventDefault()
+  debouncedStyle(true)
+}
+
+function targetDropLeave(event: DragEvent) {
+  event.preventDefault()
+  // 新增逻辑：若离开后进入的元素仍在目标元素内部，不执行样式移除
+  const relatedTarget = event.relatedTarget as Node
+  if (targetElement.value && targetElement.value.contains(relatedTarget)) {
+    return
+  }
+  debouncedStyle(false)
+}
+
+function targetDrop(event: DragEvent) {
+  event.preventDefault()
+  debouncedStyle(false)
+  if (event.dataTransfer) {
+    const files = event.dataTransfer.files
+    if (files.length) {
+      emits('uploadDrop', [...files], { ...props })
+    }
+  }
+}
+
+function targetDragOver(event: DragEvent) {
+  event.preventDefault()
+}
+
+/* 上传相关 结束 */
+
+/* 卡片相关 开始 */
+function handleDelete(item: FilesCardProps, index: number) {
+  emits('deleteCard', item, index)
+  nextTick(() => debouncedCheckPing())
+}
+
+/* 卡片相关 结束 */
+
+onMounted(() => {
+  firstMount.value = true
+  nextTick(() => debouncedCheckPing())
+  window.addEventListener('resize', debouncedCheckPing)
+
+  // 如果有拖拽目标元素，则监听拖拽事件
+  if (wrapperRef.value) {
+    targetElement.value = getTargetElement() || wrapperRef.value
+    // 监听拖拽事件
+    targetElement.value.addEventListener('dragenter', targetDragEnter, false)
+    targetElement.value.addEventListener('dragleave', targetDropLeave, false)
+    targetElement.value.addEventListener('drop', targetDrop, false)
+    targetElement.value.addEventListener('dragover', targetDragOver, false)
+  }
 })
 
-console.log('props', props)
+onUnmounted(() => {
+  window.removeEventListener('resize', debouncedCheckPing)
+  if (targetElement.value) {
+    targetElement.value.removeEventListener('dragenter', targetDragEnter, false)
+    targetElement.value.removeEventListener('dragleave', targetDropLeave, false)
+    targetElement.value.removeEventListener('drop', targetDrop, false)
+    targetElement.value.removeEventListener('dragover', targetDragOver, false)
+  }
+})
+
+watch(
+  () => [props.overflow, props.items.length],
+  () => {
+    // 确保 DOM 更新后再调用 checkPing
+    nextTick(() => debouncedCheckPing())
+  },
+  {
+    immediate: true, // 组件初始化时立即调用一次
+    deep: true, // 如果 items 是对象或数组，需要深度监听
+  },
+)
+
+defineExpose({
+  onScrollLeft,
+  onScrollRight,
+  debouncedCheckPing,
+})
 </script>
 
 <template>
-  <div>
-    <FilesCard
-      v-for="items in colorKeys"
-      :key="items"
-      :uid="items"
-      v-bind="{ ...item, iconColor: colorMap[items], fileType: items }"
-    />
+  <div
+    ref="wrapperRef" class="elx-attachments-wrapper" :class="{
+      'elx-attachments-overflow-ping-start': overflow === 'scrollX' && pingStart,
+      'elx-attachments-overflow-ping-end': overflow === 'scrollX' && pingEnd,
+    }" :style="{
+      ...listStyle,
+      '--elx-attachments-upload-icon-size': props.uploadIconSize,
+    }"
+  >
+    <div v-if="!items.length && !props.hideUpload">
+      <slot name="empty-upload">
+        <el-upload
+          class="elx-attachments-upload-btn"
+          v-bind="$attrs"
+          :show-file-list="false"
+          @change="handleUploadChange"
+          @success="handleUploadSuccess"
+          @error="handleUploadError"
+        >
+          <el-icon class="uploader-icon">
+            <Plus />
+          </el-icon>
+        </el-upload>
+      </slot>
+    </div>
+
+    <div class="elx-attachments-background">
+      <div v-if="overflow === 'scrollX' && pingStart" class="elx-attachments-background-start" />
+      <div v-if="overflow === 'scrollX' && pingEnd" class="elx-attachments-background-end" />
+    </div>
+
+    <div
+      ref="containerRef" class="elx-attachments" :class="{
+        [`elx-attachments-overflow-${overflow}`]: overflow,
+      }" :style="{
+        ...(overflow === 'scrollX' ? { whiteSpace: 'nowrap', overflowX: 'auto', overflowY: 'hidden' } : {}),
+        ...(overflow === 'scrollY' ? { overflowX: 'hidden', overflowY: 'auto' } : {}),
+        ...(overflow === 'wrap' ? { display: 'flex', flexWrap: 'wrap' } : {}),
+      }" @scroll="debouncedCheckPing"
+    >
+      <div
+        v-if="items.length" :class="{
+          'elx-attachments-file-card-wrap': overflow === 'scrollX',
+        }"
+      >
+        <slot name="file-list" :items="items">
+          <div v-for="(item, index) in items" :key="item.uid" class="elx-attachments-card">
+            <transition name="card-motion">
+              <FilesCard v-if="item.uid" v-bind="item" class="elx-attachments-card-item" @delete="handleDelete(item, index)" />
+            </transition>
+          </div>
+        </slot>
+
+        <div v-if="items.length && !_isOverLimit && !props.hideUpload" class="elx-attachments-upload-placeholder">
+          <slot name="no-empty-upload">
+            <el-upload
+              v-bind="$attrs"
+              :show-file-list="false"
+              :style="{
+                height: overflow === 'scrollY' && '',
+              }"
+              class="elx-attachments-upload-btn"
+              @change="handleUploadChange"
+              @success="handleUploadSuccess"
+              @error="handleUploadError"
+            >
+              <template #trigger>
+                <el-icon class="uploader-icon">
+                  <Plus />
+                </el-icon>
+              </template>
+            </el-upload>
+          </slot>
+        </div>
+      </div>
+    </div>
+
+    <slot name="prev-button" :show="overflow === 'scrollX' && pingStart" :on-scroll-left="onScrollLeft">
+      <el-button
+        v-if="overflow === 'scrollX' && pingStart" size="small" class="elx-attachments-prev-btn"
+        @click="onScrollLeft"
+      >
+        <el-icon>
+          <ArrowLeftBold />
+        </el-icon>
+      </el-button>
+    </slot>
+
+    <slot name="next-button" :show="overflow === 'scrollX' && pingEnd" :on-scroll-right="onScrollRight">
+      <el-button
+        v-if="overflow === 'scrollX' && pingEnd" size="small" class="elx-attachments-next-btn"
+        @click="onScrollRight"
+      >
+        <el-icon>
+          <ArrowRightBold />
+        </el-icon>
+      </el-button>
+    </slot>
+
+    <!-- 使用 DropArea 组件 -->
+    <teleport v-if="targetElement && isTargetDrag" :to="targetElement">
+      <slot name="drop-area">
+        <div class="elx-attachments-drop-area">
+          <el-icon class="elx-attachments-drop-area-icon">
+            <UploadFilled />
+          </el-icon>
+          <div class="elx-attachments-drop-area-text">
+            在此处拖放文件上传
+          </div>
+        </div>
+      </slot>
+    </teleport>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
+/* CSS 动画样式调整 */
+.card-motion-enter-active,
+.card-motion-move,
+.card-motion-leave-active {
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateX(0);
+}
 
+.card-motion-enter-from,
+.card-motion-leave-to {
+  opacity: 0;
+  /* 从左侧外进入（进场）/ 移动到右侧外（退场） */
+  transform: translateX(-100%); /* 进场初始位置在左侧外 */
+  /* 如果你希望从左侧稍微偏移进入，可以用 translateX(-10px) */
+}
+
+.card-motion-leave-active {
+  /* 退场时从当前位置移动到右侧外 */
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.elx-attachments-file-card-wrap {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+.elx-attachments-upload-placeholder {
+  display: inline-block;
+  width: fit-content;
+  align-self: center;
+  margin: 6px;
+}
+
+.elx-attachments-card {
+  display: inline-block;
+}
+
+.elx-attachments-card-item {
+  margin: 6px;
+}
+
+.elx-attachments-prev-btn,
+.elx-attachments-next-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  padding: 4px 0px;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.elx-attachments-prev-btn {
+  left: 8px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.elx-attachments-next-btn {
+  right: 8px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.elx-attachments-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.elx-attachments-background-start {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  z-index: 5;
+}
+
+.elx-attachments-background-end {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+  z-index: 5;
+}
+
+.elx-attachments-overflow-scrollX {
+  height: 100%;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+}
+
+.elx-attachments-overflow-scrollY {
+  width: 100%;
+  height: 100%;
+}
+
+.elx-attachments-wrapper {
+  position: relative;
+  display: block;
+}
+
+.elx-attachments-upload-btn {
+  display: flex;
+}
+
+:deep() {
+  .el-upload {
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
+  }
+
+  .el-icon.uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    text-align: center;
+    width: var(--elx-attachments-upload-icon-size);
+    height: var(--elx-attachments-upload-icon-size);
+  }
+
+  .el-upload-dragger {
+    padding: 0;
+  }
+}
+
+/* 设置穿梭节点的样式 */
+.elx-attachments-drop-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  border-radius: 15px;
+  border: 2px dashed var(--el-color-primary);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  /* 背景高斯模糊 */
+  background: rgba(225, 225, 225, 0.3);
+  backdrop-filter: blur(2px);
+
+  .elx-attachments-drop-area-icon {
+    font-size: 50px;
+    color: var(--el-color-primary);
+  }
+
+  .elx-attachments-drop-area-text {
+    font-size: 16px;
+    color: var(--el-color-primary);
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+  }
+}
 </style>

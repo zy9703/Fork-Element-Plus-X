@@ -22,15 +22,11 @@
     "vue3-element-plus-x",
     "vue3-element-plus-x-components"
   ],
-  "main": "dist/umd/index.js",
-  "module": "dist/es/index.js",
-  "unpkg": "dist/umd/index.js",
-  "types": "types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./types/index.d.ts",
       "import": "./dist/es/index.js",
-      "require": "./dist/umd/index.js",
-      "types": "./types/index.d.ts"
+      "require": "./dist/umd/index.js"
     },
     "./styles/*": "./dist/styles/*",
     "./src/*": {
@@ -39,10 +35,14 @@
     },
     "./types/*": "./types/components/*/types.d.ts"
   },
+  "main": "dist/umd/index.js",
+  "module": "dist/es/index.js",
+  "unpkg": "dist/umd/index.js",
+  "types": "types/index.d.ts",
   "files": [
-    "dist",
     "!dist/**/*.map",
     "README.md",
+    "dist",
     "types"
   ],
   "scripts": {
@@ -57,6 +57,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@jsonlee_12138/markdown-it-mermaid": "^0.0.3",
+    "@vueuse/core": "^13.1.0",
     "dompurify": "^3.2.4",
     "element-plus": "^2.9.7",
     "github-markdown-css": "^5.8.1",
