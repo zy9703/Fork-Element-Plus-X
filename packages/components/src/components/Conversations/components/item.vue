@@ -43,8 +43,6 @@ const {
   itemsActiveStyle,
   itemsMenuOpenedStyle,
   activeKey,
-  prefixIcon,
-  suffixIcon,
   showTooltip,
   labelMaxWidth,
   menu,
@@ -59,6 +57,20 @@ const {
   menuClassName,
   menuTeleported,
 } = toRefs(props)
+
+const renderIcon = (icon: Component | null | undefined) => {
+  if (!icon)
+    return null
+  return vueH(icon)
+}
+
+const prefixIconRender = computed(() => {
+  return renderIcon(props.prefixIcon)
+})
+
+const suffixIconRender = computed(() => {
+  return renderIcon(props.suffixIcon)
+})
 
 // 添加hover状态跟踪
 const isHovered = ref(false)
@@ -227,9 +239,9 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
       <div class="conversation-content-main">
         <slot name="label">
           <!-- 前缀图标 -->
-          <span v-if="prefixIcon" class="conversation-prefix-icon">
+          <span v-if="prefixIconRender" class="conversation-prefix-icon">
             <el-icon>
-              <component :is="prefixIcon" />
+              <component :is="prefixIconRender" />
             </el-icon>
           </span>
 
@@ -259,9 +271,9 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
       </div>
 
       <!-- 后缀图标 -->
-      <span v-if="suffixIcon" class="conversation-suffix-icon">
+      <span v-if="suffixIconRender" class="conversation-suffix-icon">
         <ElIcon>
-          <component :is="suffixIcon" />
+          <component :is="suffixIconRender" />
         </ElIcon>
       </span>
 
