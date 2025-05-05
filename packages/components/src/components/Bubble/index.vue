@@ -132,14 +132,12 @@ defineExpose(instance)
 </script>
 
 <template>
-  <div
-    v-if="!internalDestroyed"
-    class="el-bubble" :class="{
-      'el-bubble-start': placement === 'start',
-      'el-bubble-end': placement === 'end',
-      'el-bubble-no-style': noStyle,
-      'el-bubble-is-typing': isTypingClass, // 新增动态类名
-    }" :style="{
+  <div v-if="!internalDestroyed" class="el-bubble" :class="{
+    'el-bubble-start': placement === 'start',
+    'el-bubble-end': placement === 'end',
+    'el-bubble-no-style': noStyle,
+    'el-bubble-is-typing': isTypingClass, // 新增动态类名
+  }" :style="{
       '--el-box-shadow-tertiary': `0 1px 2px 0 rgba(0, 0, 0, 0.03),
       0 1px 6px -1px rgba(0, 0, 0, 0.02),
       0 2px 4px 0 rgba(0, 0, 0, 0.02)`,
@@ -147,11 +145,11 @@ defineExpose(instance)
       '--el-bubble-avatar-placeholder-width': `${$slots.avatar ? '' : avatarSize}`,
       '--el-bubble-avatar-placeholder-height': `${$slots.avatar ? '' : avatarSize}`,
       '--el-bubble-avatar-placeholder-gap': `${avatarGap}`,
-    }"
-  >
+    }">
     <!-- 头像 -->
     <div v-if="!$slots.avatar && avatar" class="el-bubble-avatar el-bubble-avatar-size">
-      <el-avatar :size="0" :src="avatar" :shape="avatarShape" :icon="avatarIcon" :src-set="avatarSrcSet" :alt="avatarFit" @error="avatarError" />
+      <el-avatar :size="0" :src="avatar" :shape="avatarShape" :icon="avatarIcon" :src-set="avatarSrcSet"
+        :alt="avatarFit" @error="avatarError" />
     </div>
 
     <!-- 头像属性进行占位 -->
@@ -168,25 +166,21 @@ defineExpose(instance)
         <slot name="header" />
       </div>
 
-      <div
-        class="el-bubble-content" :class="{
-          'el-bubble-content-loading': loading,
-          'el-bubble-content-round': shape === 'round',
-          'el-bubble-content-corner': shape === 'corner',
-          'el-bubble-content-filled': variant === 'filled',
-          'el-bubble-content-borderless': variant === 'borderless',
-          'el-bubble-content-outlined': variant === 'outlined',
-          'el-bubble-content-shadow': variant === 'shadow',
-        }"
-      >
-        <div
-          v-if="!loading" class="el-typewriter" :class="{
-            'no-content': !content,
-          }"
-        >
-          <Typewriter
-            v-if="!$slots.content && content" ref="typewriterRef" :typing="_typing" :content="content" :is-markdown="isMarkdown" :is-fog="props.isFog" @start="onStart" @writing="onWriting" @finish="onFinish"
-          />
+      <div class="el-bubble-content" :class="{
+        'el-bubble-content-loading': loading,
+        'el-bubble-content-round': shape === 'round',
+        'el-bubble-content-corner': shape === 'corner',
+        'el-bubble-content-filled': variant === 'filled',
+        'el-bubble-content-borderless': variant === 'borderless',
+        'el-bubble-content-outlined': variant === 'outlined',
+        'el-bubble-content-shadow': variant === 'shadow',
+      }">
+        <div v-if="!loading" class="el-typewriter" :class="{
+          'no-content': !content,
+        }">
+          <Typewriter v-if="!$slots.content && content" ref="typewriterRef" :typing="_typing" :content="content"
+            :is-markdown="isMarkdown" :is-fog="props.isFog" @start="onStart" @writing="onWriting" @finish="onFinish"
+            :highlight="highlight" />
         </div>
 
         <!-- 内容-自定义 -->
@@ -327,6 +321,7 @@ defineExpose(instance)
 
   .el-bubble-content-loading {
     width: fit-content;
+
     .el-bubble-loading-wrap {
       display: flex;
       justify-content: center;

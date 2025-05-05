@@ -193,7 +193,6 @@ watch(
   display: inline-block;
   width: 200px;
   margin: 8px 10px;
-  vertical-align: top;
 }
 
 /* 按钮位置样式（用户自定义按钮需保持相同定位） */

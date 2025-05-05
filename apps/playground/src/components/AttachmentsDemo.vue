@@ -1,8 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
-import type { FilesCardProps, FilesType } from 'vue-element-plus-x/types/components/FilesCard/types.d.ts'
-// import type { PromptsItemsProps } from 'vue-element-plus-x/types/components/Attachments/types.d.ts'
-import Attachments from 'vue-element-plus-x/src/components/Attachments/index.vue'
+import type { FilesCardProps, FilesType } from 'vue-element-plus-x/types/FilesCard'
+// import Attachments from 'vue-element-plus-x'
 import { colorMap1 } from '../assets/mock.ts'
 
 type SelfFilesCardProps = FilesCardProps & {
@@ -216,6 +215,7 @@ function handleDeleteCard(item: SelfFilesCardProps) {
     line-height: 1.5;
     margin-bottom: 12px;
     margin-top: 24px;
+
     &::after {
       position: absolute;
       content: '';

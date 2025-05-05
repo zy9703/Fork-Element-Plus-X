@@ -1,6 +1,7 @@
 <!-- home 首页-使用 Bubble 组件 -->
 <script setup lang="ts">
-import type { FilesCardProps, FilesType } from 'vue-element-plus-x/src/components/FilesCard/types.d.ts'
+import type { Ref } from 'vue'
+import type { FilesCardProps, FilesType } from 'vue-element-plus-x/types/FilesCard'
 import FilesCard from 'vue-element-plus-x/src/components/FilesCard/index.vue'
 // 模拟数据
 import { colorMap1, colorMap2 } from '../assets/mock.ts'

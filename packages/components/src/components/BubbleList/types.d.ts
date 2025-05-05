@@ -1,4 +1,5 @@
 import type { BubbleProps } from '../Bubble/types'
+import type { TypewriterProps } from '../Typewriter/types'
 
 // 暂时这样包一层，后续看有没有拓展
 export interface BubbleListItemProps extends BubbleProps {}
@@ -21,6 +22,7 @@ export interface BubbleListProps<T extends BubbleListItemProps = BubbleListItemP
   btnColor?: string
   btnIconSize?: number
   // v1.1.1+ 新增 --- end
+  highlight?: TypewriterProps['highlight']
 }
 
 // 定义组件实例类型

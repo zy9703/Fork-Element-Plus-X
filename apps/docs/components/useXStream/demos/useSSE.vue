@@ -9,7 +9,7 @@ title: SSE 基础使用
 </docs>
 
 <script setup lang="ts">
-import { useXStream } from '../../hooks'
+import { useXStream } from 'vue-element-plus-x'
 
 const { startStream, cancel, data, error, isLoading } = useXStream()
 

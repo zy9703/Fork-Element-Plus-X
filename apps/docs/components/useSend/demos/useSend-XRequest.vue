@@ -6,7 +6,7 @@ title: useSend & XRequest【组合使用】
 
 <script setup lang="ts">
 import { Promotion, Refresh } from '@element-plus/icons-vue'
-import { useSend, XRequest } from '../../hooks'
+import { useSend, XRequest } from 'vue-element-plus-x'
 
 const str = ref<string>('')
 let finish = () => {}

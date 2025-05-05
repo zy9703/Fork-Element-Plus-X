@@ -1,8 +1,9 @@
+import type { AnyObject } from 'typescript-api-pro'
 import type { VNode as ComponentVNode, CSSProperties } from 'vue'
 
 // 基础ConversationItem接口
-export interface ConversationItem {
-  key: string
+export interface ConversationItem<T extends AnyObject = AnyObject> extends T {
+  // key: string
   label: string
   group?: string
   icon?: ComponentVNode | null
@@ -30,8 +31,8 @@ export interface GroupableOptions {
   sort?: (a: string, b: string) => number
 }
 
-export interface Conversation {
-  items: ConversationItem[]
+export interface Conversation<T extends AnyObject = AnyObject> {
+  items: ConversationItem<T>[]
   itemsStyle?: CSSProperties
   itemsHoverStyle?: CSSProperties
   itemsActiveStyle?: CSSProperties
@@ -58,4 +59,5 @@ export interface Conversation {
   loadMore?: () => void
   loadMoreLoading?: boolean
   showToTopBtn?: boolean
+  rowKey?: keyof T
 }

@@ -254,6 +254,7 @@ defineExpose({
       :avatar-alt="item.avatarAlt"
       :avatar-fit="item.avatarFit"
       :no-style="item.noStyle"
+      :highlight="highlight"
       @finish="(instance) => handleBubbleComplete(index, instance)"
     >
       <template v-if="$slots.avatar" #avatar>

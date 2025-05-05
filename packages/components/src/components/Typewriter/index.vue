@@ -3,16 +3,21 @@ import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
-// 在组件中初始化时
-import Prism from 'prismjs'
-// import 'github-markdown-css'
-// import 'prismjs/themes/prism.css' // 样式影响其他组件库 暂时注释处理
+import { usePrism } from '../../hooks/usePrism';
+import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid';
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
   isMarkdown: false,
   typing: false,
   isFog: false,
+})
+
+const highlight = computed(() => {
+  if (!props.highlight) {
+    return usePrism();
+  }
+  return props.highlight;
 })
 
 const emit = defineEmits<{
@@ -38,19 +43,22 @@ const md = new MarkdownIt({
   typographer: true,
   breaks: true,
   highlight: (code, language) => {
-    try {
-      // 检查并修正可能的拼写错误
-      if (Prism.languages[language]) {
-        return Prism.highlight(code, Prism.languages[language], language)
-      }
-      return code // 返回原始代码，避免抛出异常
-    }
-    catch (error) {
-      console.error('Error during code highlighting:', error)
-      return code // 返回原始代码，避免抛出异常
-    }
+    return highlight.value?.(code, language);
   },
 })
+
+md.use(markdownItMermaid({delay: 100}))
+
+const initMarkdownPlugins = ()=> {
+  if(props.mdPlugins && props.mdPlugins.length) {
+    props.mdPlugins.forEach((plugin) => {
+      md.use(plugin);
+    })
+  }
+}
+
+initMarkdownPlugins()
+
 const typingIndex = ref(0)
 const isTyping = ref(false)
 let timer: ReturnType<typeof setTimeout> | null = null
@@ -112,7 +120,6 @@ const renderedContent = computed(() => {
   if (!props.isMarkdown) {
     return processedContent.value
   }
-
   // Markdown模式添加安全过滤和样式类
   return DOMPurify.sanitize(
     md.render(processedContent.value),
@@ -249,75 +256,20 @@ defineExpose(instance)
 
 <template>
   <div ref="typeWriterRef" class="typer-container">
-    <div
-      ref="markdownContentRef"
-      class="typer-content"
-      :class="[
-        {
-          'markdown-content': isMarkdown,
-          'typing-cursor': typing && mergedConfig.suffix && isTyping,
-          'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
-          'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
-        },
-        isMarkdown ? 'markdown-body' : '',
-      ]"
-      :style="{
-        '--cursor-char': `'${mergedConfig.suffix}'`,
-        '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
-        '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
-      }"
-      v-html="renderedContent"
-    />
+    <div ref="markdownContentRef" class="typer-content" :class="[
+      {
+        'markdown-content': isMarkdown,
+        'typing-cursor': typing && mergedConfig.suffix && isTyping,
+        'typing-cursor-foggy': props.isFog && typing && mergedConfig.suffix && isTyping,
+        'typing-markdown-cursor-foggy': isMarkdown && props.isFog && typing && isTyping,
+      },
+      isMarkdown ? 'markdown-body' : '',
+    ]" :style="{
+      '--cursor-char': `'${mergedConfig.suffix}'`,
+      '--cursor-fog-bg-color': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.bgColor ?? 'var(--el-fill-color)' : 'var(--el-fill-color)') : '',
+      '--cursor-fog-width': props.isFog ? (typeof props.isFog === 'object' ? props.isFog.width ?? '80px' : '80px') : '',
+    }" v-html="renderedContent" />
   </div>
 </template>
 
-<style scoped lang="scss">
-/* Markdown基础样式 */
-.markdown-content :deep(ul) { list-style-type: disc; }
-// 新增 md 雾化效果
-// 添加对 h1-h6, ol, ul 的特殊处理
-.typing-markdown-cursor-foggy,.typing-cursor-foggy {
-  &.markdown-content :deep() h1,
-  &.markdown-content :deep() h2,
-  &.markdown-content :deep() h3,
-  &.markdown-content :deep() h4,
-  &.markdown-content :deep() h5,
-  &.markdown-content :deep() h6,
-  &.markdown-content :deep() p,
-  &.markdown-content :deep() ol:last-child li,
-  &.markdown-content :deep() ul:last-child li {
-    position: relative;
-    overflow: hidden;
-    &:last-child:after {
-      content: '';
-      width: var(--cursor-fog-width);
-      height: 1.5em;
-      background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-      position: absolute;
-      margin-left: calc(-1 * var(--cursor-fog-width));
-    }
-  }
-}
-
-/* 修改光标样式 */
-.typer-content.typing-cursor::after {
-  content: var(--cursor-char);
-  margin-left: 2px;
-  display: inline-block; /* 确保光标对齐 */
-}
-
-// 新增 雾化样式
-.typer-content.typing-cursor-foggy {
-  position: relative;
-  overflow: hidden;
-
-  &:last-child:after {
-    content: '';
-    width: var(--cursor-fog-width);
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--cursor-fog-bg-color));
-    position: absolute;
-    margin-left: calc(-1 * var(--cursor-fog-width));
-  }
-}
-</style>
+<style scoped lang="scss" src="./style.scss"></style>

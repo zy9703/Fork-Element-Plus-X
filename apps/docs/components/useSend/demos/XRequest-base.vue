@@ -10,7 +10,7 @@ title: XRequest 【单独】 基础用法
 </docs>
 
 <script setup lang="ts">
-import { XRequest } from '../../hooks'
+import { XRequest } from 'vue-element-plus-x'
 
 const str = ref('')
 

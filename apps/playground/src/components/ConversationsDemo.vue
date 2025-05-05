@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/src/components/Conversations/types'
+<script setup lang="tsx">
+import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/types/Conversations'
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
-import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
+import { Conversations } from 'vue-element-plus-x'
 
 const timeBasedItems = ref([
   {
@@ -157,54 +157,54 @@ const lazyItems = ref([
   {
     key: 'l1',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l2',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l3',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l4',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l5',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l6',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l7',
     label: '初始项目1',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
   {
     key: 'l8',
     label: '初始项目2',
-    prefixIcon: h(ChatDotRound),
+    prefixIcon: vueH(ChatDotRound),
   },
   {
     key: 'l9',
     label: '初始项目3',
-    prefixIcon: h(ChatLineRound),
+    prefixIcon: vueH(ChatLineRound),
   },
 ])
 
 // 自定义分组选项
 const customGroupOptions: GroupableOptions = {
   // 自定义分组排序，学习 > 工作 > 个人 > 未分组
-  sort: (a, b) => {
+  sort: (a: any, b: any) => {
     const order: Record<string, number> = { 学习: 0, 工作: 1, 个人: 2, 未分组: 3 }
     const orderA = order[a] !== undefined ? order[a] : 999
     const orderB = order[b] !== undefined ? order[b] : 999
@@ -217,7 +217,7 @@ const conversationMenuItems = [
   {
     key: 'edit',
     label: '编辑',
-    icon: h(Edit),
+    icon: vueH(Edit),
     command: {
       self_id: '1',
       self_message: '编辑',
@@ -227,14 +227,14 @@ const conversationMenuItems = [
   {
     key: 'delete',
     label: '删除',
-    icon: h(Delete),
+    icon: vueH(Delete),
     disabled: true,
     divided: true,
   },
   {
     key: 'share',
     label: '分享',
-    icon: h(Share),
+    icon: vueH(Share),
     command: 'share',
   },
 ]
@@ -370,12 +370,12 @@ function loadMoreItems() {
       {
         key: `l${lazyItems.value.length + 1}`,
         label: `加载的项目${lazyItems.value.length + 1}`,
-        prefixIcon: h(ChatLineRound),
+        prefixIcon: vueH(ChatLineRound),
       },
       {
         key: `l${lazyItems.value.length + 2}`,
         label: `加载的项目${lazyItems.value.length + 2}`,
-        prefixIcon: h(ChatDotRound),
+        prefixIcon: vueH(ChatDotRound),
       },
     ]
 
@@ -415,14 +415,8 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>绝对自定义-默认样式，悬停样式，选中样式，以及自定义 label</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey5"
-        :items="menuTestItems1"
-        :label-max-width="200"
-        :show-tooltip="true"
-        tooltip-placement="right"
-        :tooltip-offset="35"
-        show-built-in-menu
-        :groupable="customGroupOptions"
+        v-model:active="activeKey5" :items="menuTestItems1" :label-max-width="200" :show-tooltip="true"
+        tooltip-placement="right" :tooltip-offset="35" show-built-in-menu :groupable="customGroupOptions" row-key="key"
         :items-style="{
           padding: '10px 20px',
           borderRadius: '10px',
@@ -433,22 +427,18 @@ function handleMenuClick(menuKey: string, item: any) {
           transition: 'all 0.3s',
           marginBottom: '20px',
           border: '2px dashed transparent',
-        }"
-        :items-hover-style="{
+        }" :items-hover-style="{
           background: '#FAFAD2',
           border: '2px dashed #006400',
-        }"
-        :items-active-style="{
+        }" :items-active-style="{
           background: '#006400',
           color: '#FFFAFA',
           border: '2px dashed transparent',
-        }"
-        :items-menu-opened-style="{
+        }" :items-menu-opened-style="{
           // background: '#32CD32',  // 背景色和选中样式保持一致
           // color: '#FFFAFA',
           border: '2px dashed transparent',
-        }"
-        :menu-style="{
+        }" :menu-style="{
           backgroundColor: 'red',
           boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.1)',
           padding: '10px 20px',
@@ -476,8 +466,7 @@ function handleMenuClick(menuKey: string, item: any) {
           <span v-if="isActive">✅</span>
           <span v-if="isMenuOpened">🥰</span>
           <span
-            v-if="isDisabled"
-            :style="{
+            v-if="isDisabled" :style="{
               background: 'black',
               padding: '5px',
               borderRadius: '10px',
@@ -495,8 +484,7 @@ function handleMenuClick(menuKey: string, item: any) {
         <template #menu="{ item }">
           <div class="menu-buttons">
             <div
-              v-for="menuItem in conversationMenuItems1"
-              :key="menuItem.key" class="menu-self-button"
+              v-for="menuItem in conversationMenuItems1" :key="menuItem.key" class="menu-self-button"
               @click.stop="handleMenuClick(menuItem.key, item)"
             >
               <span v-if="menuItem.icon">{{ menuItem.icon }}</span>
@@ -510,14 +498,8 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>内置下拉菜单测试 (内置 rename 和 delete)</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey4"
-        :items="menuTestItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        tooltip-placement="right"
-        :tooltip-offset="35"
-        show-to-top-btn
-        show-built-in-menu
+        v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        row-key="key" tooltip-placement="right" :tooltip-offset="35" show-to-top-btn show-built-in-menu
         @menu-command="handleMenuCommand"
       />
     </div>
@@ -525,23 +507,16 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>基础时间分组 (groupable) 内置分组吸顶功能</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey1"
-        :items="timeBasedItems"
-        groupable
-        :label-max-width="200"
-        :show-tooltip="false"
+        v-model:active="activeKey1" :items="timeBasedItems" groupable :label-max-width="200"
+        :show-tooltip="false" row-key="key"
       />
     </div>
 
     <h2>自定义分组 (groupable为对象) 内置分组吸顶功能 </h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey2"
-        :items="groupBasedItems"
-        :groupable="customGroupOptions"
-        :label-max-width="200"
-        :show-tooltip="true"
-        show-to-top-btn
+        v-model:active="activeKey2" :items="groupBasedItems" :groupable="customGroupOptions"
+        :label-max-width="200" :show-tooltip="true" show-to-top-btn row-key="key"
       >
         <template #groupTitle="{ group }">
           <div class="custom-group-title">
@@ -559,24 +534,19 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>自定义菜单功能测试</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey4"
-        :items="menuTestItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        show-to-top-btn
-        show-built-in-menu
+        v-model:active="activeKey4" :items="menuTestItems" :label-max-width="200" :show-tooltip="true"
+        show-to-top-btn show-built-in-menu
       >
         <template #more-filled>
-          <el-icon><EditPen /></el-icon>
+          <el-icon>
+            <EditPen />
+          </el-icon>
         </template>
 
         <template #menu="{ item }">
           <div class="menu-buttons">
             <el-button
-              v-for="menuItem in conversationMenuItems"
-              :key="menuItem.key"
-              link
-              size="small"
+              v-for="menuItem in conversationMenuItems" :key="menuItem.key" link size="small"
               @click.stop="handleMenuClick(menuItem.key, item)"
             >
               <el-icon v-if="menuItem.icon">
@@ -592,13 +562,8 @@ function handleMenuClick(menuKey: string, item: any) {
     <h2>加载更多功能</h2>
     <div class="demo-card">
       <Conversations
-        v-model:active="activeKey6"
-        :items="lazyItems"
-        :label-max-width="200"
-        :show-tooltip="true"
-        :load-more="loadMoreItems"
-        :load-more-loading="isLoading"
-        show-to-top-btn
+        v-model:active="activeKey6" :items="lazyItems" :label-max-width="200" :show-tooltip="true"
+        :load-more="loadMoreItems" :load-more-loading="isLoading" show-to-top-btn
       />
     </div>
   </div>
@@ -664,6 +629,7 @@ function handleMenuClick(menuKey: string, item: any) {
     margin-left: 0;
     cursor: pointer;
     gap: 8px;
+
     &:hover {
       background-color: #f5f7fa;
       color: #409EFF;

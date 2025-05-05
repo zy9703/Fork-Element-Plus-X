@@ -10,7 +10,7 @@ title: useSend 【单独】 基础用法
 </docs>
 
 <script setup lang="ts">
-import { useSend } from '../../hooks'
+import { useSend } from 'vue-element-plus-x'
 
 const { send, finish, loading } = useSend({
   sendHandler: startFn,

@@ -209,7 +209,6 @@ function onDragEnd() {
   display: inline-block;
   width: 200px;
   margin: 8px 10px;
-  vertical-align: top;
   will-change: transform;
 }
 

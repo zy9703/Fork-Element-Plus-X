@@ -192,6 +192,7 @@ watch(
 defineExpose({
   onScrollLeft,
   onScrollRight,
+  debouncedCheckPing,
 })
 </script>
 
@@ -349,7 +350,6 @@ defineExpose({
 
 .elx-attachments-card {
   display: inline-block;
-  vertical-align: top;
 }
 
 .elx-attachments-card-item {

@@ -10,7 +10,10 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      imports: ["vue"],
+      // imports: ["vue"],
+      imports: {
+        vue: ['computed', 'createApp', 'ref', 'watchEffect', 'watch', 'onMounted', 'onUnmounted', 'nextTick', 'toRefs', 'getCurrentInstance', 'shallowRef', 'toRef', ['h', 'vueH']]
+      },
       resolvers: [ElementPlusResolver({
         exclude: /ElButtonGroup/ // 忽略自动导入 ElButtonGroup
       })],
