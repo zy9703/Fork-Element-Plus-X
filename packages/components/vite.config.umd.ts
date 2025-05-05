@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import process from 'node:process'
 import { defineConfig } from 'vite'
 import plugins from './.build/plugins'
 
