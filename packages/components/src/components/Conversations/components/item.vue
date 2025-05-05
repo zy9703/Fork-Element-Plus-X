@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { CSSProperties, Component } from 'vue'
+import type { Component, CSSProperties } from 'vue'
 import type { ConversationItem, ConversationMenu, ConversationMenuCommand } from '../types'
 import { MoreFilled } from '@element-plus/icons-vue'
+import { h } from 'vue'
 
 interface Props {
   item: ConversationItem
@@ -58,10 +59,10 @@ const {
   menuTeleported,
 } = toRefs(props)
 
-const renderIcon = (icon: Component | null | undefined) => {
+function renderIcon(icon: Component | null | undefined) {
   if (!icon)
     return null
-  return vueH(icon)
+  return h(icon)
 }
 
 const prefixIconRender = computed(() => {
@@ -219,9 +220,9 @@ function menuCommand(command: string | number | object, item: ConversationItem) 
     :key="item.key"
     class="conversation-item"
     :class="{
-      disabled: item.disabled,
-      active: item.key === activeKey,
-      hovered: item.disabled ? false : isHovered,
+      'disabled': item.disabled,
+      'active': item.key === activeKey,
+      'hovered': item.disabled ? false : isHovered,
       'menu-opened': isShowMenuBtn,
     }"
     :style="{
