@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import type { ConversationItem, ConversationMenuCommand, GroupableOptions } from 'vue-element-plus-x/types/Conversations'
 import { ChatDotRound, ChatLineRound, Delete, Edit, EditPen, Share } from '@element-plus/icons-vue'
-import { Conversations } from 'vue-element-plus-x'
+import Conversations from 'vue-element-plus-x/src/components/Conversations/index.vue'
 
 const timeBasedItems = ref([
   {
