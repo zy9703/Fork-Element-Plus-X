@@ -1,11 +1,10 @@
 <script setup lang="ts" generic="T extends AnyObject = AnyObject">
 import type { ElScrollbar } from 'element-plus'
-import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions } from './types'
+import type { Conversation, ConversationItem, ConversationMenuCommand, GroupableOptions, GroupItem } from './types'
 import { Delete, Edit, Loading, Top } from '@element-plus/icons-vue'
 import Item from './components/item.vue'
 import { get } from 'radash';
 import type { AnyObject } from 'typescript-api-pro';
-import { h } from 'vue'
 
 const props = withDefaults(defineProps<Conversation<T>>(), {
   items: () => [],
@@ -23,13 +22,13 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
     {
       label: '重命名',
       key: 'rename',
-      icon: h(Edit),
+      icon: Edit,
       command: 'rename',
     },
     {
       label: '删除',
       key: 'delete',
-      icon: h(Delete),
+      icon: Delete,
       command: 'delete',
       menuItemHoverStyle: {
         color: 'red',
@@ -117,12 +116,7 @@ const groups = computed(() => {
   }
 
   // 用于存储每个组的项目
-  const groupMap: Record<string, {
-    title: string
-    key: string
-    children: ConversationItem<T>[]
-    isUngrouped?: boolean // 标记是否为未分组
-  }> = {}
+  const groupMap: Record<string, GroupItem> = {}
 
   // 使用过滤后的项目进行分组
   filteredItems.value.forEach((item) => {
@@ -314,6 +308,12 @@ function handleMenuItemClick(command: ConversationMenuCommand, item: Conversatio
   emits('menuCommand', command, item)
 }
 
+function bindGroupRef(el: Element | ComponentPublicInstance | null, item: GroupItem) {
+  if(el){
+    groupRefs.value[item.key] = el as HTMLDivElement;
+  }
+}
+
 // 组件挂载后初始化第一个标题为吸顶状态
 onMounted(() => {
   // 如果有分组，默认将第一个分组设置为吸顶状态
@@ -339,7 +339,7 @@ onMounted(() => {
             <template v-if="shouldUseGrouping">
               <!-- 分组显示 -->
               <div v-for="group in groups" :key="group.key"
-                :ref="el => { if (el) groupRefs[group.key] = el as HTMLDivElement }" class="conversation-group">
+                :ref="el => bindGroupRef(el, group)" class="conversation-group">
                 <div class="conversation-group-title sticky-title"
                   :class="{ 'active-sticky': stickyGroupKeys.has(group.key) }">
                   <slot name="groupTitle" v-bind="{ group }">
