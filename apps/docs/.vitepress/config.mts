@@ -205,5 +205,8 @@ export default defineConfig({
       // }) as Plugin,
       groupIconVitePlugin() as Plugin,
     ],
+    ssr: {
+      noExternal: ['element-plus']
+    }
   },
 })

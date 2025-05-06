@@ -15,7 +15,7 @@ export function tovUIResolver(): ComponentResolver {
       // }
       console.log('name', name)
 
-      if (name.startsWith('El') || name.startsWith('el')) {
+      if (name.startsWith('El') || name.startsWith('el') || name.startsWith('Cl')) {
         return {
           name,
           from: 'element-plus',
