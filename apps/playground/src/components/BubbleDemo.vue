@@ -36,6 +36,16 @@ pie
     "VR/AR开发" : 5
     "其他" : 15
 \`\`\`
+
+\`\`\`mermaid
+sequenceDiagram
+    autonumber
+    participant 1 as $$alpha$$
+    participant 2 as $$beta$$
+    1->>2: Solve: $$\sqrt{2+2}$$
+    2-->>1: Answer: $$2$$
+    Note right of 2: $$\sqrt{2+2}=\sqrt{4}=2$$
+\`\`\`
 `.trim()
       loading.value = false
     }, 500)
