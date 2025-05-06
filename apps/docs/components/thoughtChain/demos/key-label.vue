@@ -7,7 +7,7 @@ title: titleKey、thinkTitleKey、thinkContentKey 属性
 </docs>
 
 <script setup lang="ts">
-import type { ThoughtChainItemProps } from '../types'
+import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/ThoughtChain'
 
 interface DataType {
   codeId: string
@@ -58,13 +58,15 @@ const thinkingItems: ThoughtChainItemProps<DataType>[] = [
 </script>
 
 <template>
-  <ThoughtChain
-    :thinking-items="thinkingItems"
-    row-key="codeId"
-    title-key="self_title"
-    think-title-key="self_thinkTitle"
-    think-content-key="self_thinkContent"
-  />
+  <ClientOnly>
+    <ThoughtChain
+      :thinking-items="thinkingItems"
+      row-key="codeId"
+      title-key="self_title"
+      think-title-key="self_thinkTitle"
+      think-content-key="self_thinkContent"
+    />
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

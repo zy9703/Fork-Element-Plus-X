@@ -15,11 +15,16 @@ export function tovUIResolver(): ComponentResolver {
       // }
       console.log('name', name)
 
-      if (name.startsWith('El') || name.startsWith('el') || name.startsWith('Cl')) {
+      if (name.startsWith('El') || name.startsWith('el')) {
         return {
           name,
           from: 'element-plus',
         }
+      }
+
+      // 移除 ClientOnly 组件
+      if (name === 'ClientOnly') {
+        return null
       }
 
       return {

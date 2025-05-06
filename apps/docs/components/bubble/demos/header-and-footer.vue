@@ -14,7 +14,8 @@ const avatarAI = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpn
 </script>
 
 <template>
-  <Bubble :content="content">
+  <ClientOnly>
+    <Bubble :content="content">
     <template #avatar>
       <el-avatar :src="avatarAI" />
     </template>
@@ -30,6 +31,8 @@ const avatarAI = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpn
       </div>
     </template>
   </Bubble>
+  </ClientOnly>
+  
 </template>
 
 <style scoped lang="less">

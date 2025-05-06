@@ -60,5 +60,7 @@ function generateFakeItems(count: number): listType[] {
 </script>
 
 <template>
-  <BubbleList :list="list" max-height="350px" />
+  <ClientOnly>
+    <BubbleList :list="list" max-height="350px" />
+  </ClientOnly>
 </template>

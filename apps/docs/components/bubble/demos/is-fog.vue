@@ -27,24 +27,25 @@ function changeContent(type: number) {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <div style="display: flex; gap: 12px;">
-      <el-button style="width: fit-content;" @click="changeContent(1)">
-        雾化 markdown
-      </el-button>
-      <el-button style="width: fit-content;" @click="changeContent(2)">
-        雾化 text
-      </el-button>
+  <ClientOnly>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; gap: 12px;">
+        <el-button style="width: fit-content;" @click="changeContent(1)">
+          雾化 markdown
+        </el-button>
+        <el-button style="width: fit-content;" @click="changeContent(2)">
+          雾化 text
+        </el-button>
+      </div>
+      <Bubble :content="content" :typing="{ step: 3, interval: 80, suffix: '💩' }" is-markdown
+        :is-fog="{ bgColor: '#f5f5f5' }">
+        <template #avatar>
+          <el-avatar :size="32" :src="avatarUser" />
+        </template>
+      </Bubble>
     </div>
-    <Bubble :content="content" :typing="{ step: 3, interval: 80, suffix: '💩' }" is-markdown :is-fog="{ bgColor: '#f5f5f5' }">
-      <template #avatar>
-        <el-avatar
-          :size="32"
-          :src="avatarUser"
-        />
-      </template>
-    </Bubble>
-  </div>
+  </ClientOnly>
+
 </template>
 
 <style scoped lang="less">
