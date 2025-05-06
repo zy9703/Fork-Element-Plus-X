@@ -1,7 +1,7 @@
 import { resolveComponent, useSSRContext } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent } from "vue/server-renderer";
 import { _ as _export_sfc } from "./plugin-vue_export-helper.1tPrXgE0.js";
-const __pageData = JSON.parse('{"title":"Welcome 欢迎 🌹","description":"","frontmatter":{},"headers":[],"relativePath":"components/welcome/index.md","filePath":"components/welcome/index.md","lastUpdated":1745920435000}');
+const __pageData = JSON.parse('{"title":"Welcome 欢迎 🌹","description":"","frontmatter":{},"headers":[],"relativePath":"components/welcome/index.md","filePath":"components/welcome/index.md","lastUpdated":1746503545000}');
 const _sfc_main = { name: "components/welcome/index.md" };
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_demo = resolveComponent("demo");

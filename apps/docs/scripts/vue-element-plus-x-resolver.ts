@@ -13,6 +13,8 @@ export function tovUIResolver(): ComponentResolver {
       //     from: 'element-plus-x',
       //   }
       // }
+      console.log('name', name)
+
       if (name.startsWith('El') || name.startsWith('el')) {
         return {
           name,
