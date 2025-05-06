@@ -47,7 +47,7 @@ const md = new MarkdownIt({
   },
 })
 
-md.use(markdownItMermaid({ delay: 100 }))
+md.use(markdownItMermaid({ delay: 100, forceLegacyMathML: true }))
 
 function initMarkdownPlugins() {
   if (props.mdPlugins && props.mdPlugins.length) {

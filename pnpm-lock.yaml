@@ -140,8 +140,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(vue@3.5.13(typescript@5.8.2))
       '@jsonlee_12138/markdown-it-mermaid':
-        specifier: ^0.0.3
-        version: 0.0.3(markdown-it@14.1.0)(mermaid@11.6.0)
+        specifier: 0.0.6-beta
+        version: 0.0.6-beta(markdown-it@14.1.0)(mermaid@11.6.0)
       '@vueuse/core':
         specifier: ^13.1.0
         version: 13.1.0(vue@3.5.13(typescript@5.8.2))
@@ -1114,8 +1114,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@jsonlee_12138/markdown-it-mermaid@0.0.3':
-    resolution: {integrity: sha512-PLIexJKys3ml67M5NmTJv+8hZUX36VwHLvbW82QfxVzMCfiutigA2qjrvLZd/WjSr6Ut9vbSwgAlh9CMLPA8SQ==}
+  '@jsonlee_12138/markdown-it-mermaid@0.0.6-beta':
+    resolution: {integrity: sha512-JJylQ4zjBJDBuY6cv71uD95PUosNq5ThEs6Poq+NA+kr76JsPxwTMQZG4KbHfvBY5sUs8SYFdsffdVpQXZAeDg==}
     peerDependencies:
       markdown-it: ^14.1.0
       mermaid: ^11.6.0
@@ -5801,7 +5801,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@jsonlee_12138/markdown-it-mermaid@0.0.3(markdown-it@14.1.0)(mermaid@11.6.0)':
+  '@jsonlee_12138/markdown-it-mermaid@0.0.6-beta(markdown-it@14.1.0)(mermaid@11.6.0)':
     dependencies:
       markdown-it: 14.1.0
       mermaid: 11.6.0

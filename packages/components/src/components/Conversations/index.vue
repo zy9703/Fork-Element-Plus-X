@@ -57,16 +57,16 @@ const props = withDefaults(defineProps<Conversation<T>>(), {
 })
 
 const emits = defineEmits<{
-  (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem<T>): void
-  (e: 'change', item: ConversationItem<T>): void
-  // (e: 'update:active', v: V): void
-}>()
+    (e: 'menuCommand', command: ConversationMenuCommand, item: ConversationItem<T>): void,
+    (e: 'change', item: ConversationItem<T>): void
+    // (e: 'update:active', v: V): void
+  }>()
 
 const activeKey = defineModel<V>('active', { required: false })
 
-function getKey(item: ConversationItem<T>, index: number) {
-  return props.rowKey ? get(item, props.rowKey as string) as string : index.toString()
-}
+// const getKey = (item: ConversationItem<T>, index: number) => {
+//   return props.rowKey ? get(item, props.rowKey as string) as string : index.toString()
+// }
 
 const itemsUse = computed<ConversationItemUseOptions<T>[]>(() => {
   return props.items.map((item, index) => ({
@@ -74,10 +74,6 @@ const itemsUse = computed<ConversationItemUseOptions<T>[]>(() => {
     uniqueKey: props.rowKey ? get(item, props.rowKey as string) as string : index.toString(),
     label: get(item, props.labelKey as string),
   }))
-})
-
-watchEffect(() => {
-  console.log('itemsUse', itemsUse.value, props.rowKey, activeKey.value)
 })
 
 // const key = computed(() => {
@@ -108,24 +104,19 @@ const mergedStyle = computed(() => {
 //   }
 // })
 
-// watchEffect(()=> {
-//   console.log('active', activeKey.value);
+// 获取第一个非disabled的item的key，作为备选值
+// const firstAvailableKey = computed(() => {
+//   const firstAvailableItem = props.items.find(item => !item.disabled)
+//   if (!firstAvailableItem) return ''
+//   return getKey(firstAvailableItem, 0)
 // })
 
-// 获取第一个非disabled的item的key，作为备选值
-const firstAvailableKey = computed(() => {
-  const firstAvailableItem = props.items.find(item => !item.disabled)
-  if (!firstAvailableItem)
-    return ''
-  return getKey(firstAvailableItem, 0)
-})
-
 // 如果没有绑定activeKey或绑定的是disabled项，则使用initialKey
-watchEffect(() => {
-  if (!activeKey.value || props.items.find((item, index) => getKey(item, index) === activeKey.value)?.disabled) {
-    activeKey.value = firstAvailableKey.value as V
-  }
-})
+// watchEffect(() => {
+//   if (!activeKey.value || props.items.find((item, index) => getKey(item, index) === activeKey.value)?.disabled) {
+//     activeKey.value = firstAvailableKey.value as V
+//   }
+// })
 
 function handleClick(item: ConversationItemUseOptions<T>) {
   // 如果是disabled状态，则不允许选中

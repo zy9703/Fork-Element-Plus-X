@@ -338,7 +338,7 @@ const conversationMenuItems1 = [
 
 // 内置菜单点击方法
 function handleMenuCommand(command: ConversationMenuCommand, item: ConversationItem) {
-  console.log('内置菜单点击事件：', command, item)
+  // console.log('内置菜单点击事件：', command, item)
   // 直接修改 item 是否生效
   if (command === 'delete') {
     const index = menuTestItems.value.findIndex(itemSlef => itemSlef.key === item.key)
@@ -394,7 +394,7 @@ const activeKey6 = ref('l1')
 
 // 处理菜单点击
 function handleMenuClick(menuKey: string, item: any) {
-  console.log('菜单点击', menuKey, item)
+  // console.log('菜单点击', menuKey, item)
 
   switch (menuKey) {
     case 'edit':
