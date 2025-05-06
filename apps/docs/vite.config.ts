@@ -11,7 +11,7 @@ import { defineConfig } from 'vite'
 import eslintPlugin from 'vite-plugin-eslint'
 import { tsxAutoProps } from 'vite-plugin-tsx-auto-props'
 // 导入demo插件
-import vitepressDemo from 'vite-plugin-vitepress-demo'
+import vitepressDemo from 'vite-plugin-vitepress-demo' 
 import { tovUIResolver } from './scripts/vue-element-plus-x-resolver'
 
 // 读取我们当前的根目录
@@ -37,6 +37,7 @@ export default defineConfig({
       // 我们让他自动搜索，我们所有项目中的demos下的vue文件
       // glob: ['**/demos/*.vue'],
     }) as PluginOption,
+
     vueJsx() as PluginOption,
     Unocss() as PluginOption,
     // eslint-disable-next-line ts/no-unsafe-call
