@@ -20,6 +20,4 @@ export interface BubbleProps {
   avatarAlt?: string
   avatarFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
   noStyle?: boolean
-  highlight?: TypewriterProps['highlight']
-  mdPlugins?: TypewriterProps['mdPlugins']
 }

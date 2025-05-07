@@ -122,7 +122,6 @@ export interface ThoughtChainProps<T = ThoughtChainItemBase> {
    * 是否启用节点之间链接线的渐变颜色 false默认颜色
    */
   lineGradient?: boolean
-  mdPlugins?: TypewriterProps['mdPlugins']
 }
 
 export interface ThinkingInstance {
