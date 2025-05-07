@@ -16,24 +16,26 @@ const content = ref('hello world !')
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 10px;">
-    <Bubble :content="content" :loading="loading" />
-
-    <Bubble :content="content" :loading="loading">
-      <template #loading>
-        <div>loading...</div>
-      </template>
-    </Bubble>
-
-    <Bubble :content="content" :loading="loading">
-      <template #loading>
-        <div>感谢使用 Element-Plus-X 🌹 请稍后...</div>
-      </template>
-    </Bubble>
-
-    <div style="display: flex; align-items: center;">
-      <span>状态：</span>
-      <el-switch v-model="loading" />
+  <ClientOnly>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <Bubble :content="content" :loading="loading" />
+  
+      <Bubble :content="content" :loading="loading">
+        <template #loading>
+          <div>loading...</div>
+        </template>
+      </Bubble>
+  
+      <Bubble :content="content" :loading="loading">
+        <template #loading>
+          <div>感谢使用 Element-Plus-X 🌹 请稍后...</div>
+        </template>
+      </Bubble>
+  
+      <div style="display: flex; align-items: center;">
+        <span>状态：</span>
+        <el-switch v-model="loading" />
+      </div>
     </div>
-  </div>
+  </ClientOnly>
 </template>

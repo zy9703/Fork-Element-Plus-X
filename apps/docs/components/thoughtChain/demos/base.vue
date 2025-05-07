@@ -11,7 +11,7 @@ title: thinkingItems 基础使用
 </docs>
 
 <script setup lang="ts">
-import type { ThoughtChainItemProps } from '../types'
+import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/ThoughtChain'
 
 interface DataType {
   codeId: string
@@ -62,7 +62,9 @@ const thinkingItems: ThoughtChainItemProps<DataType>[] = [
 </script>
 
 <template>
-  <ThoughtChain :thinking-items="thinkingItems" row-key="codeId" />
+  <ClientOnly>
+    <ThoughtChain :thinking-items="thinkingItems" row-key="codeId" />
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

@@ -30,16 +30,18 @@ const markdownText = ref(`#### 标题 \n 这是一个 Markdown 示例。\n - 列
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <Bubble :content="markdownText" typing is-markdown>
-      <template #avatar>
-        <el-avatar
-          :size="32"
-          :src="avatarUser"
-        />
-      </template>
-    </Bubble>
-  </div>
+  <ClientOnly>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <Bubble :content="markdownText" typing is-markdown>
+        <template #avatar>
+          <el-avatar
+            :size="32"
+            :src="avatarUser"
+          />
+        </template>
+      </Bubble>
+    </div>
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

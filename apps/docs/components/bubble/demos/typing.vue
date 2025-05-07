@@ -34,15 +34,17 @@ function changeContent() {
 </script>
 
 <template>
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <el-button style="width: fit-content;" @click="changeContent">
-      设置 text
-    </el-button>
+  <ClientOnly>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <el-button style="width: fit-content;" @click="changeContent">
+        设置 text
+      </el-button>
 
-    <Bubble :content="content" :typing="{ step: 1, interval: 100, suffix: '💩' }">
-      <template #avatar>
-        <el-avatar :src="avatarAI" />
-      </template>
-    </Bubble>
-  </div>
+      <Bubble :content="content" :typing="{ step: 1, interval: 100, suffix: '💩' }">
+        <template #avatar>
+          <el-avatar :src="avatarAI" />
+        </template>
+      </Bubble>
+    </div>
+  </ClientOnly>
 </template>

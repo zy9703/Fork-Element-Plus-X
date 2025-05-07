@@ -7,7 +7,7 @@ title: dotSize 属性
 </docs>
 
 <script setup lang="ts">
-import type { ThoughtChainItemProps } from '../types'
+import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/ThoughtChain'
 
 interface DataType {
   id: string
@@ -59,8 +59,10 @@ const thinkingItems: ThoughtChainItemProps<DataType>[] = [
 </script>
 
 <template>
-  <ThoughtChain :thinking-items="thinkingItems" dot-size="small" />
-  <ThoughtChain :thinking-items="thinkingItems" dot-size="large" />
+  <ClientOnly>
+    <ThoughtChain :thinking-items="thinkingItems" dot-size="small" />
+    <ThoughtChain :thinking-items="thinkingItems" dot-size="large" />
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

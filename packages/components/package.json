@@ -29,10 +29,6 @@
       "require": "./dist/umd/index.js"
     },
     "./styles/*": "./dist/styles/*",
-    "./src/*": {
-      "import": "./src/*",
-      "require": "./src/*"
-    },
     "./types/*": "./types/components/*/types.d.ts"
   },
   "main": "dist/umd/index.js",

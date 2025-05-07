@@ -119,35 +119,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="component-container">
-    <div class="top-wrap">
-      <div class="btn-list">
-        <el-button type="primary" plain @click="addMessage">
-          添加对话
-        </el-button>
-        <el-button type="danger" plain @click="clearMessage">
-          清空对话列表
-        </el-button>
-        <el-button type="primary" plain @click="scrollToTop">
-          滚动到顶部
-        </el-button>
-        <el-button type="primary" plain @click="scrollBottom">
-          滚动到底部
-        </el-button>
+  <ClientOnly>
+    <div class="component-container">
+      <div class="top-wrap">
+        <div class="btn-list">
+          <el-button type="primary" plain @click="addMessage">
+            添加对话
+          </el-button>
+          <el-button type="danger" plain @click="clearMessage">
+            清空对话列表
+          </el-button>
+          <el-button type="primary" plain @click="scrollToTop">
+            滚动到顶部
+          </el-button>
+          <el-button type="primary" plain @click="scrollBottom">
+            滚动到底部
+          </el-button>
+        </div>
+  
+        <div class="btn-list">
+          <el-input-number v-model="num" :min="0" :max="10" controls-position="right" />
+          <el-button type="primary" plain @click="scrollToBubble">
+            滚动第{{ num }}个气泡框
+          </el-button>
+        </div>
       </div>
-
-      <div class="btn-list">
-        <el-input-number v-model="num" :min="0" :max="10" controls-position="right" />
-        <el-button type="primary" plain @click="scrollToBubble">
-          滚动第{{ num }}个气泡框
-        </el-button>
+  
+      <div class="component-1">
+        <BubbleList ref="bubbleListRef" :list="bubbleItems" max-height="350px" />
       </div>
     </div>
-
-    <div class="component-1">
-      <BubbleList ref="bubbleListRef" :list="bubbleItems" max-height="350px" />
-    </div>
-  </div>
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

@@ -11,5 +11,7 @@ const content = ref('hello world !')
 </script>
 
 <template>
-  <Bubble :content="content" />
+  <ClientOnly>
+    <Bubble :content="content" />
+  </ClientOnly>
 </template>

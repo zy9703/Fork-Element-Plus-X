@@ -7,7 +7,7 @@ title: lineGradient 属性
 </docs>
 
 <script setup lang="ts">
-import type { ThoughtChainItemProps } from '../types'
+import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/ThoughtChain'
 
 interface DataType {
   id: string
@@ -57,7 +57,9 @@ const thinkingItems: ThoughtChainItemProps<DataType>[] = [
 </script>
 
 <template>
-  <ThoughtChain :thinking-items="thinkingItems" line-gradient />
+  <ClientOnly>
+    <ThoughtChain :thinking-items="thinkingItems" line-gradient />
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">

@@ -9,7 +9,7 @@ title: statusKey、statusEnum 属性
 </docs>
 
 <script setup lang="ts">
-import type { ThoughtChainItemProps } from '../types'
+import type { ThoughtChainItemProps } from 'vue-element-plus-x/types/ThoughtChain'
 
 interface DataType {
   codeId: string
@@ -59,20 +59,22 @@ const thinkingItems: ThoughtChainItemProps<DataType>[] = [
 </script>
 
 <template>
-  <ThoughtChain
-    :thinking-items="thinkingItems"
-    row-key="codeId"
-    status-key="self_status"
-    :status-enum="{
-      loading: { value: 'load', type: 'warning', color: '' },
-      error: { value: 'no', type: 'success', color: '' },
-      success: { value: 'yes', type: 'danger', color: '' },
-    }"
-  >
-    <template #icon="{ item }">
-      <span>{{ console.log(item) }}</span>
-    </template>
-  </ThoughtChain>
+  <ClientOnly>
+    <ThoughtChain
+      :thinking-items="thinkingItems"
+      row-key="codeId"
+      status-key="self_status"
+      :status-enum="{
+        loading: { value: 'load', type: 'warning' },
+        error: { value: 'no', type: 'success' },
+        success: { value: 'yes', type: 'danger' },
+      }"
+    >
+      <template #icon="{ item }">
+        <span>{{ console.log(item) }}</span>
+      </template>
+    </ThoughtChain>
+  </ClientOnly>
 </template>
 
 <style scoped lang="less">
