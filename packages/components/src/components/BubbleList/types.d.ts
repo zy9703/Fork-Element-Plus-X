@@ -20,8 +20,6 @@ export interface BubbleListProps<T extends BubbleListItemProps = BubbleListItemP
   btnLoading?: boolean
   btnColor?: string
   btnIconSize?: number
-  highlight?: TypewriterProps['highlight']
-  mdPlugins?: TypewriterProps['mdPlugins']
 }
 
 // 定义组件实例类型

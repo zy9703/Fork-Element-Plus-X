@@ -4,6 +4,8 @@ import { DocumentCopy, Refresh, Search, Star } from '@element-plus/icons-vue'
 import { usePrism } from 'vue-element-plus-x'
 import 'vue-element-plus-x/styles/prism-solarizedlight.min.css'
 // import Bubble from 'vue-element-plus-x/src/components/Bubble/index.vue'
+// import AppConfig from 'vue-element-plus-x/src/components/AppConfig/index.vue'
+import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid'
 
 const avatar = ref(
   'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png',
@@ -12,6 +14,8 @@ const loading = ref(true)
 const content = ref('')
 
 const highlight = usePrism()
+
+const mdPlugins = [markdownItMermaid({ delay: 100, forceLegacyMathML: true })]
 
 onMounted(() => {
   setTimeout(() => {
@@ -54,34 +58,34 @@ sequenceDiagram
 </script>
 
 <template>
-  <div class="component-container">
-    <p>新版本支持 打字器 雾化效果 使用 Mermaid.js 支持简单的图表和函数公式 </p>
-    <div class="component-1">
-      <Bubble
-        placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
+  <AppConfig :md-plugins="mdPlugins" :highlight="highlight">
+    <div class="component-container">
+      <p>新版本支持 打字器 雾化效果 使用 Mermaid.js 支持简单的图表和函数公式 </p>
+      <div class="component-1">
+        <Bubble placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
           step: 2,
           suffix: '💗',
-        }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }" :highlight="highlight"
-      >
-        <template #avatar>
-          <el-avatar :size="32" :src="avatar" />
-        </template>
+        }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }">
+          <template #avatar>
+            <el-avatar :size="32" :src="avatar" />
+          </template>
 
-        <!-- <template #content>
+          <!-- <template #content>
           <div class="content-container">在这里可以自定义内容，支持插槽。</div>
         </template> -->
 
-        <template #footer>
-          <div class="footer-container">
-            <el-button type="info" :icon="Refresh" size="small" circle />
-            <el-button type="success" :icon="Search" size="small" circle />
-            <el-button type="warning" :icon="Star" size="small" circle />
-            <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
-          </div>
-        </template>
-      </Bubble>
+          <template #footer>
+            <div class="footer-container">
+              <el-button type="info" :icon="Refresh" size="small" circle />
+              <el-button type="success" :icon="Search" size="small" circle />
+              <el-button type="warning" :icon="Star" size="small" circle />
+              <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
+            </div>
+          </template>
+        </Bubble>
+      </div>
     </div>
-  </div>
+  </AppConfig>
 </template>
 
 <style scoped lang="scss">

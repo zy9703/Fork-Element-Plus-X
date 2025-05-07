@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
-import markdownItMermaid from '@jsonlee_12138/markdown-it-mermaid'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
 import { usePrism } from '../../hooks/usePrism'
+import { useAppConfig } from '../AppConfig/hooks.ts'
 
 const props = withDefaults(defineProps<TypewriterProps>(), {
   content: '',
@@ -22,9 +22,11 @@ const emits = defineEmits<{
   finish: [instance: TypewriterInstance]
 }>()
 
+const appConfig = useAppConfig();
+
 const highlight = computed(() => {
   if (!props.highlight) {
-    return usePrism()
+    return appConfig.highlight ?? usePrism()
   }
   return props.highlight
 })
@@ -47,10 +49,13 @@ const md = new MarkdownIt({
   },
 })
 
-md.use(markdownItMermaid({ delay: 100, forceLegacyMathML: true }))
-
 function initMarkdownPlugins() {
-  if (props.mdPlugins && props.mdPlugins.length) {
+  if(appConfig.mdPlugins?.length){
+    appConfig.mdPlugins.forEach((plugin) => {
+      md.use(plugin)
+    })
+  }
+  if (props.mdPlugins?.length) {
     props.mdPlugins.forEach((plugin) => {
       md.use(plugin)
     })
