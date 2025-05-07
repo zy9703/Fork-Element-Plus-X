@@ -48,25 +48,25 @@
 
 <demo src="./demos/newMaekDown.vue"></demo>
 
-### MD-图表（v1.2.0 新增）
+### MD-插件模式（v1.2.0 新增）
 
 <demo src="./demos/mermaid.vue"></demo>
 
 ### 开启打字效果
 
-<demo src="./demos/typing.vue"></demo>
+<!-- <demo src="./demos/typing.vue"></demo> -->
 
 ### 打字器雾化效果
 
-<demo src="./demos/isFog.vue"></demo>
+<!-- <demo src="./demos/isFog.vue"></demo> -->
 
-### 动态更新内容 (流式有用)
+### 动态更新内容
 
-<demo src="./demos/updates.vue"></demo>
+<!-- <demo src="./demos/updates.vue"></demo> -->
 
 ### 控制打字
 
-<demo src="./demos/customized.vue"></demo>
+<!-- <demo src="./demos/customized.vue"></demo> -->
 
 ## 属性
 
