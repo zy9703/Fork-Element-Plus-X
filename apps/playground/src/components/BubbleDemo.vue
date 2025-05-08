@@ -63,36 +63,36 @@ sequenceDiagram
 </script>
 
 <template>
-  <AppConfig :md-plugins="mdPlugins" :highlight="highlight">
-    <div class="component-container">
-      <p>新版本支持 打字器 雾化效果 使用 Mermaid.js 支持简单的图表和函数公式 </p>
-      <div class="component-1">
-        <Bubble
-          placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
-            step: 2,
-            suffix: '💗',
-          }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }"
-        >
-          <template #avatar>
-            <el-avatar :size="32" :src="avatar" />
-          </template>
+  <!-- <AppConfig :md-plugins="mdPlugins" :highlight="highlight"> -->
+  <div class="component-container">
+    <p>新版本支持 打字器 雾化效果 使用 Mermaid.js 支持简单的图表和函数公式 </p>
+    <div class="component-1">
+      <Bubble
+        placement="start" :content="content" shape="corner" variant="shadow" :loading="loading" :typing="{
+          step: 2,
+          suffix: '💗',
+        }" :is-markdown="true" :is-fog="{ bgColor: '#FFFFFF' }"
+      >
+        <template #avatar>
+          <el-avatar :size="32" :src="avatar" />
+        </template>
 
-          <template #content>
-            <Typewriter :content="content" :is-markdown="true" />
-          </template>
+        <template #content>
+          <Typewriter :content="content" :is-markdown="true" :md-plugins="mdPlugins" :highlight="highlight" />
+        </template>
 
-          <template #footer>
-            <div class="footer-container">
-              <el-button type="info" :icon="Refresh" size="small" circle />
-              <el-button type="success" :icon="Search" size="small" circle />
-              <el-button type="warning" :icon="Star" size="small" circle />
-              <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
-            </div>
-          </template>
-        </Bubble>
-      </div>
+        <template #footer>
+          <div class="footer-container">
+            <el-button type="info" :icon="Refresh" size="small" circle />
+            <el-button type="success" :icon="Search" size="small" circle />
+            <el-button type="warning" :icon="Star" size="small" circle />
+            <el-button color="#626aef" :icon="DocumentCopy" size="small" circle />
+          </div>
+        </template>
+      </Bubble>
     </div>
-  </AppConfig>
+  </div>
+  <!-- </AppConfig> -->
 </template>
 
 <style scoped lang="scss">

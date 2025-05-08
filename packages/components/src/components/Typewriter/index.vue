@@ -3,7 +3,7 @@ import type { ComputedRef } from 'vue'
 import type { TypewriterInstance, TypewriterProps, TypingConfig } from './types.d.ts'
 import DOMPurify from 'dompurify' // 新增安全过滤
 import MarkdownIt from 'markdown-it'
-import Prism from 'prismjs'
+// import Prism from 'prismjs'
 import { usePrism } from '../../hooks/usePrism'
 
 import { useAppConfig } from '../AppConfig/hooks.ts'
@@ -26,7 +26,7 @@ const emits = defineEmits<{
 
 const appConfig = useAppConfig()
 
-const _highlight = computed(() => {
+const highlight = computed(() => {
   if (!props.highlight) {
     return appConfig.highlight ?? usePrism()
   }
@@ -40,9 +40,9 @@ onMounted(() => {
   // 初始化雾化背景色
   updateFogColor()
 
-  nextTick(() => {
-    Prism.highlightAll()
-  })
+  // nextTick(() => {
+  //   Prism.highlightAll()
+  // })
 })
 
 const md = new MarkdownIt({
@@ -51,17 +51,17 @@ const md = new MarkdownIt({
   typographer: true,
   breaks: true,
   highlight: (code, lang) => {
-    const grammar = Prism.languages[lang]
-    if (grammar) {
-      // // 调用 Prism 高亮代码
-      // const highlightedCode = Prism.highlight(code, grammar || Prism.languages.text, lang)
+    // const grammar = Prism.languages[lang]
+    // if (grammar) {
+    //   // // 调用 Prism 高亮代码
+    //   // const highlightedCode = Prism.highlight(code, grammar || Prism.languages.text, lang)
 
-      // // 生成带 Prism 样式的 HTML
-      // return `<pre class="language-${lang}"><code class="language-${lang}">${highlightedCode}</code></pre>`
-      return Prism.highlight(code, grammar, lang)
-    }
-    return code
-    // return highlight.value?.(code, language)
+    //   // // 生成带 Prism 样式的 HTML
+    //   // return `<pre class="language-${lang}"><code class="language-${lang}">${highlightedCode}</code></pre>`
+    //   return Prism.highlight(code, grammar, lang)
+    // }
+    // return code
+    return highlight.value?.(code, lang)
   },
 })
 
