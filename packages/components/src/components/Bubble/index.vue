@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<BubbleProps>(), {
   avatarSrcSet: '',
   avatarAlt: '',
   avatarFit: 'cover',
-  noStyle: false,
+  noStyle: false
 })
 
 const emits = defineEmits(['start', 'finish', 'writing', 'avatarError'])
@@ -133,8 +133,7 @@ defineExpose(instance)
 
 <template>
   <div
-    v-if="!internalDestroyed"
-    class="el-bubble" :class="{
+    v-if="!internalDestroyed" class="el-bubble" :class="{
       'el-bubble-start': placement === 'start',
       'el-bubble-end': placement === 'end',
       'el-bubble-no-style': noStyle,
@@ -151,7 +150,10 @@ defineExpose(instance)
   >
     <!-- 头像 -->
     <div v-if="!$slots.avatar && avatar" class="el-bubble-avatar el-bubble-avatar-size">
-      <el-avatar :size="0" :src="avatar" :shape="avatarShape" :icon="avatarIcon" :src-set="avatarSrcSet" :alt="avatarFit" @error="avatarError" />
+      <el-avatar
+        :size="0" :src="avatar" :shape="avatarShape" :icon="avatarIcon" :src-set="avatarSrcSet"
+        :alt="avatarFit" @error="avatarError"
+      />
     </div>
 
     <!-- 头像属性进行占位 -->
@@ -185,7 +187,14 @@ defineExpose(instance)
           }"
         >
           <Typewriter
-            v-if="!$slots.content && content" ref="typewriterRef" :typing="_typing" :content="content" :is-markdown="isMarkdown" :is-fog="props.isFog" @start="onStart" @writing="onWriting" @finish="onFinish"
+            v-if="!$slots.content && content" ref="typewriterRef"
+            :typing="_typing"
+            :content="content"
+            :is-markdown="isMarkdown"
+            :is-fog="props.isFog"
+            @start="onStart"
+            @writing="onWriting"
+            @finish="onFinish"
           />
         </div>
 
@@ -327,6 +336,7 @@ defineExpose(instance)
 
   .el-bubble-content-loading {
     width: fit-content;
+
     .el-bubble-loading-wrap {
       display: flex;
       justify-content: center;

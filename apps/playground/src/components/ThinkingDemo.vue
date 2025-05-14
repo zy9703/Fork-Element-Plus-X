@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MessageItem } from '@/assets/mock'
-import type { BubbleListInstance } from 'vue-element-plus-x/types/components/BubbleList/types'
-import type { ThinkingStatus } from 'vue-element-plus-x/types/components/Thinking/types'
+import type { BubbleListInstance } from 'vue-element-plus-x/types/BubbleList'
+import type { ThinkingStatus } from 'vue-element-plus-x/types/Thinking'
 import { Loading, Position } from '@element-plus/icons-vue'
 import { useXStream } from 'vue-element-plus-x'
 
@@ -10,9 +10,9 @@ const { startStream, cancel, data, error, isLoading } = useXStream()
 const BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions'
 // 仅供测试，请勿拿去测试其他付费模型
 const API_KEY = 'sk-vfjyscildobjnrijtcllnkhtcouidcxdgjxtldzqzeowrbga'
-const MODEL = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B'
+const MODEL = 'THUDM/GLM-Z1-9B-0414'
 
-const inputValue = ref('一加一等于多少？')
+const inputValue = ref('帮我写一篇小米手机介绍')
 const senderRef = ref<any>(null)
 const bubbleItems = ref<MessageItem[]>([])
 const bubbleListRef = ref<BubbleListInstance | null>(null)
@@ -89,7 +89,7 @@ async function startSSE() {
       },
       body: JSON.stringify({
         model: MODEL,
-        messages: bubbleItems.value.filter(item => item.role === 'user').map(item => ({
+        messages: bubbleItems.value.filter((item: any) => item.role === 'user').map((item: any) => ({
           role: item.role,
           content: item.content,
         })),
@@ -221,7 +221,7 @@ function handleChange(payload: { value: boolean, status: ThinkingStatus }) {
     padding: 12px;
   }
   .chat-warp {
-    height: calc(100vh - 365px);
+    height: calc(100vh - 325px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;

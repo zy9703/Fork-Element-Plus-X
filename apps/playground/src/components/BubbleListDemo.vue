@@ -1,4 +1,3 @@
-<!-- home 首页 - 使用 BubbleList 组件 -->
 <script setup lang="ts">
 import type { MessageItem } from '@/assets/mock'
 import { messageArr } from '@/assets/mock'
@@ -125,6 +124,8 @@ onMounted(() => {
   background-color: white;
   padding: 12px;
   border-radius: 15px;
+  height: calc(100vh - 220px);
+  overflow: auto;
 
   .btn-list {
     display: flex;

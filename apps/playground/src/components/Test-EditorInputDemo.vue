@@ -1,6 +1,6 @@
 <!-- 富文本输入框 测试中... -->
 <script setup lang='ts'>
-import EditorInput from 'vue-element-plus-x/src/components/EditorInput/index.vue'
+import { EditorInput } from 'vue-element-plus-x'
 
 const value = ref('')
 const inputRef = ref()
@@ -65,10 +65,7 @@ function insertElement() {
     </div>
 
     <EditorInput
-      ref="inputRef"
-      v-model="value"
-      placeholder="请输入内容 啊啊啊啊"
-      :input-style="{ width: '100%', color: 'red' }"
+      ref="inputRef" v-model="value" placeholder="请输入内容 啊啊啊啊" :input-style="{ width: '100%', color: 'red' }"
       :autosize="{ minRows: 2, maxRows: 4 }"
     />
   </div>
@@ -83,15 +80,19 @@ function insertElement() {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: calc(100vh - 220px);
+  overflow: auto;
   // overflow: auto;
 
   .top-wrap {
     margin: 12px 0;
+
     .btn-list {
       display: flex;
       flex-wrap: wrap;
+
       :deep() {
-        .el-button + .el-button {
+        .el-button+.el-button {
           margin-left: 8px;
           margin-bottom: 8px;
         }

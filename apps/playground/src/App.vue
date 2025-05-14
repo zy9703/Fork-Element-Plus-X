@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import UseBubble from './components/BubbleDemo.vue'
-import UseBubbleList from './components/BubbleListDemo.vue'
-import UseMentionSender from './components/MentionSenderDemo.vue'
-import UseSender from './components/SenderDemo.vue'
-import UseThinking from './components/ThinkingDemo.vue'
-import UseThoughtChain from './components/ThoughtChainDemo.vue'
-import UseRecord from './components/useRecordDemo.vue'
-import UseSend from './components/useSendDemo.vue'
-import useXStreamSIP from './components/useXStreamSIPDemo.vue'
-import useXStreamSSE from './components/useXStreamSSEDemo.vue'
-import UseWelcome from './components/WelcomeDemo.vue'
+import AttachmentsDemo from './components/AttachmentsDemo.vue'
+import BubbleDemo from './components/BubbleDemo.vue'
+import BubbleListDemo from './components/BubbleListDemo.vue'
+import ConversationsDemo from './components/ConversationsDemo.vue'
+import FilesCardDemo from './components/FilesCardDemo.vue'
+import MentionSenderDemo from './components/MentionSenderDemo.vue'
+import PromptsDemo from './components/PromptsDemo.vue'
+import SenderDemo from './components/SenderDemo.vue'
+import ThinkingDemo from './components/ThinkingDemo.vue'
+import ThoughtChainDemo from './components/ThoughtChainDemo.vue'
+import useRecordDemo from './components/useRecordDemo.vue'
+import useSendDemo from './components/useSendDemo.vue'
+import useXStreamSIPDemo from './components/useXStreamSIPDemo.vue'
+import useXStreamSSEDemo from './components/useXStreamSSEDemo.vue'
+import WelcomeDemo from './components/WelcomeDemo.vue'
 </script>
 
 <template>
@@ -26,47 +30,63 @@ import UseWelcome from './components/WelcomeDemo.vue'
 
     <el-tabs type="border-card" class="demo-tabs">
       <el-tab-pane label="Bubble">
-        <UseBubble />
+        <BubbleDemo />
       </el-tab-pane>
 
       <el-tab-pane label="BubbleList">
-        <UseBubbleList />
+        <BubbleListDemo />
+      </el-tab-pane>
+
+      <el-tab-pane label="Conversations">
+        <ConversationsDemo />
+      </el-tab-pane>
+
+      <el-tab-pane label="FilesCard">
+        <FilesCardDemo />
+      </el-tab-pane>
+
+      <el-tab-pane label="Attachments">
+        <AttachmentsDemo />
       </el-tab-pane>
 
       <el-tab-pane label="Sender">
-        <UseSender />
+        <SenderDemo />
       </el-tab-pane>
 
       <el-tab-pane label="MentionSender">
-        <UseMentionSender />
+        <MentionSenderDemo />
       </el-tab-pane>
 
       <el-tab-pane label="Welcome">
-        <UseWelcome />
+        <WelcomeDemo />
+      </el-tab-pane>
+
+      <el-tab-pane label="Prompts">
+        <PromptsDemo />
       </el-tab-pane>
 
       <el-tab-pane label="Thinking">
-        <UseThinking />
+        <ThinkingDemo />
       </el-tab-pane>
 
       <el-tab-pane label="ThoughtChain">
-        <UseThoughtChain />
+        <ThoughtChainDemo />
       </el-tab-pane>
 
-      <el-tab-pane label="UseRecord">
-        <UseRecord />
+      <el-tab-pane label="useRecord">
+        <useRecordDemo />
       </el-tab-pane>
 
-      <el-tab-pane label="UseSend">
-        <UseSend />
+      <el-tab-pane label="useSend">
+        <useSendDemo />
       </el-tab-pane>
 
       <el-tab-pane label="useXStream-SSE">
-        <useXStreamSSE />
+        <useXStreamSSEDemo />
       </el-tab-pane>
 
       <el-tab-pane label="useXStream-SIP">
-        <useXStreamSIP />
+        <useXStreamSIPDemo />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -80,9 +100,14 @@ import UseWelcome from './components/WelcomeDemo.vue'
 }
 
 .demo-tabs {
-  min-height: calc(100vh - 64px - 64px);
   background-color: beige;
 }
+
+:deep() {
+    .el-tabs__content {
+      height: calc(100vh - 64px - 130px);
+    }
+  }
 
 .self-description {
   font-size: 14px;

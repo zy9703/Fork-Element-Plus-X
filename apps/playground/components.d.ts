@@ -8,16 +8,22 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AttachmentsDemo: typeof import('./src/components/AttachmentsDemo.vue')['default']
     BubbleDemo: typeof import('./src/components/BubbleDemo.vue')['default']
     BubbleListDemo: typeof import('./src/components/BubbleListDemo.vue')['default']
+    ConversationsDemo: typeof import('./src/components/ConversationsDemo.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElImage: typeof import('element-plus/es')['ElImage']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
+    ElProgress: typeof import('element-plus/es')['ElProgress']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
+    FilesCardDemo: typeof import('./src/components/FilesCardDemo.vue')['default']
     MentionSenderDemo: typeof import('./src/components/MentionSenderDemo.vue')['default']
+    PromptsDemo: typeof import('./src/components/PromptsDemo.vue')['default']
     SenderDemo: typeof import('./src/components/SenderDemo.vue')['default']
     TestEditorInputDemo: typeof import('./src/components/Test-EditorInputDemo.vue')['default']
     TestEditorSenderDemo: typeof import('./src/components/Test-EditorSenderDemo.vue')['default']
