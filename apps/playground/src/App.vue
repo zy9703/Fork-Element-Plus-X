@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import A3ChatDemo from './components/A3ChatDemo.vue'
 import AttachmentsDemo from './components/AttachmentsDemo.vue'
 import BubbleDemo from './components/BubbleDemo.vue'
 import BubbleListDemo from './components/BubbleListDemo.vue'
@@ -29,6 +30,10 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
     </el-alert>
 
     <el-tabs type="border-card" class="demo-tabs">
+      <el-tab-pane label="A3Chat">
+        <A3ChatDemo />
+      </el-tab-pane>
+      
       <el-tab-pane label="Bubble">
         <BubbleDemo />
       </el-tab-pane>

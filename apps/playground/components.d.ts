@@ -8,10 +8,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    A3ChatDemo: typeof import('./src/components/A3ChatDemo.vue')['default']
     AttachmentsDemo: typeof import('./src/components/AttachmentsDemo.vue')['default']
     BubbleDemo: typeof import('./src/components/BubbleDemo.vue')['default']
     BubbleListDemo: typeof import('./src/components/BubbleListDemo.vue')['default']
     ConversationsDemo: typeof import('./src/components/ConversationsDemo.vue')['default']
+    copy: typeof import('./src/components/index copy.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -22,6 +24,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     FilesCardDemo: typeof import('./src/components/FilesCardDemo.vue')['default']
+    'Index copy': typeof import('./src/components/index copy.vue')['default']
     MentionSenderDemo: typeof import('./src/components/MentionSenderDemo.vue')['default']
     PromptsDemo: typeof import('./src/components/PromptsDemo.vue')['default']
     SenderDemo: typeof import('./src/components/SenderDemo.vue')['default']
