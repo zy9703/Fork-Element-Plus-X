@@ -141,6 +141,10 @@
     .vp-doc h3  {
       margin: 24px 0 12px;
     }
+    --vp-layout-max-width: 1920px;
+    .VPDoc.has-aside .content-container {
+      max-width: 1920px; 
+    }
   }
   
   
