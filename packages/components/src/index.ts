@@ -1,4 +1,5 @@
 import type { App, Plugin } from 'vue'
+import A3Chat from './components/A3Chat/index.vue'
 import AppConfig from './components/AppConfig/index.vue'
 import Attachments from './components/Attachments/index.vue'
 import Bubble from './components/Bubble/index.vue'
@@ -20,6 +21,7 @@ export * from './hooks'
 
 const ElementPlusX: Plugin = {
   install(app: App) {
+    app.component('A3Chat', A3Chat)
     app.component('AppConfig', AppConfig)
     app.component('Attachments', Attachments)
     app.component('Bubble', Bubble)

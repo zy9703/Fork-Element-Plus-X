@@ -1,4 +1,5 @@
 // Auto-Element-Plus-X by auto-export-all-components script
+export { default as A3Chat } from './components/A3Chat/index.vue'
 export { default as AppConfig } from './components/AppConfig/index.vue'
 export { default as Attachments } from './components/Attachments/index.vue'
 export { default as Bubble } from './components/Bubble/index.vue'
