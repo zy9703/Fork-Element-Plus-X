@@ -165,22 +165,22 @@ const emit = defineEmits<A3ChatEmits>()
         :btn-icon-size="props.bubbleListBtnIconSize"
         @complete="(instance, index) => $emit('bubbleListComplete', instance, index)"
       >
-        <template #avatar="{ item }">
+        <template #avatar="{ item }" v-if="$slots.bubbleListAvatar">
           <slot name="bubbleListAvatar" :item="item" />
         </template>
-        <template #header="{ item }">
+        <template #header="{ item }" v-if="$slots.bubbleListHeader">
           <slot name="bubbleListHeader" :item="item" />
         </template>
-        <template #content="{ item }">
+        <template #content="{ item }" v-if="$slots.bubbleListContent">
           <slot name="bubbleListContent" :item="item" />
         </template>
-        <template #footer="{ item }">
+        <template #footer="{ item }" v-if="$slots.bubbleListFooter">
           <slot name="bubbleListFooter" :item="item" />
         </template>
-        <template #loading="{ item }">
+        <template #loading="{ item }" v-if="$slots.bubbleListLoading">
           <slot name="bubbleListLoading" :item="item" />
         </template>
-        <template #backToBottom>
+        <template #backToBottom v-if="$slots.bubbleListBackToBottom">
           <slot name="bubbleListBackToBottom" />
         </template>
       </BubbleList>
