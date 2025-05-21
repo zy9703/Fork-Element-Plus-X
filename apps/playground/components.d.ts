@@ -24,7 +24,6 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     FilesCardDemo: typeof import('./src/components/FilesCardDemo.vue')['default']
-    'Index copy': typeof import('./src/components/index copy.vue')['default']
     MentionSenderDemo: typeof import('./src/components/MentionSenderDemo.vue')['default']
     PromptsDemo: typeof import('./src/components/PromptsDemo.vue')['default']
     SenderDemo: typeof import('./src/components/SenderDemo.vue')['default']
