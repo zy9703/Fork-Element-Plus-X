@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
-import type { MentionOption } from '../MentionSender/types'
+import type { TriggerEvent } from '../Sender/types'
 import type { A3ChatEmits, A3ChatProps } from './types'
 import BubbleList from '../BubbleList/index.vue'
 import Conversations from '../Conversations/index.vue'
-import MentionSender from '../MentionSender/index.vue'
+import Sender from '../Sender/index.vue'
 
 const props = withDefaults(defineProps<A3ChatProps>(), {
   // Conversations组件相关
@@ -27,26 +27,27 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   bubbleListBtnColor: '#409EFF',
   bubbleListBtnIconSize: 20,
 
-  // MentionSender组件相关
-  senderPlaceholder: '输入 @ 和 # 触发指令弹框',
-  senderClearable: true,
-  senderTriggerStrings: () => ['@', '#'],
-  senderAutoSize: () => ({ minRows: 1, maxRows: 6 }),
-  senderReadOnly: false,
-  senderSubmitBtnDisabled: false,
-  senderLoading: false,
-  senderAllowSpeech: false,
-  senderSubmitType: 'enter',
-  senderHeaderAnimationTimer: 300,
-  senderInputWidth: '100%',
-  senderVariant: 'default',
-  senderShowUpdown: true,
-  senderInputStyle: () => ({}),
-  senderTriggerPopoverVisible: false,
-  senderTriggerPopoverWidth: 'fit-content',
-  senderTriggerPopoverLeft: '0px',
-  senderTriggerPopoverOffset: 8,
-  senderTriggerPopoverPlacement: 'top',
+  // Sender组件相关
+  senderPlaceholder: '请输入内容', // 输入框占位文本
+  senderAutoSize: () => ({ minRows: 1, maxRows: 6 }), // 输入框自适应高度配置
+  senderSubmitType: 'enter', // 提交方式：enter 或 shiftEnter
+  senderHeaderAnimationTimer: 300, // 头部动画持续时间（毫秒）
+  senderInputWidth: '100%', // 输入框宽度
+  senderVariant: 'default', // 变体类型：default 或 updown
+  senderShowUpdown: true, // 是否显示上下布局（仅在 variant 为 updown 时有效）
+  senderSubmitBtnDisabled: undefined, // 提交按钮禁用状态
+  senderInputStyle: () => ({}), // 输入框样式
+  senderTriggerStrings: () => [], // 触发字符数组
+  senderTriggerPopoverVisible: false, // 触发弹出框是否可见
+  senderTriggerPopoverWidth: 'fit-content', // 触发弹出框宽度
+  senderTriggerPopoverLeft: '0px', // 触发弹出框左侧偏移
+  senderTriggerPopoverOffset: 8, // 触发弹出框偏移距离
+  senderTriggerPopoverPlacement: 'top-start', // 触发弹出框位置
+  senderReadOnly: false, // 是否只读
+  senderDisabled: false, // 是否禁用
+  senderLoading: false, // 是否加载中
+  senderClearable: true, // 是否显示清空按钮
+  senderAllowSpeech: false, // 是否启用语音输入
 })
 const emit = defineEmits<A3ChatEmits>()
 </script>
@@ -81,36 +82,51 @@ const emit = defineEmits<A3ChatEmits>()
         :btn-color="props.bubbleListBtnColor"
         :btn-icon-size="props.bubbleListBtnIconSize"
       />
-      <MentionSender
+      <Sender
         :model-value="props.senderValue"
         :placeholder="props.senderPlaceholder"
-        :clearable="props.senderClearable"
-        :options="props.senderOptions"
-        :trigger-strings="props.senderTriggerStrings"
-        :disabled="props.senderDisabled"
         :auto-size="props.senderAutoSize"
         :read-only="props.senderReadOnly"
-        :submit-btn-disabled="props.senderSubmitBtnDisabled"
+        :disabled="props.senderDisabled"
         :loading="props.senderLoading"
+        :clearable="props.senderClearable"
         :allow-speech="props.senderAllowSpeech"
         :submit-type="props.senderSubmitType"
         :header-animation-timer="props.senderHeaderAnimationTimer"
         :input-width="props.senderInputWidth"
         :variant="props.senderVariant"
         :show-updown="props.senderShowUpdown"
+        :submit-btn-disabled="props.senderSubmitBtnDisabled"
         :input-style="props.senderInputStyle"
-        :trigger-popover-visible.sync="props.senderTriggerPopoverVisible"
+        :trigger-strings="props.senderTriggerStrings"
+        :trigger-popover-visible="props.senderTriggerPopoverVisible"
         :trigger-popover-width="props.senderTriggerPopoverWidth"
         :trigger-popover-left="props.senderTriggerPopoverLeft"
         :trigger-popover-offset="props.senderTriggerPopoverOffset"
         :trigger-popover-placement="props.senderTriggerPopoverPlacement"
         @update:model-value="(value: string) => emit('update:senderValue', value)"
-        @search="(value: string, prefix: string) => emit('senderSearch', value, prefix)"
-        @select="(option: MentionOption) => emit('senderSelect', option)"
+        @update:trigger-popover-visible="(value: boolean) => emit('update:senderTriggerPopoverVisible', value)"
         @submit="() => emit('senderSubmit')"
         @cancel="() => emit('senderCancel')"
         @recording-change="() => emit('senderRecordingChange')"
-      />
+        @trigger="(event: TriggerEvent) => emit('senderTrigger', event)"
+      >
+        <template #header v-if="$slots.senderHeader">
+          <slot name="senderHeader" />
+        </template>
+        <template #footer v-if="$slots.senderFooter">
+          <slot name="senderFooter" />
+        </template>
+        <template #prefix v-if="$slots.senderPrefix">
+          <slot name="senderPrefix" />
+        </template>
+        <template #action-list v-if="$slots.senderActionList">
+          <slot name="senderActionList" />
+        </template>
+        <template #trigger-popover="scope" v-if="$slots.senderTriggerPopover">
+          <slot name="senderTriggerPopover" v-bind="scope" />
+        </template>
+      </Sender>
     </div>
   </div>
 </template>
