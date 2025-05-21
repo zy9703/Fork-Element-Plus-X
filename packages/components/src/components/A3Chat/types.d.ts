@@ -1,11 +1,7 @@
-import type { BubbleListItemProps, BubbleListProps } from '../BubbleList/types'
+import type { BubbleListItemProps } from '../BubbleList/types'
 import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
+import type { TypewriterInstance } from '../Typewriter/types'
 
-
-export type listType = BubbleListItemProps & {
-  key: number
-  role: 'user' | 'ai'
-}
 
 export interface A3ChatProps {
   // Conversations组件相关
@@ -20,19 +16,19 @@ export interface A3ChatProps {
   conversationShowBuiltInMenu?: boolean
 
   // BubbleList组件相关
-  bubbleList: BubbleListProps<listType>['list']
-  bubbleListMaxHeight?: string
-  bubbleListTriggerIndices?: 'only-last' | 'all' | number[]
-  bubbleListAlwaysShowScrollbar?: boolean
-  bubbleListBackButtonThreshold?: number
-  bubbleListShowBackButton?: boolean
-  bubbleListBackButtonPosition?: {
+  bubbleList: BubbleListItemProps[] // 气泡列表数据
+  bubbleListMaxHeight?: string // 气泡列表最大高度
+  bubbleListTriggerIndices?: 'only-last' | 'all' | number[] // 触发打字机效果的索引：only-last 仅最后一个，all 全部，或指定索引数组
+  bubbleListAlwaysShowScrollbar?: boolean // 是否始终显示滚动条
+  bubbleListBackButtonThreshold?: number // 返回顶部按钮出现的滚动阈值
+  bubbleListShowBackButton?: boolean // 是否显示返回顶部按钮
+  bubbleListBackButtonPosition?: { // 返回顶部按钮位置
     bottom?: string
     left?: string
   }
-  bubbleListBtnLoading?: boolean
-  bubbleListBtnColor?: string
-  bubbleListBtnIconSize?: number
+  bubbleListBtnLoading?: boolean // 返回顶部按钮是否显示加载动画
+  bubbleListBtnColor?: string // 返回顶部按钮颜色
+  bubbleListBtnIconSize?: number // 返回顶部按钮图标大小
 
   // Sender组件相关
   senderValue: string // 输入框的值
@@ -62,6 +58,9 @@ export interface A3ChatEmits {
   // Conversations组件相关
   (e: 'conversationChange', item: ConversationItem): void
   (e: 'conversationMenuCommand', command: ConversationMenuCommand, item: ConversationItem): void
+
+  // BubbleList组件相关
+  (e: 'bubbleListComplete', instance: TypewriterInstance, index: number): void
 
   // Sender组件相关
   (e: 'update:senderValue', value: string): void

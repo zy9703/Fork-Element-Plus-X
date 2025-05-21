@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { BubbleListItemProps } from '../BubbleList/types'
 import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
 import type { TriggerEvent } from '../Sender/types'
 import type { A3ChatEmits, A3ChatProps } from './types'
@@ -17,15 +18,16 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   conversationShowBuiltInMenu: true,
 
   // BubbleList组件相关
-  bubbleListMaxHeight: 'auto',
-  bubbleListTriggerIndices: 'only-last',
-  bubbleListAlwaysShowScrollbar: false,
-  bubbleListBackButtonThreshold: 200,
-  bubbleListShowBackButton: true,
-  bubbleListBackButtonPosition: () => ({ bottom: '24px', left: '24px' }),
-  bubbleListBtnLoading: false,
-  bubbleListBtnColor: '#409EFF',
-  bubbleListBtnIconSize: 20,
+  bubbleList: () => [] as BubbleListItemProps[], // 气泡列表数据
+  bubbleListMaxHeight: 'auto', // 气泡列表最大高度
+  bubbleListTriggerIndices: 'only-last', // 触发打字机效果的索引：only-last 仅最后一个，all 全部，或指定索引数组
+  bubbleListAlwaysShowScrollbar: false, // 是否始终显示滚动条
+  bubbleListBackButtonThreshold: 80, // 返回顶部按钮出现的滚动阈值
+  bubbleListShowBackButton: true, // 是否显示返回顶部按钮
+  bubbleListBackButtonPosition: () => ({ bottom: '20px', left: 'calc(50% - 19px)' }), // 返回顶部按钮位置
+  bubbleListBtnLoading: true, // 返回顶部按钮是否显示加载动画
+  bubbleListBtnColor: '#409EFF', // 返回顶部按钮颜色
+  bubbleListBtnIconSize: 24, // 返回顶部按钮图标大小
 
   // Sender组件相关
   senderPlaceholder: '请输入内容', // 输入框占位文本
@@ -81,7 +83,27 @@ const emit = defineEmits<A3ChatEmits>()
         :btn-loading="props.bubbleListBtnLoading"
         :btn-color="props.bubbleListBtnColor"
         :btn-icon-size="props.bubbleListBtnIconSize"
-      />
+        @complete="(instance, index) => $emit('bubbleListComplete', instance, index)"
+      >
+        <template #avatar="{ item }">
+          <slot name="bubbleListAvatar" :item="item" />
+        </template>
+        <template #header="{ item }">
+          <slot name="bubbleListHeader" :item="item" />
+        </template>
+        <template #content="{ item }">
+          <slot name="bubbleListContent" :item="item" />
+        </template>
+        <template #footer="{ item }">
+          <slot name="bubbleListFooter" :item="item" />
+        </template>
+        <template #loading="{ item }">
+          <slot name="bubbleListLoading" :item="item" />
+        </template>
+        <template #backToBottom>
+          <slot name="bubbleListBackToBottom" />
+        </template>
+      </BubbleList>
       <Sender
         :model-value="props.senderValue"
         :placeholder="props.senderPlaceholder"
