@@ -3,19 +3,58 @@ import type { BubbleListItemProps } from '../BubbleList/types'
 import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
 import type { TriggerEvent } from '../Sender/types'
 import type { A3ChatEmits, A3ChatProps } from './types'
+import { Delete, Edit } from '@element-plus/icons-vue'
+import { markRaw } from 'vue'
 import BubbleList from '../BubbleList/index.vue'
 import Conversations from '../Conversations/index.vue'
 import Sender from '../Sender/index.vue'
 
 const props = withDefaults(defineProps<A3ChatProps>(), {
   // Conversations组件相关
-  conversationLabelMaxWidth: 200,
-  conversationShowTooltip: true,
-  conversationRowKey: 'key',
-  conversationTooltipPlacement: 'right',
-  conversationTooltipOffset: 35,
-  conversationShowToTopBtn: true,
-  conversationShowBuiltInMenu: true,
+  conversationItems: () => [], // 会话列表数据
+  conversationItemsStyle: () => ({}), // 会话项样式
+  conversationItemsHoverStyle: () => ({}), // 会话项悬停样式
+  conversationItemsActiveStyle: () => ({}), // 会话项激活样式
+  conversationItemsMenuOpenedStyle: () => ({}), // 会话项菜单打开时样式
+  conversationStyle: () => ({}), // 会话容器样式
+  conversationLabelMaxWidth: undefined, // 标签最大宽度
+  conversationLabelHeight: 20, // 标签高度
+  conversationShowTooltip: false, // 是否显示提示
+  conversationTooltipPlacement: 'top', // 提示位置
+  conversationTooltipOffset: 12, // 提示偏移
+  conversationGroupable: false, // 是否可分组
+  conversationUngroupedTitle: '未分组', // 未分组标题
+  conversationMenu: () => [
+    {
+      label: '重命名',
+      key: 'rename',
+      icon: markRaw(Edit),
+      command: 'rename',
+    },
+    {
+      label: '删除',
+      key: 'delete',
+      icon: markRaw(Delete),
+      command: 'delete',
+      menuItemHoverStyle: {
+        color: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+      },
+    },
+  ], // 菜单配置
+  conversationShowBuiltInMenu: false, // 是否显示内置菜单
+  conversationMenuPlacement: 'bottom-start', // 菜单位置
+  conversationMenuOffset: 50, // 菜单偏移
+  conversationMenuShowArrow: false, // 是否显示菜单箭头
+  conversationMenuMaxHeight: undefined, // 菜单最大高度
+  conversationMenuStyle: () => ({}), // 菜单样式
+  conversationMenuClassName: '', // 菜单类名
+  conversationMenuTeleported: true, // 菜单是否传送
+  conversationLoadMore: undefined, // 加载更多方法
+  conversationLoadMoreLoading: false, // 加载更多加载状态
+  conversationShowToTopBtn: false, // 是否显示回到顶部按钮
+  conversationRowKey: 'id', // 行键名
+  conversationLabelKey: 'label', // 标签键名
 
   // BubbleList组件相关
   bubbleList: () => [] as BubbleListItemProps[], // 气泡列表数据
@@ -60,16 +99,57 @@ const emit = defineEmits<A3ChatEmits>()
       <Conversations
         :active="props.conversationActive"
         :items="props.conversationItems"
+        :items-style="props.conversationItemsStyle"
+        :items-hover-style="props.conversationItemsHoverStyle"
+        :items-active-style="props.conversationItemsActiveStyle"
+        :items-menu-opened-style="props.conversationItemsMenuOpenedStyle"
+        :style="props.conversationStyle"
         :label-max-width="props.conversationLabelMaxWidth"
+        :label-height="props.conversationLabelHeight"
         :show-tooltip="props.conversationShowTooltip"
-        :row-key="props.conversationRowKey"
         :tooltip-placement="props.conversationTooltipPlacement"
         :tooltip-offset="props.conversationTooltipOffset"
-        :show-to-top-btn="props.conversationShowToTopBtn"
+        :groupable="props.conversationGroupable"
+        :ungrouped-title="props.conversationUngroupedTitle"
+        :menu="props.conversationMenu"
         :show-built-in-menu="props.conversationShowBuiltInMenu"
+        :menu-placement="props.conversationMenuPlacement"
+        :menu-offset="props.conversationMenuOffset"
+        :menu-show-arrow="props.conversationMenuShowArrow"
+        :menu-max-height="props.conversationMenuMaxHeight"
+        :menu-style="props.conversationMenuStyle"
+        :menu-class-name="props.conversationMenuClassName"
+        :menu-teleported="props.conversationMenuTeleported"
+        :load-more="props.conversationLoadMore"
+        :load-more-loading="props.conversationLoadMoreLoading"
+        :show-to-top-btn="props.conversationShowToTopBtn"
+        :row-key="props.conversationRowKey"
+        :label-key="props.conversationLabelKey"
         @change="(item: ConversationItem) => emit('conversationChange', item)"
         @menu-command="(command: ConversationMenuCommand, item: ConversationItem) => emit('conversationMenuCommand', command, item)"
-      />
+      >
+        <template #header v-if="$slots.conversationHeader">
+          <slot name="conversationHeader" />
+        </template>
+        <template #footer v-if="$slots.conversationFooter">
+          <slot name="conversationFooter" />
+        </template>
+        <template #label="scope" v-if="$slots.conversationLabel">
+          <slot name="conversationLabel" v-bind="scope" />
+        </template>
+        <template #menu="scope" v-if="$slots.conversationMenu">
+          <slot name="conversationMenu" v-bind="scope" />
+        </template>
+        <template #more-filled="scope" v-if="$slots.conversationMoreFilled">
+          <slot name="conversationMoreFilled" v-bind="scope" />
+        </template>
+        <template #groupTitle="scope" v-if="$slots.conversationGroupTitle">
+          <slot name="conversationGroupTitle" v-bind="scope" />
+        </template>
+        <template #load-more v-if="$slots.conversationLoadMore">
+          <slot name="conversationLoadMore" />
+        </template>
+      </Conversations>
     </div>
     <div class="right">
       <BubbleList 

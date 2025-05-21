@@ -1,19 +1,38 @@
 import type { BubbleListItemProps } from '../BubbleList/types'
-import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
+import type { ConversationItem, ConversationMenu, ConversationMenuCommand } from '../Conversations/types'
 import type { TypewriterInstance } from '../Typewriter/types'
 
 
 export interface A3ChatProps {
   // Conversations组件相关
-  conversationActive?: string
-  conversationItems: ConversationItem[]
-  conversationLabelMaxWidth?: number
-  conversationShowTooltip?: boolean
-  conversationRowKey?: string
-  conversationTooltipPlacement?: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end'
-  conversationTooltipOffset?: number
-  conversationShowToTopBtn?: boolean
-  conversationShowBuiltInMenu?: boolean
+  conversationActive?: string // 当前激活的会话项
+  conversationItems: ConversationItem[] // 会话列表数据
+  conversationItemsStyle?: Record<string, any> // 会话项样式
+  conversationItemsHoverStyle?: Record<string, any> // 会话项悬停样式
+  conversationItemsActiveStyle?: Record<string, any> // 会话项激活样式
+  conversationItemsMenuOpenedStyle?: Record<string, any> // 会话项菜单打开时样式
+  conversationStyle?: Record<string, any> // 会话容器样式
+  conversationLabelMaxWidth?: number // 标签最大宽度
+  conversationLabelHeight?: number // 标签高度
+  conversationShowTooltip?: boolean // 是否显示提示
+  conversationTooltipPlacement?: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end' | 'left' | 'left-start' | 'left-end' | 'right' | 'right-start' | 'right-end' // 提示位置
+  conversationTooltipOffset?: number // 提示偏移
+  conversationGroupable?: boolean | { sort?: (a: string, b: string) => number } // 是否可分组
+  conversationUngroupedTitle?: string // 未分组标题
+  conversationMenu?: ConversationMenu[] // 菜单配置
+  conversationShowBuiltInMenu?: boolean // 是否显示内置菜单
+  conversationMenuPlacement?: 'top' | 'bottom' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' // 菜单位置
+  conversationMenuOffset?: number // 菜单偏移
+  conversationMenuShowArrow?: boolean // 是否显示菜单箭头
+  conversationMenuMaxHeight?: number // 菜单最大高度
+  conversationMenuStyle?: Record<string, any> // 菜单样式
+  conversationMenuClassName?: string // 菜单类名
+  conversationMenuTeleported?: boolean // 菜单是否传送
+  conversationLoadMore?: () => void // 加载更多方法
+  conversationLoadMoreLoading?: boolean // 加载更多加载状态
+  conversationShowToTopBtn?: boolean // 是否显示回到顶部按钮
+  conversationRowKey?: string // 行键名
+  conversationLabelKey?: string // 标签键名
 
   // BubbleList组件相关
   bubbleList: BubbleListItemProps[] // 气泡列表数据
