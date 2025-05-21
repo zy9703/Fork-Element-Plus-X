@@ -33,7 +33,7 @@ import WelcomeDemo from './components/WelcomeDemo.vue'
       <el-tab-pane label="A3Chat">
         <A3ChatDemo />
       </el-tab-pane>
-      
+
       <el-tab-pane label="Bubble">
         <BubbleDemo />
       </el-tab-pane>
