@@ -79,7 +79,6 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   senderSubmitBtnDisabled: undefined, // 提交按钮禁用状态
   senderInputStyle: () => ({}), // 输入框样式
   senderTriggerStrings: () => [], // 触发字符数组
-  senderTriggerPopoverVisible: false, // 触发弹出框是否可见
   senderTriggerPopoverWidth: 'fit-content', // 触发弹出框宽度
   senderTriggerPopoverLeft: '0px', // 触发弹出框左侧偏移
   senderTriggerPopoverOffset: 8, // 触发弹出框偏移距离
@@ -91,13 +90,19 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   senderAllowSpeech: false, // 是否启用语音输入
 })
 const emit = defineEmits<A3ChatEmits>()
+// 会话列表激活索引
+const conversationActive = defineModel('conversationActive', { type: String, default: '', required: false })
+// 输入框值
+const senderValue = defineModel('senderValue', { type: String, default: '', required: false })
+// 触发弹出框是否可见
+const senderTriggerPopoverVisible = defineModel('senderTriggerPopoverVisible', { type: Boolean, default: false, required: false })
 </script>
 
 <template>
   <div class="a3-chat">
     <div class="left">
       <Conversations
-        :active="props.conversationActive"
+        v-model:active="conversationActive"
         :items="props.conversationItems"
         :items-style="props.conversationItemsStyle"
         :items-hover-style="props.conversationItemsHoverStyle"
@@ -128,32 +133,32 @@ const emit = defineEmits<A3ChatEmits>()
         @change="(item: ConversationItem) => emit('conversationChange', item)"
         @menu-command="(command: ConversationMenuCommand, item: ConversationItem) => emit('conversationMenuCommand', command, item)"
       >
-        <template #header v-if="$slots.conversationHeader">
+        <template v-if="$slots.conversationHeader" #header>
           <slot name="conversationHeader" />
         </template>
-        <template #footer v-if="$slots.conversationFooter">
+        <template v-if="$slots.conversationFooter" #footer>
           <slot name="conversationFooter" />
         </template>
-        <template #label="scope" v-if="$slots.conversationLabel">
+        <template v-if="$slots.conversationLabel" #label="scope">
           <slot name="conversationLabel" v-bind="scope" />
         </template>
-        <template #menu="scope" v-if="$slots.conversationMenu">
+        <template v-if="$slots.conversationMenu" #menu="scope">
           <slot name="conversationMenu" v-bind="scope" />
         </template>
-        <template #more-filled="scope" v-if="$slots.conversationMoreFilled">
+        <template v-if="$slots.conversationMoreFilled" #more-filled="scope">
           <slot name="conversationMoreFilled" v-bind="scope" />
         </template>
-        <template #groupTitle="scope" v-if="$slots.conversationGroupTitle">
+        <template v-if="$slots.conversationGroupTitle" #groupTitle="scope">
           <slot name="conversationGroupTitle" v-bind="scope" />
         </template>
-        <template #load-more v-if="$slots.conversationLoadMore">
+        <template v-if="$slots.conversationLoadMore" #load-more>
           <slot name="conversationLoadMore" />
         </template>
       </Conversations>
     </div>
     <div class="right">
-      <BubbleList 
-        :list="props.bubbleList" 
+      <BubbleList
+        :list="props.bubbleList"
         :max-height="props.bubbleListMaxHeight"
         :trigger-indices="props.bubbleListTriggerIndices"
         :always-show-scrollbar="props.bubbleListAlwaysShowScrollbar"
@@ -165,27 +170,28 @@ const emit = defineEmits<A3ChatEmits>()
         :btn-icon-size="props.bubbleListBtnIconSize"
         @complete="(instance, index) => $emit('bubbleListComplete', instance, index)"
       >
-        <template #avatar="{ item }" v-if="$slots.bubbleListAvatar">
+        <template v-if="$slots.bubbleListAvatar" #avatar="{ item }">
           <slot name="bubbleListAvatar" :item="item" />
         </template>
-        <template #header="{ item }" v-if="$slots.bubbleListHeader">
+        <template v-if="$slots.bubbleListHeader" #header="{ item }">
           <slot name="bubbleListHeader" :item="item" />
         </template>
-        <template #content="{ item }" v-if="$slots.bubbleListContent">
+        <template v-if="$slots.bubbleListContent" #content="{ item }">
           <slot name="bubbleListContent" :item="item" />
         </template>
-        <template #footer="{ item }" v-if="$slots.bubbleListFooter">
+        <template v-if="$slots.bubbleListFooter" #footer="{ item }">
           <slot name="bubbleListFooter" :item="item" />
         </template>
-        <template #loading="{ item }" v-if="$slots.bubbleListLoading">
+        <template v-if="$slots.bubbleListLoading" #loading="{ item }">
           <slot name="bubbleListLoading" :item="item" />
         </template>
-        <template #backToBottom v-if="$slots.bubbleListBackToBottom">
+        <template v-if="$slots.bubbleListBackToBottom" #backToBottom>
           <slot name="bubbleListBackToBottom" />
         </template>
       </BubbleList>
       <Sender
-        :model-value="props.senderValue"
+        v-model="senderValue"
+        v-model:trigger-popover-visible="senderTriggerPopoverVisible"
         :placeholder="props.senderPlaceholder"
         :auto-size="props.senderAutoSize"
         :read-only="props.senderReadOnly"
@@ -201,7 +207,6 @@ const emit = defineEmits<A3ChatEmits>()
         :submit-btn-disabled="props.senderSubmitBtnDisabled"
         :input-style="props.senderInputStyle"
         :trigger-strings="props.senderTriggerStrings"
-        :trigger-popover-visible="props.senderTriggerPopoverVisible"
         :trigger-popover-width="props.senderTriggerPopoverWidth"
         :trigger-popover-left="props.senderTriggerPopoverLeft"
         :trigger-popover-offset="props.senderTriggerPopoverOffset"
@@ -213,19 +218,19 @@ const emit = defineEmits<A3ChatEmits>()
         @recording-change="() => emit('senderRecordingChange')"
         @trigger="(event: TriggerEvent) => emit('senderTrigger', event)"
       >
-        <template #header v-if="$slots.senderHeader">
+        <template v-if="$slots.senderHeader" #header>
           <slot name="senderHeader" />
         </template>
-        <template #footer v-if="$slots.senderFooter">
+        <template v-if="$slots.senderFooter" #footer>
           <slot name="senderFooter" />
         </template>
-        <template #prefix v-if="$slots.senderPrefix">
+        <template v-if="$slots.senderPrefix" #prefix>
           <slot name="senderPrefix" />
         </template>
-        <template #action-list v-if="$slots.senderActionList">
+        <template v-if="$slots.senderActionList" #action-list>
           <slot name="senderActionList" />
         </template>
-        <template #trigger-popover="scope" v-if="$slots.senderTriggerPopover">
+        <template v-if="$slots.senderTriggerPopover" #trigger-popover="scope">
           <slot name="senderTriggerPopover" v-bind="scope" />
         </template>
       </Sender>
