@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { BubbleListItemProps } from '../BubbleList/types'
 import type { ConversationItem, ConversationMenuCommand } from '../Conversations/types'
 import type { TriggerEvent } from '../Sender/types'
-import type { A3ChatEmits, A3ChatProps } from './types'
+import type { A3ChatEmits, A3ChatProps, A3MessageItem } from './types'
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { markRaw } from 'vue'
 import BubbleList from '../BubbleList/index.vue'
@@ -57,7 +56,7 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   conversationLabelKey: 'label', // 标签键名
 
   // BubbleList组件相关
-  bubbleList: () => [] as BubbleListItemProps[], // 气泡列表数据
+  bubbleList: () => [] as A3MessageItem[], // 气泡列表数据
   bubbleListMaxHeight: 'auto', // 气泡列表最大高度
   bubbleListTriggerIndices: 'only-last', // 触发打字机效果的索引：only-last 仅最后一个，all 全部，或指定索引数组
   bubbleListAlwaysShowScrollbar: false, // 是否始终显示滚动条
@@ -67,6 +66,9 @@ const props = withDefaults(defineProps<A3ChatProps>(), {
   bubbleListBtnLoading: true, // 返回顶部按钮是否显示加载动画
   bubbleListBtnColor: '#409EFF', // 返回顶部按钮颜色
   bubbleListBtnIconSize: 24, // 返回顶部按钮图标大小
+  
+  // Thinking组件相关
+  thinkingAutoCollapse: true, // 是否自动折叠思考内容
 
   // Sender组件相关
   senderPlaceholder: '请输入内容', // 输入框占位文本
@@ -168,13 +170,23 @@ const senderTriggerPopoverVisible = defineModel('senderTriggerPopoverVisible', {
         :btn-loading="props.bubbleListBtnLoading"
         :btn-color="props.bubbleListBtnColor"
         :btn-icon-size="props.bubbleListBtnIconSize"
-        @complete="(instance, index) => $emit('bubbleListComplete', instance, index)"
+        @complete="(instance, index) => emit('bubbleListComplete', instance, index)"
       >
         <template v-if="$slots.bubbleListAvatar" #avatar="{ item }">
           <slot name="bubbleListAvatar" :item="item" />
         </template>
-        <template v-if="$slots.bubbleListHeader" #header="{ item }">
-          <slot name="bubbleListHeader" :item="item" />
+        <template #header="{ item }">
+          <template v-if="$slots.bubbleListHeader">
+            <slot name="bubbleListHeader" :item="item" />
+          </template>
+          <template v-else>
+            <Thinking 
+              v-if="item.reasoning_content" 
+              :content="item.reasoning_content" 
+              :status="item.thinkingStatus"
+              :autoCollapse="props.thinkingAutoCollapse" 
+              @change="({ value, status}:any)=> emit('thinkingChange', {value, status})" />
+          </template>
         </template>
         <template v-if="$slots.bubbleListContent" #content="{ item }">
           <slot name="bubbleListContent" :item="item" />

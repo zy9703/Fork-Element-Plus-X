@@ -1,7 +1,15 @@
 import type { BubbleListItemProps } from '../BubbleList/types'
 import type { ConversationItem, ConversationMenu, ConversationMenuCommand } from '../Conversations/types'
+import type { ThinkingStatus } from '../Thinking/types'
 import type { TypewriterInstance } from '../Typewriter/types'
 
+export type A3MessageItem = BubbleListItemProps & {
+  key: number
+  role: 'ai' | 'user' | 'system'
+  avatar: string
+  thinkingStatus?: ThinkingStatus
+  expanded?: boolean
+}
 
 export interface A3ChatProps {
   // Conversations组件相关
@@ -35,7 +43,7 @@ export interface A3ChatProps {
   conversationLabelKey?: string // 标签键名
 
   // BubbleList组件相关
-  bubbleList: BubbleListItemProps[] // 气泡列表数据
+  bubbleList: MessageItem[] // 气泡列表数据
   bubbleListMaxHeight?: string // 气泡列表最大高度
   bubbleListTriggerIndices?: 'only-last' | 'all' | number[] // 触发打字机效果的索引：only-last 仅最后一个，all 全部，或指定索引数组
   bubbleListAlwaysShowScrollbar?: boolean // 是否始终显示滚动条
@@ -48,6 +56,9 @@ export interface A3ChatProps {
   bubbleListBtnLoading?: boolean // 返回顶部按钮是否显示加载动画
   bubbleListBtnColor?: string // 返回顶部按钮颜色
   bubbleListBtnIconSize?: number // 返回顶部按钮图标大小
+
+  // Thinking组件相关
+  thinkingAutoCollapse?: boolean, // 是否自动折叠思考内容
 
   // Sender组件相关
   senderValue: string // 输入框的值
@@ -80,6 +91,9 @@ export interface A3ChatEmits {
 
   // BubbleList组件相关
   (e: 'bubbleListComplete', instance: TypewriterInstance, index: number): void
+
+  // Thinking组件相关
+  (e: 'thinkingChange', value: { value: boolean, status: ThinkingStatus }): void
 
   // Sender组件相关
   (e: 'update:senderValue', value: string): void
