@@ -1,0 +1,119 @@
+/**
+ * @description A Vue 2 Options API mixin for manipulating contenteditable elements, providing methods for selection, cursor positioning, and focus management.
+ * @description 一个用于操作 contenteditable 元素的 Vue 2 Options API mixin，提供选择、光标定位和焦点管理的方法。
+ *
+ * @mixin useContentEditableMixin
+ * Provides utilities for working with contenteditable elements in Vue 2.
+ * 提供用于处理 contenteditable 元素的 Vue 2 实用工具。
+ *
+ * @property {Object} methods - Methods for manipulating the contenteditable element.
+ * @property {Object} methods - 操作 contenteditable 元素的方法。
+ *
+ * @method selectAll(el) - Selects all content within the specified element.
+ * @method selectAll(el) - 选择指定元素内的所有内容。
+ *
+ * @method deselectAll() - Cancels any current selection.
+ * @method deselectAll() - 取消当前选择。
+ *
+ * @method moveToStart(el) - Moves the cursor to the start of the specified element.
+ * @method moveToStart(el) - 将光标移动到指定元素的开头。
+ *
+ * @method moveToEnd(el) - Moves the cursor to the end of the specified element.
+ * @method moveToEnd(el) - 将光标移动到指定元素的末尾。
+ *
+ * @method focusElement(el) - Focuses the specified element.
+ * @method focusElement(el) - 聚焦指定元素。
+ *
+ * @method blurElement(el) - Removes focus from the specified element.
+ * @method blurElement(el) - 从指定元素移除焦点。
+ *
+ * @example
+ * import useContentEditableMixin from './useContentEditableMixin';
+ *
+ * export default {
+ *   mixins: [useContentEditableMixin],
+ *   mounted() {
+ *     const editor = this.$refs.editor;
+ *     this.focusElement(editor);
+ *   }
+ * }
+ */
+export default {
+  methods: {
+    /**
+     * 选择元素中的所有内容
+     * @param {HTMLElement} el - 要选择内容的元素
+     */
+    selectAll(el) {
+      if (!el) return
+
+      const range = document.createRange()
+      range.selectNodeContents(el)
+
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    },
+
+    /**
+     * 取消选择
+     */
+    deselectAll() {
+      window.getSelection().removeAllRanges()
+    },
+
+    /**
+     * 将光标移动到元素开头
+     * @param {HTMLElement} el - 目标元素
+     */
+    moveToStart(el) {
+      if (!el) return
+
+      el.focus()
+      const range = document.createRange()
+      range.setStart(el, 0)
+      range.collapse(true)
+
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    },
+
+    /**
+     * 将光标移动到元素末尾
+     * @param {HTMLElement} el - 目标元素
+     */
+    moveToEnd(el) {
+      if (!el) return
+
+      el.focus()
+      const range = document.createRange()
+      range.selectNodeContents(el)
+      range.collapse(false)
+
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    },
+
+    /**
+     * 聚焦元素
+     * @param {HTMLElement} el - 要聚焦的元素
+     */
+    focusElement(el) {
+      el?.focus()
+    },
+
+    /**
+     * 取消元素的焦点
+     * @param {HTMLElement} el - 要取消焦点的元素
+     */
+    blurElement(el) {
+      if (el) {
+        el.blur()
+        const sel = window.getSelection()
+        sel?.removeAllRanges()
+      }
+    },
+  },
+}
