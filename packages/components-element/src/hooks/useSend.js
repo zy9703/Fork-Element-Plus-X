@@ -48,7 +48,7 @@ export class XRequest {
         if (streamDone) {
           this.#onFinish && this.#onFinish(this.#messages)
           return
-        };
+        }
         if (value) {
           const chunk = decoder.decode(value, { stream: true })
           const chunkUse = chunk.startsWith('data: ') ? chunk.slice(6) : chunk

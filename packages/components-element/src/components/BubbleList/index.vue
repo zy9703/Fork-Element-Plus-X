@@ -90,7 +90,7 @@ export default {
       default: 24
     }
   },
-  mixins: [useScrollDetector(this.scrollContainer)],
+  mixins: [useScrollDetector],
   data() {
     return {
       // 滚动容器的引用，在 Vue 2 中通过 ref 获取 DOM 元素

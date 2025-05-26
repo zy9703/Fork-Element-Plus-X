@@ -33,6 +33,9 @@
     "env": {
       "node": true
     },
+    "globals": {
+      "webkitSpeechRecognition": "writable"
+    },
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"

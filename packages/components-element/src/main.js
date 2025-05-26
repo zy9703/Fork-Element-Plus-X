@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import '@/assets/base.css'
 
 // 导入Markdown和代码高亮相关样式
 import 'github-markdown-css'
