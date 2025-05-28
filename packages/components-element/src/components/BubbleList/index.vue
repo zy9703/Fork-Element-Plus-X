@@ -2,7 +2,7 @@
 import A3Bubble from '../Bubble/index.vue';
 import loadingBg from './loading.vue';
 import useScrollDetector from '../../utils/useScrollDetector';
-
+import { ref } from "vue";
 export default {
   name: 'A3BubbleList',
   components: {
@@ -90,33 +90,27 @@ export default {
       default: 24
     }
   },
-  mixins: [useScrollDetector],
+  setup() {
+    const scrollContainer = ref(null)
+    // console.log('scrollContainer: ', scrollContainer);
+    const { hasVertical } = useScrollDetector(scrollContainer) 
+    // console.log('hasVertical: ', hasVertical.value);
+    return {
+      hasVertical // 是否有垂直滚动条的状态，需要根据实际滚动情况判断
+    }
+  },
   data() {
     return {
-      // 滚动容器的引用，在 Vue 2 中通过 ref 获取 DOM 元素
-      scrollContainer: null,
-      // 是否有垂直滚动条的状态，需要根据实际滚动情况判断
-      hasVertical: false, // 需要实现 useScrollDetector 的 Vue 2 版本逻辑来更新此状态
-      // 是否停止自动滚动到底部
-      stopAutoScrollToBottom: false,
-      // 上次滚动位置
-      lastScrollTop: 0,
-      // 累积向上滚动距离
-      accumulatedScrollUpDistance: 0,
-      // 阈值（像素），用于判断向上滚动距离
-      threshold: 20,
-      // ResizeObserver 实例，用于监听最后一个气泡元素的大小变化，需要 Vue 2 兼容实现或替代方案
-      resizeObserver: null,
-      // 控制返回底部按钮显示
-      showBackToBottom: false,
-      // 用户是否正在滚动
+      stopAutoScrollToBottom: false, // 是否停止自动滚动到底部
+      lastScrollTop: 0, // 上次滚动位置
+      accumulatedScrollUpDistance: 0, // 累积向上滚动距离
+      threshold: 20, // 阈值（像素），用于判断向上滚动距离
+      resizeObserver: null, // ResizeObserver 实例，用于监听最后一个气泡元素的大小变化，需要 Vue 2 兼容实现或替代方案
+      showBackToBottom: false, // 控制返回底部按钮显示
       isUserScrolling: false, // 用于判断是否是用户手动滚动
-      // 滚动定时器，用于判断用户滚动停止
-      scrollTimer: null,
-      // 是否滚动到底部
+      scrollTimer: null, // 滚动定时器，用于判断用户滚动停止
       isScrolledToBottom: true, // 用于判断是否在底部，结合 isUserScrolling 控制自动滚动
-      // 打字机实例引用集合
-      typingInstances: {}
+      typingInstances: {} // 打字机实例引用集合
     };
   },
   computed: {
@@ -149,42 +143,17 @@ export default {
   watch: {
     // 监听列表长度变化
     list: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         // 如果列表长度增加
-        if (newVal.length > (oldVal?.length || 0)) {
+        if (newVal.length && newVal.length > 0) {
           this.$nextTick(() => {
-            // 如果当前在底部或者不是用户手动滚动，则自动滚动到底部
-            if (this.isScrolledToBottom || !this.isUserScrolling) {
-              this.scrollToBottom();
-            }
+            // 每次添加新的气泡，等页面渲染后，在执行自动滚动
+            this.autoScroll()
           });
         }
       },
-      // 深度监听
-      deep: true
-    }
-  },
-  mounted() {
-    // 组件挂载后，获取滚动容器的引用
-    this.scrollContainer = this.$refs.scrollContainer; //TODO 兼容改动
-    // 初始滚动到底部
-    this.$nextTick(() => {
-      this.scrollToBottom();
-      // 初始化滚动检测（如果实现了 Vue 2 兼容版本）
-      // this.initScrollDetector();
-      // 初始化 ResizeObserver 监听（如果实现了 Vue 2 兼容版本）
-      // this.initResizeObserver();
-    });
-  },
-  beforeDestroy() {
-    // 组件销毁前，清除定时器和 ResizeObserver
-    if (this.scrollTimer) {
-      clearTimeout(this.scrollTimer);
-      this.scrollTimer = null;
-    }
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+      immediate: true,
+      deep: true // 深度监听
     }
   },
   methods: {
@@ -345,25 +314,7 @@ export default {
           this.stopAutoScrollToBottom = false;
         }
       }
-
-      // 更新是否滚动到底部的状态（用于控制自动滚动）
-      this.isScrolledToBottom = isCloseToBottom;
-
-      // 判断是否是用户滚动（用于控制列表长度变化时的自动滚动）
-      // 如果滚动距离变化较大，认为是用户滚动
-      if (Math.abs(scrollTop - this.lastScrollTop) > 5) { // 阈值可以调整
-        this.isUserScrolling = true;
-
-        // 设置定时器，一段时间后重置用户滚动状态
-        if (this.scrollTimer) {
-          clearTimeout(this.scrollTimer);
-        }
-
-        this.scrollTimer = setTimeout(() => {
-          this.isUserScrolling = false;
-        }, 200); // 延迟时间可以调整
-      }
-    }
+    },
     // 注意：Vue 2 Options API 中，通过 this.$refs 获取子组件实例，然后通过 $el 访问其根 DOM 元素
     // defineExpose 的功能在 Vue 2 中不需要，直接在 methods 中定义方法即可在父组件通过 ref 调用
   }

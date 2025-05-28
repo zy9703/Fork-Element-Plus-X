@@ -14,13 +14,13 @@
       <!--<el-tab-pane label="A3Chat">-->
       <!--  <A3ChatDemo />-->
       <!--</el-tab-pane>-->
-      <el-tab-pane label="A3Bubble">
+      <!-- <el-tab-pane label="A3Bubble">
         <BubbleDemo />
-      </el-tab-pane>
-      <!-- <el-tab-pane label="A3BubbleList">
+      </el-tab-pane> -->
+      <el-tab-pane label="A3BubbleList">
         <BubbleListDemo />
       </el-tab-pane>
-      <el-tab-pane label="A3Sender">
+      <!-- <el-tab-pane label="A3Sender">
         <SenderDemo />
       </el-tab-pane> -->
     </el-tabs>
@@ -29,16 +29,16 @@
 
 <script>
 // import A3ChatDemo from './components/A3Chat/demo.vue'
-import BubbleDemo from './components/Bubble/demo.vue'
-// import BubbleListDemo from './components/BubbleList/demo.vue'
+// import BubbleDemo from './components/Bubble/demo.vue'
+import BubbleListDemo from './components/BubbleList/demo.vue'
 // import SenderDemo from './components/Sender/demo.vue'
 
 export default {
   name: 'App',
   components: {
     // A3ChatDemo,
-    BubbleDemo,
-    // BubbleListDemo,
+    // BubbleDemo,
+    BubbleListDemo,
     // SenderDemo,
   }
 }

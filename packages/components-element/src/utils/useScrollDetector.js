@@ -5,7 +5,7 @@ export default (elementRef) => {
   const hasHorizontal = ref(false)
 
   const check = () => {
-    const el = elementRef
+    const el = elementRef.value
     if (!el)
       return
     hasVertical.value = el.scrollHeight > el.clientHeight
@@ -15,8 +15,8 @@ export default (elementRef) => {
   onMounted(() => {
     check()
     const observer = new ResizeObserver(check)
-    if (elementRef) {
-      observer.observe(elementRef);
+    if (elementRef.value) {
+      observer.observe(elementRef.value);
     }
     onBeforeUnmount(() => observer.disconnect())
   })
