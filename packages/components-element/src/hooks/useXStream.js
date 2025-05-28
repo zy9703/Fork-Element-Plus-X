@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 const DEFAULT_STREAM_SEPARATOR = '\n\n'
 const DEFAULT_PART_SEPARATOR = '\n'
 const DEFAULT_KV_SEPARATOR = ':'
