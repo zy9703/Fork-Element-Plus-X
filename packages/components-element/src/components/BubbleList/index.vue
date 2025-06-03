@@ -357,19 +357,19 @@ export default {
       :no-style="item.noStyle"
       @finish="(instance) => handleBubbleComplete(index, instance)"
     >
-      <template v-if="$slots.avatar" #avatar>
+      <template v-if="$scopedSlots.avatar" #avatar>
         <slot name="avatar" :item="item" />
       </template>
-      <template v-if="$slots.header" #header>
+      <template v-if="$scopedSlots.header" #header>
         <slot name="header" :item="item" />
       </template>
-      <template v-if="$slots.content" #content>
+      <template v-if="$scopedSlots.content" #content>
         <slot name="content" :item="item" />
       </template>
-      <template v-if="$slots.footer" #footer>
+      <template v-if="$scopedSlots.footer" #footer>
         <slot name="footer" :item="item" />
       </template>
-      <template v-if="$slots.loading" #loading>
+      <template v-if="$scopedSlots.loading" #loading>
         <slot name="loading" :item="item" />
       </template>
     </A3Bubble>
