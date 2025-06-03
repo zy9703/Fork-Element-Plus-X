@@ -23,11 +23,11 @@ export default {
       default: () => ({})
     },
     prefixIcon: {
-      type: [Object, null],
+      type: [String, null],
       default: null
     },
     suffixIcon: {
-      type: [Object, null],
+      type: [String, null],
       default: null
     },
     showTooltip: {
@@ -253,9 +253,7 @@ export default {
         <slot name="label">
           <!-- 前缀图标 -->
           <span v-if="prefixIconRender" class="conversation-prefix-icon">
-            <el-icon>
-              <component :is="prefixIconRender" />
-            </el-icon>
+            <i :class="prefixIconRender"/>
           </span>
 
           <!-- 标签和时间戳 -->
@@ -315,9 +313,7 @@ export default {
                   isDisabled: item.disabled,
                 }"
               >
-                <el-icon class="conversation-dropdown-more-icon">
-                  <MoreFilled />
-                </el-icon>
+                <i class="el-icon-more conversation-dropdown-more-icon"/>
               </slot>
             </template>
             <template #dropdown>

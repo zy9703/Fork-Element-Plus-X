@@ -9,6 +9,10 @@ export default {
     Item
   },
   props: {
+    active: {
+      type: String,
+      default: ''
+    },
     items: {
       type: Array,
       default: () => []
@@ -102,6 +106,10 @@ export default {
       type: String,
       default: ''
     },
+    menuMaxHeight: {
+      type: Number,
+      default: undefined
+    },
     menuTeleported: { // Vue 2 中 ElDropdown 没有 teleported 属性，默认就是 teleported
       type: Boolean,
       default: true
@@ -125,17 +133,10 @@ export default {
     rowKey: {
       type: String,
       default: 'id'
-    },
-    // Vue 3 的 defineModel 转换为 Vue 2 的 value prop 和 input 事件
-    value: { // 对应 defineModel 的 active
-      type: [String, Number, Boolean],
-      default: ''
     }
   },
   data() {
     return {
-      // 对应 Vue 3 的 ref
-      scrollbarRef: null,
       showScrollTop: false,
       groupRefs: {},
       // 使用 Set 存储吸顶组的 key
@@ -145,6 +146,14 @@ export default {
     };
   },
   computed: {
+    activeKey: {
+      get() {
+        return this.active;
+      },
+      set(value) {
+        this.$emit('input', value);
+      }
+    },
     // 将传入的样式与默认样式合并
     mergedStyle() {
       const defaultStyle = {
@@ -493,9 +502,7 @@ export default {
           <!-- 加载更多 -->
           <div v-if="loadMoreLoading" class="conversations-load-more">
             <slot name="load-more">
-              <el-icon class="conversations-load-more-is-loading">
-                <Loading />
-              </el-icon>
+              <i class="el-icon-loading conversations-load-more-is-loading" />
               <span>加载更多...</span>
             </slot>
           </div>

@@ -135,7 +135,6 @@ export default {
   },
   data() {
     return {
-      internalValue: this.value,
       isComposing: false,
       visiableHeader: false,
       speechLoading: false,
@@ -145,6 +144,17 @@ export default {
     }
   },
   computed: {
+    internalValue: {
+      get() {
+        return this.value
+      },
+      set(val) {
+        if (this.readOnly || this.disabled) { 
+          return
+        }
+        this.$emit('input', val)
+      }
+    },
     // 计算提交按钮禁用状态
     isSubmitDisabled() {
       // 用户显式设置了 submitBtnDisabled 时优先使用
@@ -164,15 +174,10 @@ export default {
     }
   },
   watch: {
-    value(val) {
-      this.internalValue = val
-    },
     internalValue(newVal, oldVal) {
-      this.$emit('input', newVal)
-      
       if (this.isComposing) return
-      
       // 触发逻辑：当输入值等于数组中的任意一个指令字符时触发
+      // 确保 oldVal 是字符串类型
       const triggerStrings = this.triggerStrings || [] // 如果为 undefined，就使用空数组
       const validOldVal = typeof oldVal === 'string' ? oldVal : ''
       const wasOldValTrigger = triggerStrings.includes(validOldVal)
@@ -238,7 +243,7 @@ export default {
       if (e.target !== this.$el.querySelector(`.el-textarea__inner`)) {
         e.preventDefault()
       }
-      this.inputRef.focus()
+      this.$refs.inputRef.focus()
     },
     /* 内容容器聚焦 结束 */
 
@@ -372,14 +377,14 @@ export default {
       if (this.readOnly) {
         return false
       }
-      this.inputRef.blur()
+      this.$refs.inputRef.blur()
     },
     focus(type = 'all') {
       if (this.readOnly) {
         return false
       }
       if (type === 'all') {
-        this.inputRef.select()
+        this.$refs.inputRef.select()
       }
       else if (type === 'start') {
         this.focusToStart()
@@ -390,9 +395,9 @@ export default {
     },
     // 聚焦到文本最前方
     focusToStart() {
-      if (this.inputRef) {
+      if (this.$refs.inputRef) {
         // 获取底层的 textarea DOM 元素
-        const textarea = this.inputRef.$el.querySelector('textarea')
+        const textarea = this.$refs.inputRef.$el.querySelector('textarea')
         if (textarea) {
           textarea.focus() // 聚焦到输入框
           textarea.setSelectionRange(0, 0) // 设置光标到最前方
@@ -401,9 +406,9 @@ export default {
     },
     // 聚焦到文本最后方
     focusToEnd() {
-      if (this.inputRef) {
+      if (this.$refs.inputRef) {
         // 获取底层的 textarea DOM 元素
-        const textarea = this.inputRef.$el.querySelector('textarea')
+        const textarea = this.$refs.inputRef.$el.querySelector('textarea')
         if (textarea) {
           textarea.focus() // 聚焦到输入框
           textarea.setSelectionRange(this.internalValue.length, this.internalValue.length) // 设置光标到最后方

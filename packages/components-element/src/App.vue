@@ -14,32 +14,45 @@
       <!--<el-tab-pane label="A3Chat">-->
       <!--  <A3ChatDemo />-->
       <!--</el-tab-pane>-->
-      <!-- <el-tab-pane label="A3Bubble">
-        <BubbleDemo />
-      </el-tab-pane> -->
       <el-tab-pane label="A3BubbleList">
         <BubbleListDemo />
       </el-tab-pane>
-      <!-- <el-tab-pane label="A3Sender">
+      <el-tab-pane label="A3Bubble">
+        <BubbleDemo />
+      </el-tab-pane>
+      <el-tab-pane label="A3BubbleList">
+        <BubbleListDemo />
+      </el-tab-pane>
+      <el-tab-pane label="A3Conversations">
+        <ConversationsDemo />
+      </el-tab-pane>
+      <el-tab-pane label="A3Sender">
         <SenderDemo />
-      </el-tab-pane> -->
+      </el-tab-pane>
+      <el-tab-pane label="A3Thinking">
+        <ThinkingDemo />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
 // import A3ChatDemo from './components/A3Chat/demo.vue'
-// import BubbleDemo from './components/Bubble/demo.vue'
+import BubbleDemo from './components/Bubble/demo.vue'
 import BubbleListDemo from './components/BubbleList/demo.vue'
-// import SenderDemo from './components/Sender/demo.vue'
+import ConversationsDemo from './components/Conversations/demo.vue'
+import SenderDemo from './components/Sender/demo.vue'
+import ThinkingDemo from './components/Thinking/demo.vue'
 
 export default {
   name: 'App',
   components: {
     // A3ChatDemo,
-    // BubbleDemo,
+    BubbleDemo,
     BubbleListDemo,
-    // SenderDemo,
+    ConversationsDemo,
+    SenderDemo,
+    ThinkingDemo
   }
 }
 </script>

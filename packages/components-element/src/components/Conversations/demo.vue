@@ -1,15 +1,10 @@
 <script>
-// 导入 Element UI 组件和 Message 提示
-// import { Button, InputNumber, Message } from 'element-ui';
 import Conversations from './index.vue'; // 假设 Conversations 组件已转写为 Vue 2
 
 export default {
   name: 'ConversationsDemo',
   components: {
     Conversations,
-    // 注册 Element UI 组件
-    // [Button.name]: Button,
-    // [InputNumber.name]: InputNumber,
   },
   data() {
     return {
@@ -157,6 +152,77 @@ export default {
           label: '菜单测试项目 14',
         },
       ],
+      // 绝对自定义
+      menuTestItems1: [
+        {
+          key: 'm1',
+          label: '菜单测试项目 1 - 长文本效果演示文本长度溢出效果测试'.repeat(2),
+          group: '工作',
+        },
+        {
+          key: 'm2',
+          label: '菜单测试项目 2',
+          disabled: true,
+          group: '工作',
+        },
+        {
+          key: 'm3',
+          label: '菜单测试项目 3',
+          group: '工作',
+        },
+        {
+          key: 'm4',
+          label: '菜单测试项目 4',
+          group: '学习',
+        },
+        {
+          key: 'm5',
+          label: '菜单测试项目 5',
+          group: '学习',
+        },
+        {
+          key: 'm6',
+          label: '菜单测试项目 6',
+          group: '学习',
+        },
+        {
+          key: 'm7',
+          label: '菜单测试项目 7',
+          group: '学习',
+        },
+        {
+          key: 'm8',
+          label: '菜单测试项目 8',
+          group: '个人',
+        },
+        {
+          key: 'm9',
+          label: '菜单测试项目 9',
+          group: '个人',
+        },
+        {
+          key: 'm10',
+          label: '菜单测试项目 10',
+          group: '个人',
+        },
+        {
+          key: 'm11',
+          label: '菜单测试项目 11',
+          group: '个人',
+        },
+        {
+          key: 'm12',
+          label: '菜单测试项目 12',
+        },
+        {
+          key: 'm13',
+          label: '菜单测试项目 13',
+        },
+        {
+          key: 'm14',
+          label: '菜单测试项目 14',
+        },
+      ],
       lazyItems: [
         {
           key: 'l1',
@@ -197,7 +263,8 @@ export default {
           key: 'l8',
           label: '初始项目2',
           prefixIcon: 'el-icon-chat-dot-round', // Element UI icon class
-        },\n        {
+        },
+        {
           key: 'l9',
           label: '初始项目3',
           prefixIcon: 'el-icon-chat-line-round', // Element UI icon class
@@ -279,12 +346,12 @@ export default {
 
         if (index !== -1) {
           this.menuTestItems.splice(index, 1)
-          Message.success('删除成功')
+          this.$message.success('删除成功')
         }
       }
       if (command === 'rename') {
         item.label = '已修改'
-        Message.success('重命名成功')
+        this.$message.success('重命名成功')
       }
     },
     loadMoreItems() {
@@ -292,7 +359,7 @@ export default {
         return
 
       this.isLoading = true
-      Message.info('加载更多数据...')
+      this.$message.info('加载更多数据...')
 
       // 模拟异步加载
       setTimeout(() => {
@@ -318,13 +385,13 @@ export default {
 
       switch (menuKey) {
         case 'edit':
-          Message.info(`编辑: ${item.label}`)
+          this.$message.info(`编辑: ${item.label}`)
           break
         case 'delete':
-          Message.warning(`删除: ${item.label}`)
+          this.$message.warning(`删除: ${item.label}`)
           break
         case 'share':
-          Message.success(`分享: ${item.label}`)
+          this.$message.success(`分享: ${item.label}`)
           break
       }
     }
