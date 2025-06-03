@@ -22,7 +22,7 @@ export default {
      */
     maxHeight: {
       type: String,
-      default: 'auto'
+      default: '500px'
     },
     /**
      * 触发打字机效果的索引
