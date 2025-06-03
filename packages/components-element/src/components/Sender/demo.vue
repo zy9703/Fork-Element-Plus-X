@@ -1,18 +1,13 @@
 <script>
-// 导入 Element UI 组件和 Message 提示
-import { Button, Message } from 'element-ui';
 import Sender from './index.vue'; // 假设 Sender 组件已转写为 Vue 2
 
 export default {
   name: 'SenderDemo',
   components: {
     Sender,
-    // 注册 Element UI 组件
-    [Button.name]: Button,
   },
   data() {
     return {
-      senderRef: null,
       value: '',
       loading: false,
       showHeaderFlog: false,
@@ -21,47 +16,47 @@ export default {
     }
   },
   mounted() {
-    if (this.senderRef) {
-      console.log('senderRef', this.senderRef)
-      this.senderRef.openHeader()
+    if (this.$refs.senderRef) {
+      console.log('senderRef', this.$refs.senderRef)
+      this.$refs.senderRef.openHeader()
     }
   },
   methods: {
     openCloseHeader() {
       if (!this.showHeaderFlog) {
-        this.senderRef.openHeader()
+        this.$refs.senderRef.openHeader()
       }
       else {
-        this.senderRef.closeHeader()
+        this.$refs.senderRef.closeHeader()
       }
       this.showHeaderFlog = !this.showHeaderFlog
     },
     closeHeader() {
       this.showHeaderFlog = false
-      this.senderRef.closeHeader()
+      this.$refs.senderRef.closeHeader()
     },
     submit() {
       console.log('submit 提交参数', this.value)
-      Message.warning('提交中,💌 注意组件内置提交按钮的变化 ~')
+      this.$message.warning('提交中,💌 注意组件内置提交按钮的变化 ~')
       this.loading = true
       this.time = setTimeout(() => {
         this.loading = false
-        Message.success('提交成功')
+        this.$message.success('提交成功')
       }, 3500)
     },
     // 取消提交
     cancel() {
-      Message.info('取消提交')
+      this.$message.info('取消提交')
       this.loading = false
       if (this.time)
         clearTimeout(this.time)
       this.time = null
     },
     blur() {
-      this.senderRef.blur()
+      this.$refs.senderRef.blur()
     },
     focus(type = 'all') {
-      this.senderRef.focus(type)
+      this.$refs.senderRef.focus(type)
     },
   },
 }
