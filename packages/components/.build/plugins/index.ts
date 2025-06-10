@@ -5,16 +5,17 @@ import autoImportPlugin from './autoImport'
 import dtsPlugin from './dts'
 // import prismjsPlugin from './prismjs'
 
+// 插件配置数组
 const plugins: PluginOption[] = [
   vue({
     script: {
-      propsDestructure: true,
+      propsDestructure: true, // 启用 props 解构
     },
   }),
-  // prismjsPlugin,
-  ...autoImportPlugin,
-  dtsPlugin,
-  libInjectCss(),
+  // prismjsPlugin, // Prism.js 代码高亮插件 (目前禁用)
+  ...autoImportPlugin, // 自动导入插件
+  dtsPlugin, // d.ts 文件生成插件
+  libInjectCss(), // 样式注入插件
 ]
 
 export default plugins
