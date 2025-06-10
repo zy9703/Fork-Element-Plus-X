@@ -2,16 +2,20 @@ import type { BuildEnvironmentOptions } from 'vite'
 import { extname, join, relative, resolve } from 'node:path'
 import fg from 'fast-glob'
 
+// 获取当前文件所在目录的根路径
 const root = resolve(__dirname, '../')
 
+// 查找所有组件入口文件
 const entries = fg.globSync('src/components/*/*.(tsx|ts|vue)', {
-  ignore: ['src/components/**/*.d.ts', 'src/components/**/*.types.ts'],
+  ignore: ['src/components/**/*.d.ts', 'src/components/**/*.types.ts'], // 忽略类型声明文件
 })
 
+// 查找所有 hooks 入口文件
 const hooksEntries = fg.globSync('src/hooks/*.(ts|tsx)', {
-  ignore: ['src/hooks/**/*.d.ts', 'src/hooks/**/*.types.ts'],
+  ignore: ['src/hooks/**/*.d.ts', 'src/hooks/**/*.types.ts'], // 忽略类型声明文件
 })
 
+// 将组件入口文件路径转换为对象格式
 const entriesObj = Object.fromEntries(entries.map((f) => {
   return [
     relative('src/components', f.slice(0, f.length - extname(f).length)),
@@ -19,6 +23,7 @@ const entriesObj = Object.fromEntries(entries.map((f) => {
   ]
 }))
 
+// 将 hooks 入口文件路径转换为对象格式
 const hooksEntriesObj = Object.fromEntries(hooksEntries.map((f) => {
   return [
     `hooks/${relative('src/hooks', f.slice(0, f.length - extname(f).length))}`,
@@ -26,19 +31,20 @@ const hooksEntriesObj = Object.fromEntries(hooksEntries.map((f) => {
   ]
 }))
 
+// 构建配置
 const buildConfig: BuildEnvironmentOptions = {
   lib: {
-    name: 'ElementPlusX',
+    name: 'ElementPlusX', // 库的名称
     entry: {
-      index: resolve(__dirname, '../src/index.ts'),
-      components: resolve(__dirname, '../src/components.ts'),
-      ...entriesObj,
-      ...hooksEntriesObj,
+      index: resolve(__dirname, '../src/index.ts'), // 主入口文件
+      components: resolve(__dirname, '../src/components.ts'), // 组件入口文件
+      ...entriesObj, // 动态添加的组件入口
+      ...hooksEntriesObj, // 动态添加的 hooks 入口
     },
     fileName: (format, entryName) => {
-      return `${format}/${entryName}.js`
+      return `${format}/${entryName}.js` // 输出文件名格式
     },
-    formats: ['es'],
+    formats: ['es'], // 输出格式，这里是 ES 模块
   },
   rollupOptions: {
     // 确保外部化处理那些你不想打包进库的依赖
@@ -61,7 +67,7 @@ const buildConfig: BuildEnvironmentOptions = {
       }) as unknown as string,
     },
   },
-  sourcemap: true,
+  sourcemap: true, // 生成 sourcemap
   // 减少文件大小
   minify: 'terser',
   // CSS 处理
