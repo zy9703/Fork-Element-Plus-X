@@ -9,7 +9,7 @@
     "serve": "cd ./packages/components-element && npm i && npm run serve",
     "build": "turbo run build",
     "build:components": "turbo run build --filter=vue-element-plus-x",
-    "watch:components": "cd ./packages/components && pnpm run build:watch",
+    "watch:components": "pnpm --filter=vue-element-plus-x run build:watch",
     "dev:playground": "turbo run dev --filter=playground",
     "dev:docs": "turbo run dev --filter=docs",
     "build:docs": "turbo run build --filter=docs",
